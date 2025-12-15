@@ -6,13 +6,14 @@
 flask
 #### setup venv
 Create a venv (Virtual environement)
-```cd backend
+```
+cd backend
 mkdir venv
 python -m venv venv
 ```
+
 Install Modules
-```pip install flask
-```
+```pip install flask```
 Befor running Python programs connect to venv. ```source venv/bin/acitvate```
 Then run using ```python *.py```
 ### Angular
