@@ -1,0 +1,6 @@
+#Python Modules
+venv/
+
+#Angular Modules
+frontend/
+!src/
