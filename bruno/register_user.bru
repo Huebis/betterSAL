@@ -1,0 +1,27 @@
+meta {
+  name: register_user
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://172.25.167.34:5000/register_user
+  body: json
+  auth: inherit
+}
+
+params:query {
+  : 
+}
+
+body:json {
+  {
+    "username":1,
+    "password":2
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
