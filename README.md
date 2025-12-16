@@ -4,6 +4,7 @@
 ### Python
 #### python modules
 flask
+selenium
 #### setup venv
 Create a venv (Virtual environement)
 ```
