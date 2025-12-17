@@ -1,0 +1,8 @@
+
+@for (lesson of lessons; track lesson) {
+    <div class="lesson" [style]="'position: absolute; top:'+calculateStartTime(lesson.startTime)+'px; left:'+translateDay(lesson.day)+'px; height:'+calculateHeight(lesson.startTime,lesson.endTime)+'px'">
+        <p class="subject">{{lesson.subject}}</p>
+        <p class="room">{{lesson.room}}</p>
+        <p class="teacher">{{lesson.teachers}}</p>
+    </div>
+}
