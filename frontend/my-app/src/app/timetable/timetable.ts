@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 export class TimetableComponent {
   lessons=[{
     subject:"M",
-    teacher:"Warin",
+    teachers:["Warin"],
     room:"200",
     day:0,
     startTime:900,
