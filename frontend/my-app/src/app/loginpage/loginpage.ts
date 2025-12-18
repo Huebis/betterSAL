@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Passwordinput } from '../passwordinput/passwordinput';
-
 @Component({
   selector: 'app-loginpage',
   imports: [Passwordinput],

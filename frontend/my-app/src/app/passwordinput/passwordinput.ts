@@ -12,5 +12,4 @@ export class Passwordinput {
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
-
 }
