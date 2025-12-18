@@ -1,6 +1,10 @@
 import json
+from flask import Flask, request, Response, render_template
+import database
 
-from flask import Flask, request, Response
+
+
+
 app = Flask(__name__)
 
 #ERRORS:
@@ -18,6 +22,23 @@ def register_user():
         resp = Response(data)
         resp.headers['Content-Type'] = 'application/json'
         return resp
+
+
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+
+
+    if database.isUserValid(username,password):
+        return render_template("login.html")
+    return render_template("loginNotRight.html")
 
 
 
