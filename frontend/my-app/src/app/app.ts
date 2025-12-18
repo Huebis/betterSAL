@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { MenuComponent } from './menu/menu';
 import { TimetableComponent } from './timetable/timetable';
 import { Loginpage } from './loginpage/loginpage';
+import { ApiService } from './api.service';
 
 @Component({
   selector: 'app-root',
