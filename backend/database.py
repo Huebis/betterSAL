@@ -22,6 +22,35 @@ def creatTableUser():
     return True
 
 
+def insertTestDataTableUser():
+    testData = [
+        [0,"Emil" , "Emil", "M4G", "B"],
+        [0,"Nahia" , "Nahia", "M4G", "B"],
+        [0,"Paul" , "Paul", "M4G", "W"],
+        [0,"Esben" , "Esben", "M4G", "A"],
+        [0,"Moritz" , "Moritz", "M4G", "A"],
+        [0,"Manuel" , "Manuel", "M4G", "W"],
+        [0,"Aurel" , "Aurel", "M4G", "W"],
+        [0,"Loic" , "Loic", "M4G", "W"],
+        [0,"Eliah" , "Eliah", "M4G", "A"],
+        [0,"Walter" , "Walter", "M4G", "A"],
+        [0,"Theo" , "Theo", "M4G", "A"],
+        [0,"Marlon" , "Marlon", "M4G", "A"],
+    ]
+    for row in testData:
+        row[0] = str(uuid.uuid4())
+
+    stringRows_of_testData = ["""', '""".join(map(str, row)) for row in testData]
+
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    for row in stringRows_of_testData:
+        cursor.execute("""INSERT INTO user (userid,username,password,classname,major) VALUES ('""" + row + "')""")
+
+    conn.commit()
+    conn.close()
+    return True
+
 
 
 def creatTableGrade():
@@ -96,39 +125,64 @@ def creatTableToken():
     conn.commit()
     return True
 
-
-
-
-
-
-def insertTestDataTableUser():
-    testData = [
-        [0,"Emil" , "Emil", "M4G", "B"],
-        [0,"Nahia" , "Nahia", "M4G", "B"],
-        [0,"Paul" , "Paul", "M4G", "W"],
-        [0,"Esben" , "Esben", "M4G", "A"],
-        [0,"Moritz" , "Moritz", "M4G", "A"],
-        [0,"Manuel" , "Manuel", "M4G", "W"],
-        [0,"Aurel" , "Aurel", "M4G", "W"],
-        [0,"Loic" , "Loic", "M4G", "W"],
-        [0,"Eliah" , "Eliah", "M4G", "A"],
-        [0,"Walter" , "Walter", "M4G", "A"],
-        [0,"Theo" , "Theo", "M4G", "A"],
-        [0,"Marlon" , "Marlon", "M4G", "A"],
-    ]
-    for row in testData:
-        row[0] = str(uuid.uuid4())
-
-    stringRows_of_testData = ["""', '""".join(map(str, row)) for row in testData]
-
+def creatTableSubject():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
-    for row in stringRows_of_testData:
-        cursor.execute("""INSERT INTO user (userid,username,password,classname,major) VALUES ('""" + row + "')""")
+    cursor.execute("DROP TABLE IF EXISTS subject")
+    tableCreationQuery = """
+    CREATE TABLE subject (
+        listofteachers TEXT NOT NULL,
+        name TEXT NOT NULL,
+        listofstudents TEXT NOT NULL
+    );
+    """
+    cursor.execute(tableCreationQuery)
+    conn.commit()
+    return True
 
+
+
+def creatTableFile():
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute("DROP TABLE IF EXISTS file")
+    tableCreationQuery = """
+    CREATE TABLE file (
+        fileid TEXT NOT NULL,
+        namebefor TEXT NOT NULL,
+        nameafter TEXT NOT NULL
+    );
+    """
+    cursor.execute(tableCreationQuery)
+    conn.commit()
+    return True
+
+def addNewFile(nameOfFile):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    sql = "INSERT INTO file (fileid,namebefor,nameafter) VALUES (?,?,?))"
+
+    fileId = str(uuid.uuid4())
+    newFileName = str(uuid.uuid4())
+    cursor.execute(sql, (fileId,nameOfFile,newFileName))
+    output = cursor.fetchone()
+    conn.commit()
+    conn.close()
+    return fileId
+
+def deleteFile(fileId):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    sql = "DELETE FROM file WHERE fileid = ?"
+    cursor.execute(sql, (fileId,))
+    output = cursor.fetchone()
     conn.commit()
     conn.close()
     return True
+
+
+
+
 
 
 def readAndReturnTableUser():
@@ -166,6 +220,9 @@ def readAndReturnTableSchedule():
     conn.commit()
     conn.close()
     return output
+
+
+
 
 def isUserValid(username, password):
     conn = sqlite3.connect('database.db')
@@ -219,7 +276,6 @@ def addNewToken(userid):
     output = cursor.fetchone()
     conn.commit()
     conn.close()
-
 
 
 def getUseridFromToken(token):
