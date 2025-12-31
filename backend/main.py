@@ -1,11 +1,22 @@
 import json
 from flask import Flask, request, Response, render_template
 import database
+import os
+
+
+#source venv/bin/activate
+
+
 
 
 
 
 app = Flask(__name__)
+
+
+app.config["UPLOAD_FOLDER"] = "user_documents"
+
+
 
 #ERRORS:
 #0:No error
@@ -39,6 +50,34 @@ def login():
     if database.isUserValid(username,password):
         return render_template("login.html")
     return render_template("loginNotRight.html")
+
+
+
+#Testversuch, ob Dateien Hochgeladen werden können und abgespeichert werden
+@app.route("/upload", methods=["GET","POST"])
+def upload_file():
+    if request.method == "GET":
+        return render_template("upload.html", message="")
+
+
+
+    if "file" not in request.files:
+        return render_template("upload.html", message="Keine Datei ausgewählt")
+
+    file = request.files["file"]
+
+    if file.filename == "":
+        return render_template("upload.html", message="Keine Datei ausgewählt")
+
+
+    
+    file.save(os.path.join(app.config["UPLOAD_FOLDER"], "testtesttest"))
+
+    return render_template("upload.html", message=f"Datei erfolgreich gespeichert: {file.filename}")
+
+
+
+
 
 
 
