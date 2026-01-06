@@ -1,24 +1,83 @@
 # Server comunication
 
+## Interfaces
+/betterSAL/api ...
 
-## Endpoints
-Comunication in JSON format
-### /register_user
-Input: {"username":"","password":""}
+### Login
+/login
+#### input
+username (plain, json)
+password (plain, json)
+#### output
+token
 
-Ouput: {}
+### register
+/register_user
 
-### /login
-Input: {"username":"","password":""}
+#### input
+username (plain, json)
+password (plain, json)
+email (plain, json)
 
-Ouput: {"nickname":""}
+#### output
 
-## ERRROR
-Each output also contains a {"EROOR":"0"}
+### getfile
+/get_file_by_id
+
+#### input
+token
+fileId (json)
+
+#### output
+file (attachment)
+
+### getGradesStudent
+/get_grades_student
+#### input
+token
+#### output
+subjects:{{name, grade, date, message, fileId},...} (json) 
+
+
+### createTest
+/create_test
+#### input
+token
+course, testName, date, weight, testId (json)
+
+
+### getTest
+/get_test_by_id
+#### input
+token
+testId (json)
+#### output
+{name, date, students:{{studentName, grade, message, fileId},...}} (json) 
+
+### postTest
+/post_test_by_id
+#### input
+token
+{testId,students:{{studentName, grade, message, fileId},...}} (json)
+
+
+### getTests
+/get_tests
+#### input
+token
+#### output
+{{courseId, subject, tests,{{testId, name, date, greaded},...}}...} (json)
+
+
+
+
+## ERRORS
+### 200
+OK
+### 403
+token expired or invalid
 
 | ERROR number| Description |
 | ----------- | ----------- |
-| 0           | No Error    |
-| 1           | A Error     |
-| 2           | Missing Data|
-| 10          | Username already exists|
+| 200         | OK          |
+| 403         | token invalid|
