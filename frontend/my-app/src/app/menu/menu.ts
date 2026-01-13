@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiService } from '../api.service';
 import { FormsModule } from '@angular/forms';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <h2>Send Data</h2>
-    <textarea [(ngModel)]="payload" rows="5" cols="30"></textarea>
-    <br>
-    <button (click)="send()">Send</button>
+    <h2>Dashboard</h2>
+    <textarea [(ngModel)]="payload" rows="5" cols="30" placeholder="Enter JSON"></textarea>
+    <br/>
+    <button (click)="send()">Send Request</button>
     <pre>{{ response | json }}</pre>
   `
 })
@@ -31,10 +31,7 @@ export class MenuComponent {
     }
 
     this.api.sendRequest(data).subscribe({
-      next: res => {
-        this.response = res; // store response to display
-        console.log(res);
-      },
+      next: res => this.response = res,
       error: err => console.error('HTTP Error:', err)
     });
   }

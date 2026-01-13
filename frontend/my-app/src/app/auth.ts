@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class AuthService {
   private readonly UUID_KEY = 'client_uuid';
 
-  setUuid(uuid: string): void {
+  setUuid(uuid: string) {
     localStorage.setItem(this.UUID_KEY, uuid);
   }
 
@@ -14,7 +14,7 @@ export class AuthService {
     return localStorage.getItem(this.UUID_KEY);
   }
 
-  clearUuid(): void {
+  clearUuid() {
     localStorage.removeItem(this.UUID_KEY);
   }
 

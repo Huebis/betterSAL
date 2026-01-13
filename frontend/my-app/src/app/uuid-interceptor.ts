@@ -10,11 +10,11 @@ import { AuthService } from './auth';
 
 @Injectable()
 export class UuidInterceptor implements HttpInterceptor {
-
   constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const uuid = this.authService.getUuid();
+    console.log("interceptor works")
     if (!uuid) return next.handle(req);
 
     const cloned = req.clone({
