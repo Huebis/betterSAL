@@ -18,7 +18,7 @@ def saveNewFile(file):
     file.save(os.path.join(uploadFolder, newFileName))
     return fileId
 
-def lookUpFile(fileId)
+def lookUpFile(fileId):
     nameBefor,nameAfter = database.getNamesOfFile(FileId)
 
     path = os.path.join(uploadFolder, nameAfter)
