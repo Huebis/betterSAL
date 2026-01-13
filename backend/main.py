@@ -1,7 +1,7 @@
 import json
 from flask import Flask, request, Response, render_template
 import database
-import os
+import service
 
 
 #source venv/bin/activate
@@ -14,7 +14,6 @@ import os
 app = Flask(__name__)
 
 
-app.config["UPLOAD_FOLDER"] = "user_documents"
 
 
 
@@ -71,9 +70,8 @@ def upload_file():
 
 
     
-    file.save(os.path.join(app.config["UPLOAD_FOLDER"], "testtesttest"))
-
-    return render_template("upload.html", message=f"Datei erfolgreich gespeichert: {file.filename}")
+    fileId = service.saveNewFile(file)
+    return render_template("upload.html", message=f"Datei erfolgreich gespeichert: {fileId}")
 
 
 
