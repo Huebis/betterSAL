@@ -1,19 +1,24 @@
 import json
-from flask import Flask, request, Response, render_template
-import database
+from flask import Flask, request, Response, render_template, g, jsonify
+from database import Database
 import service
 
 
 #source venv/bin/activate
 
-
+def get_db():
+    db = getattr(g, '_database', None)
+    print("1")
+    if db is None:
+        print("2")
+        db = g._database = Database()
+    return db
+ 
 
 
 
 
 app = Flask(__name__)
-
-
 
 
 
@@ -37,19 +42,17 @@ def register_user():
 @app.route('/betterSAL/api/login', methods=["POST"])
 def loginUser():
     data = request.get_json()
-
-    if not data or "username" not in data or "password" not in data:
-        return jsonify({"error": "username and password required"}), 400
+    db = get_db()
 
     username = data["username"]
     password = data["password"]
 
-    userID = database.isUserValid_getUserID(username,password)
+    userID = db.isUserValid_getUserID(username,password)
 
     if userID == False:
         return jsonify({"error": "username and password are wrong"}), 400
 
-    token = database.addNewToken(userID)
+    token = db.addNewToken(userID)
 
     return jsonify({"token": token}), 200
 
