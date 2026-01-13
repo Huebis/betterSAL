@@ -1,10 +1,14 @@
 #temp
 test.py
 password.py
-
+test/
+__pycache__/
 
 #Python Modules
 venv/
+
+#Storage of user files
+user_documents/
 
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
