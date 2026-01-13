@@ -4,7 +4,9 @@ meta {
   seq: 2
 }
 
-get {
+
+post {
+  main
   url: http://127.0.0.1:5000/betterSAL/api/login
   body: json
   auth: inherit
@@ -13,7 +15,9 @@ get {
 body:json {
   {
     "username":"Eliah",
-    "password":"Eliah"
+
+    "password":"Eliah"  
+  main
   }
 }
 
