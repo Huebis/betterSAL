@@ -5,9 +5,16 @@ meta {
 }
 
 get {
-  url: http://127.0.0.1:5000/
-  body: none
+  url: http://127.0.0.1:5000/betterSAL/api/login
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "username":"Eliah",
+    "password":"Eliah"
+  }
 }
 
 settings {
