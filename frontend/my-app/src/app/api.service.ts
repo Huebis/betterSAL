@@ -7,23 +7,25 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
 
-  private apiUrl = 'http://127.0.0.1:5000/';
-  
-  constructor(private http:HttpClient) {}
-  setUrl(substring:string) {this.apiUrl=this.apiUrl+substring}
+  private baseUrl = 'http://127.0.0.1:5000/';
 
-  sendData(body: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, body);
+  constructor(private http: HttpClient) {}
+
+  // optional: dynamically append path
+  setUrl(subpath: string) {
+    if (!this.baseUrl.endsWith('/')) {
+      this.baseUrl += '/';
+    }
+    this.baseUrl = this.baseUrl + subpath;
   }
 
-  response: any;
+  // send POST request
+  sendData(body: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl, body);
+  }
 
-  sendRequest(data:Object) {
-
-    this.sendData(data).subscribe({
-      next: (res) => this.response = res,
-      error: (err) => console.error(err)
-    });
-    return this.response;
+  // sendRequest now just returns Observable
+  sendRequest(data: Object): Observable<any> {
+    return this.sendData(data);
   }
 }
