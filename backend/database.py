@@ -210,15 +210,17 @@ def readAndReturnTableSchedule():
 
 
 
-def isUserValid(username, password):
-    sql = "SELECT COUNT(*) FROM user WHERE username = ? AND password = ?"
+def isUserValid_getUserID(username, password):
+    sql = "SELECT userid FROM user WHERE username = ? AND password = ?"
     cursor.execute(sql, (username, password))
-    output = cursor.fetchone()
+    output = cursor.fetchall()
     conn.commit()
 
-    if output[0] == 1:
-        return True
-    return False
+    if output == []:
+        return False
+
+
+    return output[0][0]
 
 def isUserExist(username):
     sql = "SELECT COUNT(*) FROM user WHERE username = ?"
@@ -247,9 +249,11 @@ def addNewUser(username,password,classname,major):
 
 def addNewToken(userid):
     sql = "INSERT INTO token (userid,token,creattime) VALUES (?,?,strftime('%s', 'now'))"
-    cursor.execute(sql, (userid,str(uuid.uuid4())))
+    token = str(uuid.uuid4())
+    cursor.execute(sql, (userid,token))
     output = cursor.fetchone()
     conn.commit()
+    return token
 
 
 def getUseridFromToken(token):
@@ -288,7 +292,7 @@ addNewUser("Gremaud","Gremaud","M4i","Lehrer MA")
 print(readAndReturnTableUser())
 
 print(isUserValid("Gremaud","Gremaud"))
-"""
+
 #creatTableToken()
 
 #addNewToken("eliah")
@@ -301,3 +305,7 @@ print(getUseridFromToken("eliah"))
 print(readAndReturnTableFile())
 #deleteFile("d1072a26-6feb-44b0-bbec-843e00c387bb")
 print(readAndReturnTableFile())
+
+"""
+
+print(isUserValid_getUserID("Eliah","Eliah"))

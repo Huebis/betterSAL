@@ -34,6 +34,26 @@ def register_user():
         return resp
 
 
+@app.route('/betterSAL/api/login', methods=["POST"])
+def loginUser():
+    data = request.get_json()
+
+    if not data or "username" not in data or "password" not in data:
+        return jsonify({"error": "username and password required"}), 400
+
+    username = data["username"]
+    password = data["password"]
+
+    userID = database.isUserValid_getUserID(username,password)
+
+    if userID == False:
+        return jsonify({"error": "username and password are wrong"}), 400
+
+    token = database.addNewToken(userID)
+
+    return jsonify({"token": token}), 200
+
+
 
 
 @app.route('/')
