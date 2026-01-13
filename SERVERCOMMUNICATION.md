@@ -43,7 +43,7 @@ subjects:{{name, grade, date, message, fileId},...} (json)
 /create_test
 #### input
 token
-course, testName, date, weight, testId (json)
+course, testName, date, startTime, endTime, weight (json)
 
 
 ### getTest
@@ -72,10 +72,6 @@ token
 
 
 ## ERRORS
-### 200
-OK
-### 403
-token expired or invalid
 
 | ERROR number| Description |
 | ----------- | ----------- |
