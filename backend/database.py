@@ -1,6 +1,6 @@
 import sqlite3
 import uuid
-
+from argon2 import PasswordHasher
 
 class Database:
 
@@ -32,26 +32,29 @@ class Database:
 
     def insertTestDataTableUser(self):
         testData = [
-            [0,"Emil" , "Emil", "M4G", "B"],
-            [0,"Nahia" , "Nahia", "M4G", "B"],
-            [0,"Paul" , "Paul", "M4G", "W"],
-            [0,"Esben" , "Esben", "M4G", "A"],
-            [0,"Moritz" , "Moritz", "M4G", "A"],
-            [0,"Manuel" , "Manuel", "M4G", "W"],
-            [0,"Aurel" , "Aurel", "M4G", "W"],
-            [0,"Loic" , "Loic", "M4G", "W"],
-            [0,"Eliah" , "Eliah", "M4G", "A"],
-            [0,"Walter" , "Walter", "M4G", "A"],
-            [0,"Theo" , "Theo", "M4G", "A"],
-            [0,"Marlon" , "Marlon", "M4G", "A"],
+            [0,"Emil" , "Emil", "M4G", "B","test@test.ch", False],
+            [0,"Nahia" , "Nahia", "M4G", "B","test@test.ch", False],
+            [0,"Paul" , "Paul", "M4G", "W","test@test.ch", False],
+            [0,"Esben" , "Esben", "M4G", "A","test@test.ch", False],
+            [0,"Moritz" , "Moritz", "M4G", "A","test@test.ch", False],
+            [0,"Manuel" , "Manuel", "M4G", "W","test@test.ch", False],
+            [0,"Aurel" , "Aurel", "M4G", "W","test@test.ch", False],
+            [0,"Loic" , "Loic", "M4G", "W","test@test.ch", False],
+            [0,"Eliah" , "Eliah", "M4G", "A","test@test.ch", False],
+            [0,"Walter" , "Walter", "M4G", "A","test@test.ch", False],
+            [0,"Theo" , "Theo", "M4G", "A","test@test.ch", False],
+            [0,"Marlon" , "Marlon", "M4G", "A","test@test.ch", False],
         ]
+
+        ph = PasswordHasher()
         for row in testData:
             row[0] = str(uuid.uuid4())
+            row[2] = ph.hash(row[2]) 
 
         stringRows_of_testData = ["""', '""".join(map(str, row)) for row in testData]
 
         for row in stringRows_of_testData:
-            self.cursor.execute("""INSERT INTO user (userid,username,password,classname,major) VALUES ('""" + row + "')""")
+            self.cursor.execute("""INSERT INTO user (userid,username,password,classname,major,email,teacherboolian) VALUES ('""" + row + "')""")
 
         self.conn.commit()
         return True
@@ -151,6 +154,9 @@ class Database:
         self.conn.commit()
         return True
 
+    def passwordHashAndSalt(self,password):
+        return password
+
     def addNewFile(self,nameOfFile):
         sql = "INSERT INTO file (fileid,namebefor,nameafter) VALUES (?,?,?)"
 
@@ -216,16 +222,22 @@ class Database:
 
 
     def isUserValid_getUserID(self, username, password):
-        sql = "SELECT userid FROM user WHERE username = ? AND password = ?"
-        self.cursor.execute(sql, (username, password))
+        sql = "SELECT password,userid FROM user WHERE username = ?"
+        self.cursor.execute(sql, (username,))
         output = self.cursor.fetchall()
         self.conn.commit()
+
+        
 
         if output == []:
             return False
 
 
-        return output[0][0]
+        ph = PasswordHasher()
+        if not ph.verify(output[0][0], password):
+            return False
+
+        return output[0][1]
 
     def isUserExist(self,username):
         sql = "SELECT COUNT(*) FROM user WHERE username = ?"
@@ -320,3 +332,10 @@ class Database:
     """
 
     #print(isUserValid_getUserID("Eliah","Eliah"))
+
+db = Database()
+
+db.creatTableUser()
+db.insertTestDataTableUser()
+
+print(db.readAndReturnTableUser())
