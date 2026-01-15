@@ -4,22 +4,33 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth';
 
+import { ApiService } from '../api.service';
+
+
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  template: `
-    <h2>Login</h2>
-    <input type="text" placeholder="Enter UUID" [(ngModel)]="uuid"/>
-    <button (click)="login()">Login</button>
-  `
+  templateUrl: './login.html',
 })
 export class LoginComponent {
-  uuid = '';
+  username = '';
+  password = '';
+  uuid='';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private api: ApiService) {}
 
   login() {
+    //let data="{'username:'{$this.username}','password':'{$this.password}'}"
+    let data={username:"Eliah",password:"Eliah"}
+    let senddata = JSON.stringify(data);
+
+    this.api.sendRequest(senddata,"login").subscribe({
+      next: res => console.log(res),
+      error: err => console.error('HTTP Error:', err)
+    });
+
+    console.log(this.uuid)
     const value = this.uuid.trim();
     if (!value) {
       alert('UUID is required');

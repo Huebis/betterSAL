@@ -29,10 +29,9 @@ export class MenuComponent {
       alert('Invalid JSON');
       return;
     }
+    console.log("test");
 
-    this.api.sendRequest(data).subscribe({
-      next: res => this.response = res,
-      error: err => console.error('HTTP Error:', err)
-    });
+  
+    
   }
 }

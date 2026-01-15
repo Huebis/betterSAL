@@ -1,9 +1,15 @@
 <h2>Login</h2>
 
+
 <input
   type="text"
-  placeholder="Enter UUID"
-  [(ngModel)]="uuid"
+  placeholder="Enter username"
+  [(ngModel)]="username"
+/>
+<input
+  type="text"
+  placeholder="Enter password"
+  [(ngModel)]="password"
 />
 
 <button (click)="login()">Login</button>

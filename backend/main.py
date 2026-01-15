@@ -43,12 +43,10 @@ def register_user():
 def loginUser():
     data = request.get_json()
     db = get_db()
-
     username = data["username"]
     password = data["password"]
 
     userID = db.isUserValid_getUserID(username,password)
-
     if userID == False:
         return jsonify({"error": "username and password are wrong"}), 400
 

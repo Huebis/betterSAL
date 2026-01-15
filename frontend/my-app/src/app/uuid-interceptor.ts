@@ -18,7 +18,7 @@ export class UuidInterceptor implements HttpInterceptor {
     if (!uuid) return next.handle(req);
 
     const cloned = req.clone({
-      setHeaders: { 'X-Client-UUID': uuid }
+      setHeaders: { 'token': uuid }
     });
 
     return next.handle(cloned);
