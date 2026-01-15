@@ -2,6 +2,7 @@ import json
 from flask import Flask, request, Response, render_template, g, jsonify
 from database import Database
 import service
+from flask_cors import CORS
 
 
 #source venv/bin/activate
@@ -19,6 +20,7 @@ def get_db():
 
 
 app = Flask(__name__)
+CORS(app)
 
 
 

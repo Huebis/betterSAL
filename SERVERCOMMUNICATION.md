@@ -21,6 +21,16 @@ email (plain, json)
 
 #### output
 
+
+### endSession
+/endSession
+
+#### input
+token (plain, json)
+
+#### output
+empty Json
+
 ### getfile
 /get_file_by_id
 
