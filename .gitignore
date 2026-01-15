@@ -1,7 +1,7 @@
 #temp
 test.py
 password.py
-#backend/database.db
+backend/database.db
 test/
 __pycache__/
 
