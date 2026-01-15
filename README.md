@@ -5,6 +5,7 @@
 #### python modules
 flask
 selenium
+argon2-cffi
 #### setup venv
 Create a venv (Virtual environement)
 ```

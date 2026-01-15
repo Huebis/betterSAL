@@ -27,21 +27,21 @@ app = Flask(__name__)
 #1:User already exists
 #2:
 
-@app.route('/register_user', methods=['GET'])
-def register_user():
-    data=request.get_json()
-    response=0
-    #response=createUser(data["username"],data["password"])
-    data = json.dumps({"ERROR":response})#{"ERROR: 0"}
-    if request.method == 'GET':
-        resp = Response(data)
-        resp.headers['Content-Type'] = 'application/json'
-        return resp
 
 
 @app.route('/betterSAL/api/login', methods=["POST"])
 def loginUser():
     data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+    if "username" not in data or "password" not in data:
+        return jsonify({"error": "username und password wurden nicht übermittelt"}), 400
+
+
+
+
     db = get_db()
 
     username = data["username"]
@@ -57,6 +57,57 @@ def loginUser():
     return jsonify({"token": token}), 200
 
 
+
+@app.route('/betterSAL/api/endSession', methods=["Post"])
+def deletToken():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+    if "token" not in data:
+        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
+
+    token = data["token"]
+    db = get_db()
+    db.deletToken(token)
+
+    return jsonify({}), 200
+
+
+@app.route('/betterSAL/api/userData', methods=["POST"])
+def postAllUserInformation():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+    if "token" not in data:
+        return jsonify({"error": "token wurden nicht übermittelt"}), 400
+
+
+
+    token = data["token"]
+    db = get_db()
+
+    userID = db.getUseridFromToken(token)
+
+    if userID == False:
+        return jsonify({"error": "token ist nicht valid"}), 403
+
+    userData = db.getAllUserDataWithUserID(userID)
+
+
+    return jsonify({"data": userData}), 200
+
+
+
+
+
+
+###########################################################
+#Tests#
+########################################
 
 
 @app.route('/')
