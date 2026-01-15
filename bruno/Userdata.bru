@@ -1,0 +1,22 @@
+meta {
+  name: Userdata
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://127.0.0.1:5000/betterSAL/api/userData
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "token": "bffd7145-881c-4220-8443-32a9a1400ea7"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
