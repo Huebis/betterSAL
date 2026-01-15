@@ -1,0 +1,22 @@
+meta {
+  name: endSession
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://127.0.0.1:5000/betterSAL/api/endSession
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "token":"a9dba61a-e4af-43d1-a4ae-15e45df60923"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

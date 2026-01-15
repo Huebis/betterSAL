@@ -1,6 +1,7 @@
 import sqlite3
 import uuid
 from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
 
 class Database:
 
@@ -232,9 +233,10 @@ class Database:
         if output == []:
             return False
 
-
         ph = PasswordHasher()
-        if not ph.verify(output[0][0], password):
+        try:
+            ph.verify(output[0][0], password)
+        except VerifyMismatchError:
             return False
 
         return output[0][1]
@@ -293,15 +295,23 @@ class Database:
 
     def deletOldTokens(self):
         countOfNumbersUntilTokenIsInvalid = 20
-        sql = "DELETE FROM tokens WHERE creattime < (strftime('%s', 'now') - ?*60"
+        sql = "DELETE FROM token WHERE creattime < (strftime('%s', 'now') - ?*60"
         self.cursor.execute(sql, (countOfNumbersUntilTokenIsInvalid,))
         self.conn.commit()
 
     def deletToken(self,token):
-        sql = "DELETE FROM tokens WHERE token = ?"
+        sql = "DELETE FROM token WHERE token = ?"
         self.cursor.execute(sql, (token,))
         self.conn.commit()
+        return
 
+    def getAllUserDataWithUserID(self,userID):
+        sql = "SELECT * FROM user WHERE userid = ?"
+        self.cursor.execute(sql, (userID,))
+        output = self.cursor.fetchall()
+        self.conn.commit()
+
+        return output
 
 
 
