@@ -1,11 +1,16 @@
 #temp
 test.py
 password.py
+#backend/database.db
 test/
 __pycache__/
 
+
+
 #Python Modules
 venv/
+
+
 
 #Storage of user files
 user_documents/
@@ -53,3 +58,4 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
