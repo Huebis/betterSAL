@@ -20,6 +20,7 @@ export class UserMenuComponent {
       next: res => {
         this.authService.clearUuid();
         console.log("loged out")
+        this.router.navigate(['/main'])
       },
       error: err => console.error('HTTP Error:', err)
     }); 

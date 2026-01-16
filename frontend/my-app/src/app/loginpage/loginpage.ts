@@ -29,7 +29,6 @@ export class LoginpageComponent {
     this.api.sendRequest(data,"login").subscribe({
       next: res => {
         this.authService.setUuid(res["token"]);
-        console.log("loged in");
         this.username='';
         this.passwordComponent.password='';
         this.router.navigate(['/main'])
