@@ -34,9 +34,10 @@ export class RegisterComponent {
       next: res => {
         this.authService.setUuid(res["token"]);
         console.log("registered");
-
+        this.username='';
+        this.passwordComponent.password='';
+        this.email='';
         this.router.navigate(['/main'])
-
       },
       error: err => console.error('HTTP Error:', err)
     });   

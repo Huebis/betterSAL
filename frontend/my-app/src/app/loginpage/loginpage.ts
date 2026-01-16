@@ -30,6 +30,8 @@ export class LoginpageComponent {
       next: res => {
         this.authService.setUuid(res["token"]);
         console.log("loged in");
+        this.username='';
+        this.passwordComponent.password='';
         this.router.navigate(['/main'])
       },
       error: err => console.error('HTTP Error:', err)
