@@ -1,9 +1,7 @@
-mainsite
+<app-navbar></app-navbar>
 <nav>
     <a routerLink="user"></a>
+    <a routerLink="timetable"></a>
+    <a routerLink="grades"></a>
 </nav>
 <router-outlet></router-outlet>
-<button (click)="navigateTo('login')">login</button>
-<button (click)="navigateTo('register')">register</button>
-<app-user-menu></app-user-menu>
-{{this.uuid}}

@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../auth';
@@ -12,8 +10,21 @@ import { ApiService } from '../api.service';
   templateUrl: './user-menu.html',
   styleUrl: './user-menu.css',
 })
+
 export class UserMenuComponent {
-  constructor(private authService: AuthService, private router: Router, private api: ApiService) {};
+  uuid:string|null=null;
+  constructor(private authService: AuthService, private router: Router, private api: ApiService) {if (this.authService.isLoggedIn()){
+    this.uuid=this.authService.getUuid();
+  }else{
+    this.uuid="logged out";
+  }}
+  
+  
+  
+
+  navigateTo(path:string){
+    this.router.navigate([path])
+  };
 
   logout(){
     this.api.sendRequest({},"endSession").subscribe({
