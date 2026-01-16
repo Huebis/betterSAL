@@ -51,7 +51,7 @@ def loginUser():
 
     token = db.addNewToken(userID)
 
-    return jsonify({"token": "token"}), 200
+    return jsonify({"token": token}), 200
 
 
 
