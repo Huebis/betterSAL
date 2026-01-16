@@ -1,2 +1,9 @@
-<input type="text" placeholder="Enter your username">
-<app-passwordinput style="margin-top: 10px; width: 100px;"></app-passwordinput>
+<input 
+    type="text" 
+    placeholder="Enter your username"
+    [(ngModel)]="username">
+
+<app-passwordinput
+    style="margin-top: 10px; width: 100px;">
+</app-passwordinput>
+<button (click)="login()">Login</button>

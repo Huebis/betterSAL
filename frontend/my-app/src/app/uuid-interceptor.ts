@@ -15,10 +15,13 @@ export class UuidInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const uuid = this.authService.getUuid();
     console.log("interceptor works")
-    if (!uuid) return next.handle(req);
+    if (!uuid) {
+      console.log("no uuid")
+      return next.handle(req)
+    };
 
     const cloned = req.clone({
-      setHeaders: { 'token': uuid }
+      body: {...req.body,'token': uuid }
     });
 
     return next.handle(cloned);

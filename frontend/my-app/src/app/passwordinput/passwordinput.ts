@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-passwordinput',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './passwordinput.html',
   styleUrl: './passwordinput.css',
 })
-export class Passwordinput {
+export class PasswordComponent {
   password: string = '';
   showPassword: boolean = false;
   togglePasswordVisibility(): void {

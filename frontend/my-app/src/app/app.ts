@@ -1,14 +1,14 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MenuComponent } from './menu/menu';
+import { UserMenuComponent } from './user-menu/user-menu';
 import { TimetableComponent } from './timetable/timetable';
-import { Loginpage } from './loginpage/loginpage';
-import { LoginComponent } from './login/login';
+import { LoginpageComponent } from './loginpage/loginpage';
 import { ApiService } from './api.service';
 
 @Component({
   selector: 'app-root',
-  imports: [LoginComponent, MenuComponent],
+  imports: [MenuComponent, LoginpageComponent, UserMenuComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

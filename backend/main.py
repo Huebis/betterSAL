@@ -41,9 +41,6 @@ def loginUser():
     if "username" not in data or "password" not in data:
         return jsonify({"error": "username und password wurden nicht übermittelt"}), 400
 
-
-
-
     db = get_db()
     username = data["username"]
     password = data["password"]
@@ -54,13 +51,14 @@ def loginUser():
 
     token = db.addNewToken(userID)
 
-    return jsonify({"token": token}), 200
+    return jsonify({"token": "token"}), 200
 
 
 
 @app.route('/betterSAL/api/endSession', methods=["Post"])
 def deletToken():
     data = request.get_json()
+    print(data)
 
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
