@@ -346,6 +346,12 @@ class Database:
 db = Database()
 
 db.creatTableUser()
+db.creatTableToken()
+db.creatTableAbsence()
+db.creatTableFile()
+db.creatTableSchedule()
+db.creatTableGrade()
+db.creatTableSubject()
 db.insertTestDataTableUser()
 
 print(db.readAndReturnTableUser())
