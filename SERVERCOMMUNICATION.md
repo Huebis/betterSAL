@@ -22,6 +22,19 @@ email (plain, json)
 #### output
 
 
+### password Change
+/changePassword
+
+#### input
+token (plain, json)
+password (plain, json)
+newPassword (plain, json)
+
+#### output
+empty JSON
+
+
+
 ### endSession
 /endSession
 
@@ -29,7 +42,7 @@ email (plain, json)
 token (plain, json)
 
 #### output
-empty Json
+empty JSON
 
 ### getfile
 /get_file_by_id

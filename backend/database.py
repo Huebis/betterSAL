@@ -265,6 +265,45 @@ class Database:
         
         return True
         
+    def changePassword(self,userID,password,newPassword):
+        sql = "SELECT password FROM user WHERE userid = ?"
+        self.cursor.execute(sql, (userID,))
+        output = self.cursor.fetchone()
+
+        self.conn.commit()
+
+        if output == []:
+            return False
+
+        dbPassword  = output[0]
+
+
+        ph = PasswordHasher()
+        try:
+            ph.verify(dbPassword, password)
+        except VerifyMismatchError:
+            return False
+
+        hashedNewPassword = ph.hash(newPassword)
+
+        sql = "UPDATE user set password = ? WHERE userid = ?"
+        self.cursor.execute(sql, (hashedNewPassword,userID))
+        self.conn.commit()
+
+        return True
+
+
+
+        
+
+        
+
+
+
+
+
+
+
 
     def addNewToken(self,userid):
         sql = "INSERT INTO token (userid,token,creattime) VALUES (?,?,strftime('%s', 'now'))"
@@ -343,6 +382,9 @@ class Database:
 
     #print(isUserValid_getUserID("Eliah","Eliah"))
 
+
+
+"""
 db = Database()
 
 db.creatTableUser()
@@ -355,3 +397,5 @@ db.creatTableSubject()
 db.insertTestDataTableUser()
 
 print(db.readAndReturnTableUser())
+
+"""

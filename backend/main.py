@@ -28,6 +28,36 @@ CORS(app)
 #0:No error
 #1:User already exists
 #2:
+@app.route('/betterSAL/api/changePassword', methods=["POST"])
+def requestChangePassword():
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+    if "password" not in data or "newpassword" not in data or "token" not in data:
+        return jsonify({"error": "password, newpassword und token wurden nicht übermittelt"}), 400
+
+
+    token = data["token"]
+    db = get_db()
+
+    userID = db.getUseridFromToken(token)
+
+    if userID == False:
+        return jsonify({"error": "token ist nicht valid"}), 403
+
+    password = data["password"]
+    newPassword = data["newpassword"]
+    output = db.changePassword(userID,password,newPassword)
+
+    if output:
+        return jsonify({}), 200
+    
+    return jsonify({"error": "password ist nicht valid"}), 403
+
+
 
 
 
@@ -51,7 +81,7 @@ def loginUser():
 
     token = db.addNewToken(userID)
 
-    return jsonify({"token": "token"}), 200
+    return jsonify({"token": token}), 200
 
 
 
