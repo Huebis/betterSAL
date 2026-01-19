@@ -5,7 +5,9 @@ import service
 from flask_cors import CORS
 
 
-#source venv/bin/activate
+#source venv/bin/activate 
+
+
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -28,7 +30,10 @@ CORS(app)
 #0:No error
 #1:User already exists
 #2:
-@app.route('/betterSAL/api/changePassword', methods=["POST"])
+
+
+#route musste angepasst werden wegen dem Server
+@app.route('/changePassword', methods=["POST"])
 def requestChangePassword():
 
     data = request.get_json()
@@ -37,7 +42,7 @@ def requestChangePassword():
         return jsonify({"error": "kein JSON gesendet"}), 400
 
     if "password" not in data or "newpassword" not in data or "token" not in data:
-        return jsonify({"error": "password, newpassword und token wurden nicht übermittelt"}), 400
+        return jsonify({"error": "password, neues password und token wurden nicht übermittelt"}), 400
 
 
     token = data["token"]
@@ -61,7 +66,7 @@ def requestChangePassword():
 
 
 
-@app.route('/betterSAL/api/login', methods=["POST"])
+@app.route('/login', methods=["POST"])
 def loginUser():
     data = request.get_json()
 
@@ -85,7 +90,7 @@ def loginUser():
 
 
 
-@app.route('/betterSAL/api/endSession', methods=["Post"])
+@app.route('/endSession', methods=["Post"])
 def deletToken():
     data = request.get_json()
     print(data)
@@ -103,7 +108,7 @@ def deletToken():
     return jsonify({}), 200
 
 
-@app.route('/betterSAL/api/userData', methods=["POST"])
+@app.route('/userData', methods=["POST"])
 def postAllUserInformation():
     data = request.get_json()
 
