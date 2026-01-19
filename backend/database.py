@@ -23,7 +23,7 @@ class Database:
             classname TEXT NOT NULL,
             major TEXT NOT NULL,
             email TEXT NOT NULL,
-            teacherboolian INT NOT NULL
+            role INT NOT NULL
         );
         """
         self.cursor.execute(table_creation_query)
@@ -33,18 +33,18 @@ class Database:
 
     def insertTestDataTableUser(self):
         testData = [
-            [0,"Emil" , "Emil", "M4G", "B","test@test.ch", False],
-            [0,"Nahia" , "Nahia", "M4G", "B","test@test.ch", False],
-            [0,"Paul" , "Paul", "M4G", "W","test@test.ch", False],
-            [0,"Esben" , "Esben", "M4G", "A","test@test.ch", False],
-            [0,"Moritz" , "Moritz", "M4G", "A","test@test.ch", False],
-            [0,"Manuel" , "Manuel", "M4G", "W","test@test.ch", False],
-            [0,"Aurel" , "Aurel", "M4G", "W","test@test.ch", False],
-            [0,"Loic" , "Loic", "M4G", "W","test@test.ch", False],
-            [0,"Eliah" , "Eliah", "M4G", "A","test@test.ch", False],
-            [0,"Walter" , "Walter", "M4G", "A","test@test.ch", False],
-            [0,"Theo" , "Theo", "M4G", "A","test@test.ch", False],
-            [0,"Marlon" , "Marlon", "M4G", "A","test@test.ch", False],
+            [0,"Emil" , "Emil", "M4G", "B","test@test.ch", 0],
+            [0,"Nahia" , "Nahia", "M4G", "B","test@test.ch", 0],
+            [0,"Paul" , "Paul", "M4G", "W","test@test.ch", 0],
+            [0,"Esben" , "Esben", "M4G", "A","test@test.ch", 0],
+            [0,"Moritz" , "Moritz", "M4G", "A","test@test.ch", 0],
+            [0,"Manuel" , "Manuel", "M4G", "W","test@test.ch", 0],
+            [0,"Aurel" , "Aurel", "M4G", "W","test@test.ch", 0],
+            [0,"Loic" , "Loic", "M4G", "W","test@test.ch", 0],
+            [0,"Eliah" , "Eliah", "M4G", "A","test@test.ch", 0],
+            [0,"Walter" , "Walter", "M4G", "A","test@test.ch", 0],
+            [0,"Theo" , "Theo", "M4G", "A","test@test.ch", 0],
+            [0,"Marlon" , "Marlon", "M4G", "A","test@test.ch", 0],
         ]
 
         ph = PasswordHasher()
@@ -55,7 +55,7 @@ class Database:
         stringRows_of_testData = ["""', '""".join(map(str, row)) for row in testData]
 
         for row in stringRows_of_testData:
-            self.cursor.execute("""INSERT INTO user (userid,username,password,classname,major,email,teacherboolian) VALUES ('""" + row + "')""")
+            self.cursor.execute("""INSERT INTO user (userid,username,password,classname,major,email,role) VALUES ('""" + row + "')""")
 
         self.conn.commit()
         return True
@@ -68,13 +68,9 @@ class Database:
         CREATE TABLE grade (
             userid TEXT NOT NULL,
             grade INT,
-            subject TEXT NOT NULL,
-            date TEXT NOT NULL,
-            name TEXT NOT NULL,
-            change_datum TEXT NOT NULL,
             message TEXT,
             fileid TEXT,
-            weight INT NOT NULL
+            eventid NOT NULL
         );
         """
         self.cursor.execute(table_creation_query)
@@ -101,7 +97,7 @@ class Database:
         self.cursor.execute("DROP TABLE IF EXISTS schedule")
         table_creation_query = """
         CREATE TABLE schedule (
-            teachername TEXT NOT NULL,
+            courseid TEXT NOT NULL,
             subject TEXT NOT NULL,
             date TEXT NOT NULL,
             starttime TEXT NOT NULL,
@@ -127,19 +123,67 @@ class Database:
         self.conn.commit()
         return True
 
+    
     def creatTableSubject(self):
         self.cursor.execute("DROP TABLE IF EXISTS subject")
+        """
+        tableCreationQuery = 
+        #CREATE TABLE subject (
+        #    listofteachers TEXT NOT NULL,
+        #    name TEXT NOT NULL,
+        #    listofstudents TEXT NOT NULL
+        #);
+        """
+        #self.cursor.execute(tableCreationQuery)
+        self.conn.commit()
+        return True
+
+
+
+    def creatTableCourse(self):
+        self.cursor.execute("DROP TABLE IF EXISTS course")
         tableCreationQuery = """
-        CREATE TABLE subject (
-            listofteachers TEXT NOT NULL,
-            name TEXT NOT NULL,
-            listofstudents TEXT NOT NULL
+        CREATE TABLE course (
+            courseid TEXT NOT NULL,
+            userid TEXT NOT NULL,
+            subject TEXT NOT NULL            
+        );
+        """
+        self.cursor.execute(tableCreationQuery)
+        self.conn.commit()
+        return True
+    
+    def creatTableExamen(self):
+        self.cursor.execute("DROP TABLE IF EXISTS examen")
+        tableCreationQuery = """
+        CREATE TABLE examen (
+            courseid TEXT NOT NULL,
+            testname TEXT NOT NULL,
+            weight TEXT NOT NULL,
+            eventid TEXT NOT NULL,
+            changedatum TEXT NOT NULL            
         );
         """
         self.cursor.execute(tableCreationQuery)
         self.conn.commit()
         return True
 
+    def creatTableEvent(self):
+        self.cursor.execute("DROP TABLE IF EXISTS event")
+        tableCreationQuery = """
+        CREATE TABLE event (
+            eventid TEXT NOT NULL,
+            location TEXT NOT NULL,
+            date TEXT NOT NULL,
+            starttime TEXT NOT NULL,
+            endtime TEXT NOT NULL,
+            describtion TEXT,
+            type TEXT            
+        );
+        """
+        self.cursor.execute(tableCreationQuery)
+        self.conn.commit()
+        return True
 
 
     def creatTableFile(self):
@@ -265,6 +309,45 @@ class Database:
         
         return True
         
+    def changePassword(self,userID,password,newPassword):
+        sql = "SELECT password FROM user WHERE userid = ?"
+        self.cursor.execute(sql, (userID,))
+        output = self.cursor.fetchone()
+
+        self.conn.commit()
+
+        if output == []:
+            return False
+
+        dbPassword  = output[0]
+
+
+        ph = PasswordHasher()
+        try:
+            ph.verify(dbPassword, password)
+        except VerifyMismatchError:
+            return False
+
+        hashedNewPassword = ph.hash(newPassword)
+
+        sql = "UPDATE user set password = ? WHERE userid = ?"
+        self.cursor.execute(sql, (hashedNewPassword,userID))
+        self.conn.commit()
+
+        return True
+
+
+
+        
+
+        
+
+
+
+
+
+
+
 
     def addNewToken(self,userid):
         sql = "INSERT INTO token (userid,token,creattime) VALUES (?,?,strftime('%s', 'now'))"
@@ -343,6 +426,9 @@ class Database:
 
     #print(isUserValid_getUserID("Eliah","Eliah"))
 
+
+
+
 db = Database()
 
 db.creatTableUser()
@@ -352,6 +438,10 @@ db.creatTableFile()
 db.creatTableSchedule()
 db.creatTableGrade()
 db.creatTableSubject()
+db.creatTableCourse()
+db.creatTableExamen()
+db.creatTableEvent()
 db.insertTestDataTableUser()
 
 print(db.readAndReturnTableUser())
+

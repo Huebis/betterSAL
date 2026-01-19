@@ -1,11 +1,11 @@
 meta {
-  name: register_user
+  name: Real Server
   type: http
-  seq: 1
+  seq: 5
 }
 
 post {
-  url: http://127.0.0.1:5000/login
+  url: https://huebis.dev/betterSAL/api/login
   body: json
   auth: inherit
 }
@@ -13,7 +13,7 @@ post {
 body:json {
   {
     "username":"Eliah",
-    "password":"Eliah"
+    "password":"eliah"
   }
 }
 
