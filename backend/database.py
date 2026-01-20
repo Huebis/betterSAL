@@ -31,36 +31,6 @@ class Database:
         return True
 
 
-    def insertTestDataTableUser(self):
-        testData = [
-            [0,"Emil" , "Emil", "M4G", "B","test@test.ch", 0],
-            [0,"Nahia" , "Nahia", "M4G", "B","test@test.ch", 0],
-            [0,"Paul" , "Paul", "M4G", "W","test@test.ch", 0],
-            [0,"Esben" , "Esben", "M4G", "A","test@test.ch", 0],
-            [0,"Moritz" , "Moritz", "M4G", "A","test@test.ch", 0],
-            [0,"Manuel" , "Manuel", "M4G", "W","test@test.ch", 0],
-            [0,"Aurel" , "Aurel", "M4G", "W","test@test.ch", 0],
-            [0,"Loic" , "Loic", "M4G", "W","test@test.ch", 0],
-            [0,"Eliah" , "Eliah", "M4G", "A","test@test.ch", 0],
-            [0,"Walter" , "Walter", "M4G", "A","test@test.ch", 0],
-            [0,"Theo" , "Theo", "M4G", "A","test@test.ch", 0],
-            [0,"Marlon" , "Marlon", "M4G", "A","test@test.ch", 0],
-        ]
-
-        ph = PasswordHasher()
-        for row in testData:
-            row[0] = str(uuid.uuid4())
-            row[2] = ph.hash(row[2]) 
-
-        stringRows_of_testData = ["""', '""".join(map(str, row)) for row in testData]
-
-        for row in stringRows_of_testData:
-            self.cursor.execute("""INSERT INTO user (userid,username,password,classname,major,email,role) VALUES ('""" + row + "')""")
-
-        self.conn.commit()
-        return True
-
-
 
     def creatTableGrade(self):
         self.cursor.execute("DROP TABLE IF EXISTS grade")
@@ -123,8 +93,8 @@ class Database:
         self.conn.commit()
         return True
 
-    
-    def creatTableSubject(self):
+    # Nicht mehr in gebrauch
+    def creatTableSubject(self): 
         self.cursor.execute("DROP TABLE IF EXISTS subject")
         """
         tableCreationQuery = 
@@ -146,7 +116,8 @@ class Database:
         CREATE TABLE course (
             courseid TEXT NOT NULL,
             userid TEXT NOT NULL,
-            subject TEXT NOT NULL            
+            subject TEXT NOT NULL,
+            courseName TEXT NOT NULL            
         );
         """
         self.cursor.execute(tableCreationQuery)
@@ -295,20 +266,26 @@ class Database:
             return True
         return False
 
-    def addNewUser(self,username,password,classname,major):
+    def addNewUser(self,username,password,classname,major,email,role):
 
-        if isUserExist(username):
+        if self.isUserExist(username):
             return False
 
 
-        sql = "INSERT INTO user (userid,username,password,classname,major) VALUES (?,?,?,?,?)"
-        self.cursor.execute(sql, (str(uuid.uuid4),username,password,classname,major))
-        output = self.cursor.fetchone()
+        sql = "INSERT INTO user (userid,username,password,classname,major,email,role) VALUES (?,?,?,?,?,?,?)"
+        userID = str(uuid.uuid4())
+        self.cursor.execute(sql, (userID,username,password,classname,major,email,role))
         self.conn.commit()
 
         
+        return userID
+
+    def addNewCourse(self,courseID,userID,subject,courseName):
+        sql = "INSERT INTO course (courseid,userid,subject,courseName) VALUES (?,?,?,?)"
+        self.cursor.execute(sql, (courseID,userID,subject,courseName))
+        self.conn.commit()
         return True
-        
+    
     def changePassword(self,userID,password,newPassword):
         sql = "SELECT password FROM user WHERE userid = ?"
         self.cursor.execute(sql, (userID,))
@@ -397,6 +374,22 @@ class Database:
         return output
 
 
+    def getALLCourseWithUserID(self,userID):
+        sql = "SELECT courseid,subject FROM course WHERE userid = ?"
+        self.cursor.execute(sql, (userID,))
+        output = self.cursor.fetchall()
+        self.conn.commit()
+
+        return output
+    
+    def getRolefromUserWithUserID(self,userID):
+        sql = "SELECT role FROM user WHERE userid = ?"
+        self.cursor.execute(sql, (userID,))
+        output = self.cursor.fetchall()
+        self.conn.commit()
+
+        return output[0][0]
+
 
     """
     creatTableUser()
@@ -425,23 +418,4 @@ class Database:
     """
 
     #print(isUserValid_getUserID("Eliah","Eliah"))
-
-
-
-
-db = Database()
-
-db.creatTableUser()
-db.creatTableToken()
-db.creatTableAbsence()
-db.creatTableFile()
-db.creatTableSchedule()
-db.creatTableGrade()
-db.creatTableSubject()
-db.creatTableCourse()
-db.creatTableExamen()
-db.creatTableEvent()
-db.insertTestDataTableUser()
-
-print(db.readAndReturnTableUser())
 

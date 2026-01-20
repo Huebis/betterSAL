@@ -81,6 +81,12 @@ def loginUser():
     password = data["password"]
 
     userID = db.isUserValid_getUserID(username,password)
+
+
+
+    #test
+    db.getALLCourseWithUserID(userID)
+
     if userID == False:
         return jsonify({"error": "username and password are wrong"}), 400
 
