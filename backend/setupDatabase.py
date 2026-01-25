@@ -10,6 +10,7 @@ db = database.Database()
 
 def insertTestDataTableUserAndCourse(db):
     testData = [
+            [0,"Eliah" , "Eliah", "M4G", "A","test@test.ch", 1],
             [0,"Emil" , "Emil", "M4G", "B","test@test.ch", 1],
             [0,"Nahia" , "Nahia", "M4G", "B","test@test.ch", 1],
             [0,"Paul" , "Paul", "M4G", "W","test@test.ch", 1],
@@ -18,7 +19,6 @@ def insertTestDataTableUserAndCourse(db):
             [0,"Manuel" , "Manuel", "M4G", "W","test@test.ch", 1],
             [0,"Aurel" , "Aurel", "M4G", "W","test@test.ch", 1],
             [0,"Loic" , "Loic", "M4G", "W","test@test.ch", 1],
-            [0,"Eliah" , "Eliah", "M4G", "A","test@test.ch", 1],
             [0,"Walter" , "Walter", "M4G", "A","test@test.ch", 1],
             [0,"Theo" , "Theo", "M4G", "A","test@test.ch", 1],
             [0,"Marlon" , "Marlon", "M4G", "A","test@test.ch", 1],
@@ -43,6 +43,34 @@ def insertTestDataTableUserAndCourse(db):
         if(row[6] == 1 or row[1] == "Zulauf"):
             db.addNewCourse(EnglischM4GcourseID,row[0],"E","E-M4G-26")
     
+    # [[testname, weight, changedatum, grade, message]]
+
+    testGradesfuerEliahFranzösisch = [
+    ["Contrôle de mathématiques", 0.3, "2024-04-12", 1, "Bon travail"],
+    ["Examen de physique", 0.4, "2024-05-20", 2, "Résultats satisfaisants"],
+    ["Projet d'informatique", 0.2, "2024-06-10", 3, "Excellent projet"],
+    ["Test de chimie", 0.1, "2024-03-25", 4, "Des lacunes importantes"],
+    ["Examen final de statistiques", 0.5, "2024-07-05", 5, "Très bonne compréhension"]
+    ]
+
+    testGradesfuerEliahEnglisch = [
+    ["Math Exam", 0.3, "2024-04-12", 6, "Good overall performance"],
+    ["Physics Test", 0.4, "2024-05-20", 5.35, "Satisfactory results"],
+    ["Computer Science Project", 0.2, "2024-06-10", 3.14159 , "Excellent work"],
+    ["Chemistry Quiz", 0.1, "2024-03-25", 2.718, "Needs improvement"],
+    ["Statistics Final Exam", 0.5, "2024-07-05", 6.89, "Very good understanding"]
+    ]
+
+    for grade in testGradesfuerEliahFranzösisch:
+        eventID = str(uuid.uuid4())
+        db.addNewExamen(FranzösischM4GcourseID, eventID,grade[0],grade[1])
+        db.addNewGrade(testData[0][0], eventID,grade[3],grade[4])
+    
+    for grade in testGradesfuerEliahEnglisch:
+        eventID = str(uuid.uuid4())
+        db.addNewExamen(FranzösischM4GcourseID, eventID,grade[0],grade[1])
+        db.addNewGrade(testData[0][0], eventID,grade[3],grade[4])
+
 
     return True
 

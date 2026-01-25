@@ -130,7 +130,7 @@ class Database:
         CREATE TABLE examen (
             courseid TEXT NOT NULL,
             testname TEXT NOT NULL,
-            weight TEXT NOT NULL,
+            weight INT NOT NULL,
             eventid TEXT NOT NULL,
             changedatum TEXT NOT NULL            
         );
@@ -285,6 +285,20 @@ class Database:
         self.cursor.execute(sql, (courseID,userID,subject,courseName))
         self.conn.commit()
         return True
+    def addNewExamen(self,courseID, eventID, testName,weight):
+        sql = "INSERT INTO examen (courseid,eventid,testname,weight,changedatum) VALUES (?,?,?,?, DATETIME('now'))"
+        self.cursor.execute(sql, (courseID,eventID,testName,weight))
+        self.conn.commit()
+        return True
+
+    def addNewGrade(self,userID,eventID,grade = 0,message = "", fileID = "",):
+        sql = "INSERT INTO grade (userid,eventid,grade,message,fileid) VALUES (?,?,?,?,?)"
+        self.cursor.execute(sql, (userID,eventID,grade,message,fileID))
+        self.conn.commit()
+        return True
+
+
+
     
     def changePassword(self,userID,password,newPassword):
         sql = "SELECT password FROM user WHERE userid = ?"
@@ -377,6 +391,26 @@ class Database:
     def getALLCourseWithUserID(self,userID):
         sql = "SELECT courseid,subject FROM course WHERE userid = ?"
         self.cursor.execute(sql, (userID,))
+        output = self.cursor.fetchall()
+        self.conn.commit()
+
+        return output
+
+    def getAllGradesWithCourseIDAndUserID(self,courseID, userID):
+        sql = """SELECT 
+            e.testname, 
+            e.weight, 
+            e.changedatum,
+            g.grade,
+            g.message,
+            g.fileId
+            FROM Examen AS e
+            LEFT JOIN grade AS g
+            ON g.eventid = e.eventid
+            AND g.userid = ?
+            WHERE e.courseid = ?;
+            """
+        self.cursor.execute(sql,(userID, courseID))
         output = self.cursor.fetchall()
         self.conn.commit()
 

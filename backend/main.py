@@ -141,6 +141,30 @@ def postAllUserInformation():
 
 
 
+@app.route('/getGradesStudent', methods=["POST"])
+def postAllGradesFromUser():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+    if "token" not in data:
+        return jsonify({"error": "token wurden nicht übermittelt"}), 400
+
+
+
+    token = data["token"]
+    db = get_db()
+
+    userID = db.getUseridFromToken(token)
+
+    if userID == False:
+        return jsonify({"error": "token ist nicht valid"}), 403
+
+    output = service.getAllGradesforStudents(db,userID)
+
+
+    return jsonify({"grades": output}), 200
 
 
 

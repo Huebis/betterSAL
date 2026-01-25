@@ -1,0 +1,22 @@
+meta {
+  name: getGradesStudent
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://127.0.0.1:5000/getGradesStudent
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "token": "8feed7a1-41d4-480e-98b1-de8215620fa2"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
