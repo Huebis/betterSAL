@@ -1,1 +1,26 @@
 <p>grades works!</p>
+<!--@if (subjects$ | async; as subjects) {-->
+@for (subject of subjects; track subject.name) {
+
+    <section>
+      <h2>Subject: {{ subject.name }} Durchschnitt: {{getAverage(subject.grades)}}</h2>
+        <tr>
+            <th>date</th>
+            <th>grade</th>
+            <th>message</th>
+            <th>fileId</th>
+        </tr>
+        @for (g of subject.grades; track g.fileId ?? $index) {
+            <tr>
+                <th>{{g.date}}</th>
+                <th>{{g.grade}}</th>
+                <th>{{g.message}}</th>
+                <th>{{g.fileId}}</th>
+            </tr>
+        }
+
+    </section>
+}
+<!--} @else {
+    <p>Loading subjects...</p>
+  }-->

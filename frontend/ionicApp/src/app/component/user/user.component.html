@@ -1,0 +1,5 @@
+@if (isLoggedIn()) {
+  <ion-button (click)="logout()">Logout</ion-button>
+}@else {
+  <ion-button (click)="navigateTo('/login')">Login</ion-button>
+}

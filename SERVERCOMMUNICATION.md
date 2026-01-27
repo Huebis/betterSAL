@@ -59,7 +59,7 @@ file (attachment)
 #### input
 token
 #### output
-subjects:{{name, grade, date, message, fileId},...} (json) 
+subjects:[{name,[{ grade, date, message, fileId},...]},...](json) 
 
 
 ### createTest
