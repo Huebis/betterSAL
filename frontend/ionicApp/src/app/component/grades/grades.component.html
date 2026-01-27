@@ -4,22 +4,26 @@
     <h2>Subject: {{ subject.name }} @if(getAverage(subject.grades)){Durchschnitt: {{getAverage(subject.grades)}}}</h2>
       <tr>
           <th>date</th>
-          <th>grade</th>
-          <th>weight</th>
+          <th>name</th>
           <th>message</th>
           <th>fileId</th>
+          <th>weight</th>
+          <th>grade</th>
       </tr>
       @for (g of subject.grades; track g.fileId ?? $index) {
           <tr>
               <th>{{g.date}}</th>
-              <th>{{g.grade}}</th>
-              <th>{{g.weight}}</th>
+              <th>{{g.testName}}</th>
               <th>{{g.message}}</th>
-              @if (g.fileId){
-                <button (click)="getFile(g.fileId)">
-                  Download
-                </button>
-              }
+              <th>
+                @if (g.fileId){
+                  <button (click)="getFile(g.fileId)">
+                    Download
+                  </button>
+                }
+              </th>
+              <th>{{g.weight}}</th>
+              <th>{{g.grade}}</th>
           </tr>
       }
   </section>
