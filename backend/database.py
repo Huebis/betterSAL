@@ -149,7 +149,7 @@ class Database:
             starttime TEXT NOT NULL,
             endtime TEXT NOT NULL,
             describtion TEXT,
-            type TEXT            
+            type INT            
         );
         """
         self.cursor.execute(tableCreationQuery)
@@ -297,6 +297,12 @@ class Database:
         self.conn.commit()
         return True
 
+    def addNewEvent(self,eventID,location,date,starttime,endtime,describtion,kind):
+        sql = "INSERT INTO event (eventid, location, date, starttime, endtime, describtion, type) VALUES (?,?,?,?,?,?,?)"
+        self.cursor.execute(sql, (eventID,location,date, starttime, endtime, describtion, kind))
+        self.conn.commit()
+        return True
+
 
 
     
@@ -397,18 +403,25 @@ class Database:
         return output
 
     def getAllGradesWithCourseIDAndUserID(self,courseID, userID):
-        sql = """SELECT 
-            e.testname, 
-            e.weight, 
-            e.changedatum,
-            g.grade,
-            g.message,
-            g.fileId
-            FROM Examen AS e
+        sql = """
+        FROM 
+            SELECT 
+                ex.testname, 
+                ex.weight, 
+                ex.changedatum,
+                ex.courseid,
+                ex.eventid,
+                g.grade,
+                g.message,
+                g.fileId
+                ev.date
+            FROM examen AS ex
             LEFT JOIN grade AS g
-            ON g.eventid = e.eventid
-            AND g.userid = ?
-            WHERE e.courseid = ?;
+                ON g.eventid = ex.eventid
+                AND g.userid = ?
+            INNER JOIN event AS ev
+                ON ev.eventid = ex.eventid
+            WHERE ex.courseid = ?;
             """
         self.cursor.execute(sql,(userID, courseID))
         output = self.cursor.fetchall()

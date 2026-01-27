@@ -1,0 +1,9 @@
+
+
+Bei Login Role mitgeben
+
+Token alle in Header (Daten in URL)
+
+Post zu GET (meistens)
+
+Test mit files machen (low)

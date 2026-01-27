@@ -25,7 +25,7 @@ def getAllGradesforStudents(db, userID):
             gradeDict ={
                 "testName": grade[0],
                 "weight": grade[1],
-                "changedatum": grade[2],
+                "changedate": grade[2],
                 "grade": grade[3],
                 "message": grade[4],
                 "fileID": grade[5]
