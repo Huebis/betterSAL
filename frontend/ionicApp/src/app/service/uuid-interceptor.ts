@@ -1,4 +1,4 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import {
   HttpEvent,
   HttpHandler,
@@ -8,16 +8,17 @@ import {
 import { Observable } from 'rxjs';
 import { AuthService } from './auth';
 
-
+@Injectable()
 export class UuidInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    console.log("interceptor works");
     const uuid = this.authService.getUuid();
-    console.log("interceptor works")
+    
     if (!uuid) {
-      console.log("no uuid")
-      return next.handle(req)
+      console.log("no uuid");
+      return next.handle(req);
     };
 
     const cloned = req.clone({

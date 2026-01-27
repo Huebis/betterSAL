@@ -5,8 +5,9 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class Api {
-  private baseUrl = 'http://127.0.0.1:5000/betterSAL/api/';
+export class ApiService {
+  private baseUrl = 'https://huebis.dev/betterSAL/api/';
+  //private baseUrl = 'http://127.0.0.1:5000/betterSAL/api/';
 
   constructor(private http: HttpClient) {}
 

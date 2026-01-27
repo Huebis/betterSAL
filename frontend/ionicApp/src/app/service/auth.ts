@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly UUID_KEY = 'client_uuid';
+  private readonly UUID_KEY = 'uuid';
 
   setUuid(uuid: string) {
     localStorage.setItem(this.UUID_KEY, uuid);
