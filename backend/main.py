@@ -161,6 +161,11 @@ def postAllGradesFromUser():
     if userID == False:
         return jsonify({"error": "token ist nicht valid"}), 403
 
+
+    role = db.getRolefromUserWithUserID(userID)
+    if role != 1:#überprüft ob es wirklich ein Schüler*in ist
+        return jsonify({"error": "user do not have the permission to enter the site"}), 403
+
     output = service.getAllGradesforStudents(db,userID)
 
 

@@ -8,9 +8,7 @@ uploadFolder = "user_documents"
 
 
 def getAllGradesforStudents(db, userID):
-    role = db.getRolefromUserWithUserID(userID)
-    if role != 1:#überprüft ob es wirklich ein Schüler*in ist
-        return False
+    
     courses = db.getALLCourseWithUserID(userID)
 
     if courses == []:
