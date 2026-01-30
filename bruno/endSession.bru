@@ -4,16 +4,14 @@ meta {
   seq: 3
 }
 
-post {
+get {
   url: http://127.0.0.1:5000/endSession
   body: json
   auth: inherit
 }
 
-body:json {
-  {
-    "token":"2f7fec76-a547-4a43-a2a3-8635b3a72eea"
-  }
+headers {
+  token: 68069e6a-86ba-42cb-8fbd-2836b0138458
 }
 
 settings {

@@ -4,16 +4,14 @@ meta {
   seq: 6
 }
 
-post {
+get {
   url: http://127.0.0.1:5000/getGradesStudent
   body: json
   auth: inherit
 }
 
-body:json {
-  {
-    "token": "dc58d14e-807f-4ca1-be70-98db8ef57aa5"
-  }
+headers {
+  token: 0d02f2cb-97ba-42c3-a0f2-e3483f60c4b7
 }
 
 settings {

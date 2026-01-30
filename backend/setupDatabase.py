@@ -78,7 +78,7 @@ def insertTestDataTableUserAndCourse(db):
     
     for a,grade in enumerate(testGradesfuerEliahEnglisch):
         eventID = str(uuid.uuid4())
-        db.addNewExamen(FranzösischM4GcourseID, eventID,grade[0],grade[1])
+        db.addNewExamen(EnglischM4GcourseID, eventID,grade[0],grade[1])
         db.addNewGrade(testData[0][0], eventID,grade[3],grade[4])
         db.addNewEvent(eventID,testevents[a][0],testevents[a][1],testevents[a][2],testevents[a][3],testevents[a][4],testevents[a][5])
     

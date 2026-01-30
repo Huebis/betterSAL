@@ -36,16 +36,23 @@ CORS(app)
 @app.route('/changePassword', methods=["POST"])
 def requestChangePassword():
 
+
+    token = request.headers.get("token")
+
+
+    if not token:
+        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
+
     data = request.get_json()
 
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if "password" not in data or "newpassword" not in data or "token" not in data:
-        return jsonify({"error": "password, neues password und token wurden nicht übermittelt"}), 400
+    if "password" not in data or "newpassword" not in data:
+        return jsonify({"error": "password oder/und neues password wurden nicht übermittelt"}), 400
 
 
-    token = data["token"]
+
     db = get_db()
 
     userID = db.getUseridFromToken(token)
@@ -95,37 +102,33 @@ def loginUser():
 
 
 
-@app.route('/endSession', methods=["Post"])
+@app.route('/endSession', methods=["Get"])
 def deletToken():
-    data = request.get_json()
-    print(data)
 
-    if not data:
-        return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if "token" not in data:
+    token = request.headers.get("token")
+
+
+    if not token:
         return jsonify({"error": "Token wurden nicht übermittelt"}), 400
 
-    token = data["token"]
+
     db = get_db()
     db.deletToken(token)
 
     return jsonify({}), 200
 
 
-@app.route('/userData', methods=["POST"])
+@app.route('/userData', methods=["Get"])
 def postAllUserInformation():
-    data = request.get_json()
 
-    if not data:
-        return jsonify({"error": "kein JSON gesendet"}), 400
-
-    if "token" not in data:
-        return jsonify({"error": "token wurden nicht übermittelt"}), 400
+    token = request.headers.get("token")
 
 
+    if not token:
+        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
 
-    token = data["token"]
+
     db = get_db()
 
     userID = db.getUseridFromToken(token)
@@ -140,19 +143,19 @@ def postAllUserInformation():
 
 
 
-@app.route('/getGradesStudent', methods=["POST"])
+@app.route('/getGradesStudent', methods=["Get"])
 def postAllGradesFromUser():
-    data = request.get_json()
 
-    if not data:
-        return jsonify({"error": "kein JSON gesendet"}), 400
-
-    if "token" not in data:
-        return jsonify({"error": "token wurden nicht übermittelt"}), 400
+    token = request.headers.get("token")
 
 
+    if not token:
+        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
 
-    token = data["token"]
+
+
+
+
     db = get_db()
 
     userID = db.getUseridFromToken(token)
@@ -176,20 +179,6 @@ def postAllGradesFromUser():
 #Tests#
 ########################################
 
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/login', methods=['POST'])
-def login():
-    username = request.form['username']
-    password = request.form['password']
-
-
-    if database.isUserValid(username,password):
-        return render_template("login.html")
-    return render_template("loginNotRight.html")
 
 
 

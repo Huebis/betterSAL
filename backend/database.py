@@ -404,7 +404,6 @@ class Database:
 
     def getAllGradesWithCourseIDAndUserID(self,courseID, userID):
         sql = """
-        FROM 
             SELECT 
                 ex.testname, 
                 ex.weight, 
@@ -413,7 +412,7 @@ class Database:
                 ex.eventid,
                 g.grade,
                 g.message,
-                g.fileId
+                g.fileId,
                 ev.date
             FROM examen AS ex
             LEFT JOIN grade AS g
