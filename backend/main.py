@@ -81,18 +81,17 @@ def loginUser():
     password = data["password"]
 
     userID = db.isUserValid_getUserID(username,password)
+    
 
 
-
-    #test
-    db.getALLCourseWithUserID(userID)
 
     if userID == False:
         return jsonify({"error": "username and password are wrong"}), 400
 
     token = db.addNewToken(userID)
+    role = db.getRolefromUserWithUserID(userID)
 
-    return jsonify({"token": token}), 200
+    return jsonify({"token": token, "role": role}), 200
 
 
 

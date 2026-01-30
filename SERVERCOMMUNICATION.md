@@ -10,6 +10,7 @@ username (plain, json)
 password (plain, json)
 #### output
 token
+role
 
 ### register
 /register_user
