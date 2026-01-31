@@ -152,6 +152,8 @@ class Database:
             type INT            
         );
         """
+
+        # type Exam = 666
         self.cursor.execute(tableCreationQuery)
         self.conn.commit()
         return True
@@ -302,7 +304,29 @@ class Database:
         self.cursor.execute(sql, (eventID,location,date, starttime, endtime, describtion, kind))
         self.conn.commit()
         return True
+    
+    def addNewGradesForExamForEveryoneInCourse(self,courseID,eventID):
+        sql = """INSERT INTO grade (userid, eventid, grade, message, fileid)
+            SELECT userid, ?, 0, '',''
+            FROM course
+            WHERE courseID = '?';
+            """    
+        self.cursor.execute(sql, (eventID,courseID))
+        self.conn.commit()
+        return True
 
+    def changeGradeWithUserIDandEventID(self, userID, eventID, grade, message,fileID):
+        sql """ UPDATE grade
+        SET grade = ?
+            message = ?
+            fileid = ?
+        WHERE userid = ?
+            AND eventid = ?;        
+        """
+
+        self.cursor.execute(sql, (grade, message, fileID, userID, eventID))
+        self.conn.commit()
+        return True
 
 
     
@@ -435,6 +459,32 @@ class Database:
         self.conn.commit()
 
         return output[0][0]
+
+    def isUserIDinCourse(self,userID,courseID):
+        sql =     sql = """SELECT CASE
+            WHEN EXISTS (
+                SELECT 1
+                FROM course
+                WHERE userID = ?
+                    AND courseID = ?
+            )
+            THEN 1
+            ELSE 0
+            END;
+        """
+
+        cur = conn.cursor()
+        cur.execute(sql, (user_id, course_id))
+        
+        self.cursor.execute(sql, (userID,))
+        output = cur.fetchone()[0] 
+        self.conn.commit()
+
+        if output == 1:
+            return True
+        return False
+
+
 
 
     """

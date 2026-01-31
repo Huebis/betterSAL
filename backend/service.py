@@ -1,5 +1,5 @@
 import database
-
+import uuid
 import os
 
 
@@ -39,6 +39,12 @@ def getAllGradesforStudents(db, userID):
 
     return output
             
+def addNewExamenForCourseWithEventAndDefaultGrades(db,courseID,examenName,weight,location,date,starttime,endtime,describtion):
+    eventID = str(uuid.uuid4())
+    db.addNewExamen(courseID,eventID,examenName,weight)
+    db.addNewGradesForExamForEveryoneInCourse(courseID,eventID)
+    db.addNewEvent(eventID,location,date,starttime,endtime,describtion, 666)
+    return True
 
 
 
