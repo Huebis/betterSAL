@@ -38,7 +38,7 @@ def insertTestDataTableUserAndCourse(db):
         row[0] = db.addNewUser(row[1],row[2],row[3],row[4],row[5],row[6])
 
         if(row[6] == 1 or row[1] == "Anklin"):
-            print("hello")
+            #print("hello")
             db.addNewCourse(FranzösischM4GcourseID,row[0],"F","F-M4G-26")
         if(row[6] == 1 or row[1] == "Zulauf"):
             db.addNewCourse(EnglischM4GcourseID,row[0],"E","E-M4G-26")
@@ -61,15 +61,27 @@ def insertTestDataTableUserAndCourse(db):
     ["Statistics Final Exam", 0.5, "2024-07-05", 6.89, "Very good understanding"]
     ]
 
-    for grade in testGradesfuerEliahFranzösisch:
+    testevents = [
+    ["Berlin", "2026-02-01", "10:00", "12:00", "Technologie Konferenz", 666],
+    ["Hamburg", "2026-02-03", "18:00", "22:00", "Live Konzert in der Innenstadt", 666],
+    ["München", "2026-02-05", "09:00", "17:00", "Ganztägiger Workshop", 666],
+    ["Köln", "2026-02-10", "20:00", "23:00", "Comedy Abend", 666],
+    ["Frankfurt", "2026-02-15", "14:00", "18:00", "Business Networking Event", 666]
+    ]
+
+
+    for a,grade in enumerate(testGradesfuerEliahFranzösisch):
         eventID = str(uuid.uuid4())
         db.addNewExamen(FranzösischM4GcourseID, eventID,grade[0],grade[1])
         db.addNewGrade(testData[0][0], eventID,grade[3],grade[4])
+        db.addNewEvent(eventID,testevents[a][0],testevents[a][1],testevents[a][2],testevents[a][3],testevents[a][4],testevents[a][5])
     
-    for grade in testGradesfuerEliahEnglisch:
+    for a,grade in enumerate(testGradesfuerEliahEnglisch):
         eventID = str(uuid.uuid4())
-        db.addNewExamen(FranzösischM4GcourseID, eventID,grade[0],grade[1])
+        db.addNewExamen(EnglischM4GcourseID, eventID,grade[0],grade[1])
         db.addNewGrade(testData[0][0], eventID,grade[3],grade[4])
+        db.addNewEvent(eventID,testevents[a][0],testevents[a][1],testevents[a][2],testevents[a][3],testevents[a][4],testevents[a][5])
+    
 
 
     return True

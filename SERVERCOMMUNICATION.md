@@ -10,6 +10,7 @@ username (plain, json)
 password (plain, json)
 #### output
 token
+role
 
 ### register
 /register_user
@@ -62,11 +63,11 @@ token
 subjects:[{name,[{ grade, date, message, fileId},...]},...](json) 
 
 
-### createTest
-/create_test
+### addNewTest
+/addNewTest
 #### input
 token
-course, testName, date, startTime, endTime, weight (json)
+courseID, testName, weight, location, date, starttime, endtime, describtion
 
 
 ### getTest
@@ -84,7 +85,7 @@ token
 {testId,students:{{studentName, grade, message, fileId},...}} (json)
 
 
-### getTests
+### getAllTests
 /get_tests
 #### input
 token

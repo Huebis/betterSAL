@@ -1,0 +1,20 @@
+meta {
+  name: RS getGradesStudent
+  type: http
+  seq: 10
+}
+
+post {
+  url: https://huebis.dev/betterSAL/api/getGradesStudent
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {"token":"e8c9ff36-f484-44ff-9240-e1f36fad3563"}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

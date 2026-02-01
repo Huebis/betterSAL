@@ -1,0 +1,33 @@
+meta {
+  name: addNewTest
+  type: http
+  seq: 8
+}
+
+post {
+  url: http://127.0.0.1:5000/addNewTest
+  body: json
+  auth: inherit
+}
+
+headers {
+  token: 379a734c-4cb0-4648-ba61-9f17db4d818e
+}
+
+body:json {
+  {
+    "courseID": "54add817-ee3b-454f-a059-1fd17ff6b1a6",
+    "testName": "testtesttest",
+    "weight": 0.99,
+    "location": "P0000",
+    "date": "28.08.2006",
+    "starttime": "11:30",
+    "endtime": "12:30",
+    "description": "testtesttest"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

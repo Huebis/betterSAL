@@ -1,19 +1,17 @@
 meta {
   name: Userdata
   type: http
-  seq: 4
+  seq: 5
 }
 
-post {
+get {
   url: http://127.0.0.1:5000/userData
   body: json
   auth: inherit
 }
 
-body:json {
-  {
-    "token": "f24eac1b-3914-44d9-ba09-aa8b112bc09d"
-  }
+headers {
+  token: 52e4df3b-ac18-4d67-8c0a-c313be8ec10c
 }
 
 settings {

@@ -149,9 +149,11 @@ class Database:
             starttime TEXT NOT NULL,
             endtime TEXT NOT NULL,
             describtion TEXT,
-            type TEXT            
+            type INT            
         );
         """
+
+        # type Exam = 666
         self.cursor.execute(tableCreationQuery)
         self.conn.commit()
         return True
@@ -297,6 +299,34 @@ class Database:
         self.conn.commit()
         return True
 
+    def addNewEvent(self,eventID,location,date,starttime,endtime,describtion,kind):
+        sql = "INSERT INTO event (eventid, location, date, starttime, endtime, describtion, type) VALUES (?,?,?,?,?,?,?)"
+        self.cursor.execute(sql, (eventID,location,date, starttime, endtime, describtion, kind))
+        self.conn.commit()
+        return True
+    
+    def addNewGradesForExamForEveryoneInCourse(self,courseID,eventID):
+        sql = """INSERT INTO grade (userid, eventid, grade, message, fileid)
+            SELECT userid, ?, 0, '',''
+            FROM course
+            WHERE courseID = ?;
+            """    
+        self.cursor.execute(sql, (eventID,courseID))
+        self.conn.commit()
+        return True
+
+    def changeGradeWithUserIDandEventID(self, userID, eventID, grade, message,fileID):
+        sql = """UPDATE grade
+        SET grade = ?,
+            message = ?,
+            fileid = ?
+        WHERE userid = ?
+            AND eventid = ?;        
+        """
+
+        self.cursor.execute(sql, (grade, message, fileID, userID, eventID))
+        self.conn.commit()
+        return True
 
 
     
@@ -389,26 +419,49 @@ class Database:
 
 
     def getALLCourseWithUserID(self,userID):
-        sql = "SELECT courseid,subject FROM course WHERE userid = ?"
+        sql = "SELECT courseid,subject,courseName FROM course WHERE userid = ?"
         self.cursor.execute(sql, (userID,))
         output = self.cursor.fetchall()
         self.conn.commit()
 
         return output
 
-    def getAllGradesWithCourseIDAndUserID(self,courseID, userID):
+
+    def getAllExamsFromCourseID(self,courseID):
         sql = """SELECT 
-            e.testname, 
-            e.weight, 
-            e.changedatum,
-            g.grade,
-            g.message,
-            g.fileId
-            FROM Examen AS e
+        ex.testname, 
+        ex.weight,
+        ev.date
+        FROM examen AS ex
+        INNER JOIN event AS ev
+            ON ex.eventid = ev.eventid
+        WHERE courseid = ?;
+        """
+        self.cursor.execute(sql, (courseID,))
+        output = self.cursor.fetchall()
+        self.conn.commit()
+
+        return output
+
+    def getAllGradesWithCourseIDAndUserID(self,courseID, userID):
+        sql = """
+            SELECT 
+                ex.testname, 
+                ex.weight, 
+                ex.changedatum,
+                ex.courseid,
+                ex.eventid,
+                g.grade,
+                g.message,
+                g.fileId,
+                ev.date
+            FROM examen AS ex
             LEFT JOIN grade AS g
-            ON g.eventid = e.eventid
-            AND g.userid = ?
-            WHERE e.courseid = ?;
+                ON g.eventid = ex.eventid
+                AND g.userid = ?
+            INNER JOIN event AS ev
+                ON ev.eventid = ex.eventid
+            WHERE ex.courseid = ?;
             """
         self.cursor.execute(sql,(userID, courseID))
         output = self.cursor.fetchall()
@@ -423,6 +476,29 @@ class Database:
         self.conn.commit()
 
         return output[0][0]
+
+    def isUserIDinCourse(self,userID,courseID):
+        sql =     sql = """SELECT CASE
+            WHEN EXISTS (
+                SELECT 1
+                FROM course
+                WHERE userid = ?
+                    AND courseid = ?
+            )
+            THEN 1
+            ELSE 0
+            END;
+        """
+       
+        self.cursor.execute(sql, (userID, courseID))
+        output = self.cursor.fetchone()[0] 
+        self.conn.commit()
+
+        if output == 1:
+            return True
+        return False
+
+
 
 
     """
