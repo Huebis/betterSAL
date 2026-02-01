@@ -309,16 +309,16 @@ class Database:
         sql = """INSERT INTO grade (userid, eventid, grade, message, fileid)
             SELECT userid, ?, 0, '',''
             FROM course
-            WHERE courseID = '?';
+            WHERE courseID = ?;
             """    
         self.cursor.execute(sql, (eventID,courseID))
         self.conn.commit()
         return True
 
     def changeGradeWithUserIDandEventID(self, userID, eventID, grade, message,fileID):
-        sql """ UPDATE grade
-        SET grade = ?
-            message = ?
+        sql = """UPDATE grade
+        SET grade = ?,
+            message = ?,
             fileid = ?
         WHERE userid = ?
             AND eventid = ?;        
@@ -419,8 +419,25 @@ class Database:
 
 
     def getALLCourseWithUserID(self,userID):
-        sql = "SELECT courseid,subject FROM course WHERE userid = ?"
+        sql = "SELECT courseid,subject,courseName FROM course WHERE userid = ?"
         self.cursor.execute(sql, (userID,))
+        output = self.cursor.fetchall()
+        self.conn.commit()
+
+        return output
+
+
+    def getAllExamsFromCourseID(self,courseID):
+        sql = """SELECT 
+        ex.testname, 
+        ex.weight,
+        ev.date
+        FROM examen AS ex
+        INNER JOIN event AS ev
+            ON ex.eventid = ev.eventid
+        WHERE courseid = ?;
+        """
+        self.cursor.execute(sql, (courseID,))
         output = self.cursor.fetchall()
         self.conn.commit()
 
@@ -465,19 +482,16 @@ class Database:
             WHEN EXISTS (
                 SELECT 1
                 FROM course
-                WHERE userID = ?
-                    AND courseID = ?
+                WHERE userid = ?
+                    AND courseid = ?
             )
             THEN 1
             ELSE 0
             END;
         """
-
-        cur = conn.cursor()
-        cur.execute(sql, (user_id, course_id))
-        
-        self.cursor.execute(sql, (userID,))
-        output = cur.fetchone()[0] 
+       
+        self.cursor.execute(sql, (userID, courseID))
+        output = self.cursor.fetchone()[0] 
         self.conn.commit()
 
         if output == 1:

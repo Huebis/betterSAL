@@ -46,7 +46,32 @@ def addNewExamenForCourseWithEventAndDefaultGrades(db,courseID,examenName,weight
     db.addNewEvent(eventID,location,date,starttime,endtime,describtion, 666)
     return True
 
+#Teacher Only
+def getAllCoursesWithAllExamsFromUserID(db,userID): 
+     
+    courses = db.getALLCourseWithUserID(userID)
 
+    output = []
+    for course in courses:
+        exams = db.getAllExamsFromCourseID(course[0])
+        examsList = []
+        for examen in exams:
+            examenDict = {
+            "testName": examen[0],
+            "weight": examen[1],
+            "date": examen[2]
+            }
+            examsList.append(examenDict)
+
+        courseDict = {
+            "courseID": course[0],
+            "subject": course[1],
+            "courseName": course[2],
+            "exams": examsList
+        }
+        output.append(courseDict)
+
+    return output
 
 
 
