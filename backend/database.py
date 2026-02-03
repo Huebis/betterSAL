@@ -533,9 +533,9 @@ class Database:
             WHERE ex.eventid = ?;
             """
         self.cursor.execute(sql,(eventID,))
-        output = self.cursor.fetchone()
+        output = self.cursor.fetchall()
         self.conn.commit()
-        return output
+        return output[0]
 
 
 

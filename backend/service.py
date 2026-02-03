@@ -99,9 +99,10 @@ def getAllExamAndEventDataWithEventID(db,eventID):
             "testName": examData[0],
             "weight": examData[1],
             "location": examData[2],
-            "starttime": examData[3],
-            "endtime": examData[4],
-            "describtion": examData[5],
+            "date":examData[3],
+            "starttime": examData[4],
+            "endtime": examData[5],
+            "describtion": examData[6],
             }
 
     return examDict
