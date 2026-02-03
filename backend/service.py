@@ -74,8 +74,37 @@ def getAllCoursesWithAllExamsFromUserID(db,userID):
 
     return output
 
+def getAllGradesFromAllStudentsOfTest(db, eventID):
+
+    grades = db.getAllGradesPlusNamesWithEventID(eventID)
+    gradeslist = []
+    for grade in grades:
+        gradeDict ={
+            "firstName": grade[0],
+            "lastName": grade[1],
+            "grade": grade[2],
+            "message": grade[3],
+            "fileID": grade[4],
+            }
+        gradeslist.append(gradeDict)
+    
+    return gradeslist
 
 
+
+def getAllExamAndEventDataWithEventID(db,eventID):
+    examData = db.getAllExamAndEventDataWithEventID(eventID)
+
+    examDict = {
+            "testName": examData[0],
+            "weight": examData[1],
+            "location": examData[2],
+            "starttime": examData[3],
+            "endtime": examData[4],
+            "describtion": examData[5],
+            }
+
+    return examDict
 ################ NOCH NICHT FERTIG ###############################
 def saveNewFile(file):
     oldFileName = file.filename

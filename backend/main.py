@@ -291,7 +291,7 @@ def getAllTests():
 ###########Nicht fertig #####################################
 #Teacher only
 @app.route('/getAllGradesFromTest', methods=["get"])
-def getAllGradesFromTest():
+def getAllGradesFromAllStudentsOfTest():
 
     token = request.headers.get("token")
 
@@ -317,6 +317,11 @@ def getAllGradesFromTest():
 
     if not db.isUserIDinCourse(userID,courseID):
         return jsonify({"error": "user do not have the permission to change that"}), 403
+
+    grades = service.getAllGradesFromAllStudentsOfTest(db,eventID)
+    exam = service.getAllExamAndEventDataWithEventID(db,eventID)
+
+    return jsonify({"grades": grades,"exam":exam}), 200
 
 
 

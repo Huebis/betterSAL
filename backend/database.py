@@ -420,6 +420,7 @@ class Database:
         return output
 
 
+
     def getALLCourseWithUserID(self,userID):
         sql = "SELECT courseid,subject,courseName FROM course WHERE userid = ?"
         self.cursor.execute(sql, (userID,))
@@ -498,6 +499,43 @@ class Database:
             return True
         return False
 
+    def getAllGradesPlusNamesWithEventID(self,eventID):
+        sql = """
+            SELECT 
+                u.firstname,
+                u.lastname,
+                g.grade,
+                g.message,
+                g.fileid
+            FROM grade AS g
+            INNER JOIN user AS u
+                ON g.userid = u.userid
+            WHERE g.eventid = ?;
+            """
+        self.cursor.execute(sql,(eventID,))
+        output = self.cursor.fetchall()
+        self.conn.commit()
+        return output
+
+    def getAllExamAndEventDataWithEventID(self,eventID):
+        sql = """
+            SELECT 
+                ex.testname,
+                ex.weight,
+                ev.location,
+                ev.date,
+                ev.starttime,
+                ev.endtime,
+                ev.describtion
+            FROM examen AS ex
+            INNER JOIN event AS ev
+                ON ex.eventid = ev.eventid
+            WHERE ex.eventid = ?;
+            """
+        self.cursor.execute(sql,(eventID,))
+        output = self.cursor.fetchone()
+        self.conn.commit()
+        return output
 
 
 
