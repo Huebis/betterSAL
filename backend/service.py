@@ -102,7 +102,7 @@ def getAllExamAndEventDataWithEventID(db,eventID):
             "date":examData[3],
             "starttime": examData[4],
             "endtime": examData[5],
-            "describtion": examData[6],
+            "description": examData[6],
             }
 
     return examDict
