@@ -171,7 +171,7 @@ def postAllGradesFromUser():
     output = service.getAllGradesforStudents(db,userID)
 
 
-    return jsonify({"grades": output}), 200
+    return jsonify({"subjects": output}), 200
 
 
 
@@ -284,6 +284,39 @@ def getAllTests():
     output = service.getAllCoursesWithAllExamsFromUserID(db,userID)
 
     return jsonify({"courses": output}), 200
+
+
+
+
+###########Nicht fertig #####################################
+#Teacher only
+@app.route('/getAllGradesFromTest', methods=["get"])
+def getAllGradesFromTest():
+
+    token = request.headers.get("token")
+
+
+    if not token:
+        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
+
+
+    db = get_db()
+
+    userID = db.getUseridFromToken(token)
+
+    if userID == False:
+        return jsonify({"error": "token ist nicht valid"}), 403
+
+
+    role = db.getRolefromUserWithUserID(userID)
+    if role != 2:#überprüft ob es wirklich ein Lehrer*in ist
+        return jsonify({"error": "user do not have the permission to change that"}), 403
+
+    eventID = request.args.get("eventID")
+    courseID = request.args.get("courseID")
+
+    if not db.isUserIDinCourse(userID,courseID):
+        return jsonify({"error": "user do not have the permission to change that"}), 403
 
 
 

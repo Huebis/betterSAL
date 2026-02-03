@@ -25,10 +25,10 @@ def getAllGradesforStudents(db, userID):
             gradeDict ={
                 "testName": grade[0],
                 "weight": grade[1],
-                "changedate": grade[2],
-                "grade": grade[3],
-                "message": grade[4],
-                "fileID": grade[5]
+                "grade": grade[2],
+                "message": grade[3],
+                "fileID": grade[4],
+                "date": grade[5]
                 }
             grades.append(gradeDict)
         courseDict = {
@@ -59,7 +59,8 @@ def getAllCoursesWithAllExamsFromUserID(db,userID):
             examenDict = {
             "testName": examen[0],
             "weight": examen[1],
-            "date": examen[2]
+            "date": examen[2],
+            "eventID": examen[3]
             }
             examsList.append(examenDict)
 

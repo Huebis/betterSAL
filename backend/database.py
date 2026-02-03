@@ -433,7 +433,8 @@ class Database:
         sql = """SELECT 
         ex.testname, 
         ex.weight,
-        ev.date
+        ev.date,
+        ex.eventid
         FROM examen AS ex
         INNER JOIN event AS ev
             ON ex.eventid = ev.eventid
@@ -450,9 +451,6 @@ class Database:
             SELECT 
                 ex.testname, 
                 ex.weight, 
-                ex.changedatum,
-                ex.courseid,
-                ex.eventid,
                 g.grade,
                 g.message,
                 g.fileId,

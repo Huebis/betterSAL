@@ -86,14 +86,21 @@ token
 
 
 ### getAllTests
-/get_tests
+/getAllTests
 #### input
 token
 #### output
 {{courseId, subject, tests,{{testId, name, date, greaded},...}}...} (json)
 
 
+###getAllGradesFromTest
+/getAllGradesFromTest
+### input
+token
+eventID (in url)
+courseID (in url)
 
+### Output
 
 ## ERRORS
 
