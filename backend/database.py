@@ -23,7 +23,9 @@ class Database:
             classname TEXT NOT NULL,
             major TEXT NOT NULL,
             email TEXT NOT NULL,
-            role INT NOT NULL
+            role INT NOT NULL,
+            firstname TEXT NOT NULL,
+            lastname TEXT NOT NULL
         );
         """
         self.cursor.execute(table_creation_query)
@@ -268,15 +270,15 @@ class Database:
             return True
         return False
 
-    def addNewUser(self,username,password,classname,major,email,role):
+    def addNewUser(self,username,password,classname,major,email,role,firstName, lastName):
 
         if self.isUserExist(username):
             return False
 
 
-        sql = "INSERT INTO user (userid,username,password,classname,major,email,role) VALUES (?,?,?,?,?,?,?)"
+        sql = "INSERT INTO user (userid,username,password,classname,major,email,role,firstname,lastname) VALUES (?,?,?,?,?,?,?,?,?)"
         userID = str(uuid.uuid4())
-        self.cursor.execute(sql, (userID,username,password,classname,major,email,role))
+        self.cursor.execute(sql, (userID,username,password,classname,major,email,role,firstName,lastName))
         self.conn.commit()
 
         
@@ -431,7 +433,8 @@ class Database:
         sql = """SELECT 
         ex.testname, 
         ex.weight,
-        ev.date
+        ev.date,
+        ex.eventid
         FROM examen AS ex
         INNER JOIN event AS ev
             ON ex.eventid = ev.eventid
@@ -448,9 +451,6 @@ class Database:
             SELECT 
                 ex.testname, 
                 ex.weight, 
-                ex.changedatum,
-                ex.courseid,
-                ex.eventid,
                 g.grade,
                 g.message,
                 g.fileId,
