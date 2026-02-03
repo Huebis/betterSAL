@@ -276,7 +276,7 @@ class Database:
             return False
 
 
-        sql = "INSERT INTO user (userid,username,password,classname,major,email,role,firstname,lastname) VALUES (?,?,?,?,?,?,?)"
+        sql = "INSERT INTO user (userid,username,password,classname,major,email,role,firstname,lastname) VALUES (?,?,?,?,?,?,?,?,?)"
         userID = str(uuid.uuid4())
         self.cursor.execute(sql, (userID,username,password,classname,major,email,role,firstName,lastName))
         self.conn.commit()

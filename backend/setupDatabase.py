@@ -11,7 +11,7 @@ db = database.Database()
 def insertTestDataTableUserAndCourse(db):
     testData = [
             [0,"Eliah" , "Eliah", "M4G", "A","test@test.ch", 1,"Eliah", "Hueber"],
-            [0,"Emil" , "Emil", "M4G", "B","test@test.ch", 1,,"Emil", "Peterson"],
+            [0,"Emil" , "Emil", "M4G", "B","test@test.ch", 1,"Emil", "Peterson"],
             [0,"Nahia" , "Nahia", "M4G", "B","test@test.ch", 1,"Nahia", "Weyeneth"],
             [0,"Paul" , "Paul", "M4G", "W","test@test.ch", 1,"Paul", "Konzili"],
             [0,"Esben" , "Esben", "M4G", "A","test@test.ch", 1,"Esben", "Duss"],
