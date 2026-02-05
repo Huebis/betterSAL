@@ -1,29 +1,30 @@
-<ion-item>
-  <ion-input
-    [(ngModel)]="username"
-    name="username"
-    label="Text" 
-    placeholder="Enter text"
-    label-placement="floating" 
-    fill="outline" 
-    value="">
-  </ion-input>
-<ion-item>
-</ion-item>
-  <ion-input
-    [(ngModel)]="password"
-    name="password"
-    label="Password" 
-    type="password" 
-    placeholder="Enter password"
-    label-placement="floating" 
-    fill="outline" 
-    value="">
-    <ion-input-password-toggle 
-      slot="end">
-    </ion-input-password-toggle>
-  </ion-input>
-  <ion-button (click)="login()">
-    login
-  </ion-button>
-</ion-item>
+<ion-content>
+  <div class="loginwindow">
+
+    <ion-input
+      [(ngModel)]="username"
+      name="username"
+      label="Username" 
+      placeholder="Enter text"
+      label-placement="floating" 
+      fill="outline" 
+      value="">
+    </ion-input>
+    <ion-input
+      [(ngModel)]="password"
+      name="password"
+      label="Password" 
+      type="password" 
+      placeholder="Enter password"
+      label-placement="floating" 
+      fill="outline" 
+      value="">
+      <ion-input-password-toggle 
+        slot="end">
+      </ion-input-password-toggle>
+    </ion-input>
+    <ion-button (click)="login()">
+      login
+    </ion-button>
+  </div>
+</ion-content>
