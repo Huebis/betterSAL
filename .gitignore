@@ -47,6 +47,8 @@ www/
 platforms/
 /plugins
 
+#Android
+android/
 
 # Compiled output
 dist/
