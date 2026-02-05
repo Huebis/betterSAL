@@ -2,6 +2,7 @@ import database
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 import uuid
+import service
 
 
 
@@ -69,13 +70,12 @@ def insertTestDataTableUserAndCourse(db):
     ["Frankfurt", "2026-02-15", "14:00", "18:00", "Business Networking Event", 666]
     ]
 
+    
+    
 
     for a,grade in enumerate(testGradesfuerEliahFranzösisch):
-        eventID = str(uuid.uuid4())
-        db.addNewExamen(FranzösischM4GcourseID, eventID,grade[0],grade[1])
-        db.addNewGrade(testData[0][0], eventID,grade[3],grade[4])
-        db.addNewEvent(eventID,testevents[a][0],testevents[a][1],testevents[a][2],testevents[a][3],testevents[a][4],testevents[a][5])
-    
+        service.addNewExamenForCourseWithEventAndDefaultGrades(db,FranzösischM4GcourseID,grade[0],grade[1],"P001",grade[2],"11:30","12:30","Dies ist die Describtion oder Description")
+           
     for a,grade in enumerate(testGradesfuerEliahEnglisch):
         eventID = str(uuid.uuid4())
         db.addNewExamen(EnglischM4GcourseID, eventID,grade[0],grade[1])
