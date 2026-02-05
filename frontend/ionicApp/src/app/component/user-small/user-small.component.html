@@ -1,11 +1,5 @@
-<ion-menu side="end" menuId="user" type="push" contentId="main-content">
-    <ion-content>
-        <ion-button (click)="closeMenu()">Click to close the menu</ion-button>
-    </ion-content>
-</ion-menu>
 <div id="main-content">
-    <ion-avatar>
+    <ion-avatar (click)="navigateTo('/login')">
         <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
-        <ion-button (click)="openMenu()">click</ion-button>
     </ion-avatar>
 </div>

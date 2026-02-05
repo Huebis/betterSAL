@@ -26,9 +26,10 @@ export class LoginPage  implements OnInit {
       username:this.username,
       password:this.password
     }
-    this.api.sendRequest(data,"login").subscribe({
+    this.api.sendRequestPost(data,"login").subscribe({
       next: res => {
         this.authService.setUuid(res["token"]);
+        this.authService.setRole(res["role"]);
         this.username="";
         this.password="";
         this.router.navigate(['/home'])

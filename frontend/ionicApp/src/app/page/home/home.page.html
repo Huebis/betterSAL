@@ -1,5 +1,10 @@
 <ion-header [translucent]="true">
   <ion-toolbar class="navbar">
+    <ion-item>
+      <ion-button (click)="navigateTo('/home/grades')">
+        Grades
+      </ion-button>
+    </ion-item>
     <ion-item slot="end">
       <app-user-small></app-user-small>
     </ion-item>
