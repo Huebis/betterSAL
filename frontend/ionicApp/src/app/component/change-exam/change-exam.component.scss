@@ -1,0 +1,7 @@
+.examValues{
+    --ion-item-background: transparent;
+    --ion-item-background-focused: transparent;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr; /* Adjust number of columns here */
+    gap: 10px; /* Space between items */
+}

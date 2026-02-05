@@ -22,7 +22,7 @@ export class UuidInterceptor implements HttpInterceptor {
     };
 
     const cloned = req.clone({
-      body: {...req.body,'token': uuid }
+      headers: req.headers.set('token', uuid)
     });
 
     return next.handle(cloned);

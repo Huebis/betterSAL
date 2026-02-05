@@ -1,30 +1,85 @@
-@for (subject of subjects; track subject.name) {
+Grades
+@for (subject of subjects; track subject.grades) {
+  <section class="subject">
+      <ion-button (click)="toggleSubject(subject)" class="subject-band">
+        <ion-label class="subject-name" slot="start">
+          Subject: {{ subject.name }}
+        </ion-label>
+        <ion-label class="subject-average" slot="end">
+          @if(getAverage(subject.grades)){Average: {{getAverage(subject.grades)}}}
+        </ion-label>
+      </ion-button>
 
-  <section>
-    <h2>Subject: {{ subject.name }} @if(getAverage(subject.grades)){Durchschnitt: {{getAverage(subject.grades)}}}</h2>
-      <tr>
-          <th>date</th>
-          <th>name</th>
-          <th>message</th>
-          <th>fileId</th>
-          <th>weight</th>
-          <th>grade</th>
-      </tr>
-      @for (g of subject.grades; track g.fileId ?? $index) {
-          <tr>
-              <th>{{g.date}}</th>
-              <th>{{g.testName}}</th>
-              <th>{{g.message}}</th>
-              <th>
-                @if (g.fileId){
-                  <button (click)="getFile(g.fileId)">
-                    Download
-                  </button>
-                }
-              </th>
-              <th>{{g.weight}}</th>
-              <th>{{g.grade}}</th>
-          </tr>
-      }
+      <div [ngClass]="{'expanded': subject.open, 'collapsed': !subject.open}">
+        @if (subject.open){
+          <ion-list>
+              <ion-item class="date">
+                <ion-label class="full-text">
+                  Date
+                </ion-label>
+                <ion-label class="first-letter">
+                  D
+                </ion-label>
+              </ion-item>
+              <ion-item class="name">
+                <ion-label class="full-text">
+                  Theme
+                </ion-label>
+                <ion-label class="first-letter">
+                  T
+                </ion-label>
+              </ion-item>
+              <ion-item class="message">
+                <ion-label class="full-text">
+                  Message
+                </ion-label>
+                <ion-label class="first-letter">
+                  M
+                </ion-label>
+              </ion-item>
+              <ion-item class="fileId">fileId</ion-item>
+              <ion-item class="weight">
+                <ion-label class="full-text">
+                Weight
+              </ion-label>
+              <ion-label class="first-letter">
+                W
+              </ion-label>
+            </ion-item>
+              <ion-item class="grade">
+                <ion-label class="full-text">
+                Grade
+              </ion-label>
+              <ion-label class="first-letter">
+                G
+              </ion-label>
+            </ion-item>     
+            @for (g of subject.grades; track g.fileId ?? $index) {
+                <ion-item class="date">
+                  {{g.date}}
+                </ion-item>
+                <ion-item class="name">
+                  {{g.testName}}
+                </ion-item>
+                <ion-item class="message">
+                  {{g.message}}
+                </ion-item>
+                <ion-item class="fileId">
+                  @if (g.fileId){
+                    <button (click)="getFile(g.fileId)">
+                      Download
+                    </button>
+                  }
+                </ion-item>
+                <ion-item class="weight">
+                  {{g.weight}}
+                </ion-item>
+                <ion-item class="grade">
+                  {{g.grade}}
+                </ion-item>       
+            }
+          </ion-list>
+        }
+      </div>
   </section>
 }

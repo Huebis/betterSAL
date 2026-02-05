@@ -3,9 +3,9 @@ ion-list {
     --ion-item-background-focused: transparent;
     display: grid;
     grid-template-columns: 100px 1fr 50px 50px; /* Adjust number of columns here */
+
   }
   
-
   ion-item {
     --min-height: 50px; /* Adjust height */
     justify-content: space-between; /* Space between label and note */
@@ -54,11 +54,9 @@ ion-list {
 }
 @media (min-width: 700px){
   ion-list{
-    grid-template-columns: 150px 1fr 2fr 50px 100px 100px; /* Adjust number of columns here */
     gap: 10px; /* Space between items */
-  }
-  .message,.fileId{
-    display: inline;
+    grid-template-columns: 100px 1fr 100px 50px; /* Adjust number of columns here */
+
   }
   .full-text{
     display: inline;

@@ -11,13 +11,13 @@ import { MenuController } from '@ionic/angular'; //import MenuController to acce
   styleUrls: ['./menus.component.scss'],
   imports:[IonButton, IonMenu, IonContent]
 })
-export class MenusComponent  implements AfterViewInit {
+export class MenusComponent{
 
   constructor(private menuCtrl: MenuController) {
     this.menuCtrl.enable(true);
    }
 
-  ngAfterViewInit() { 
+  ionViewDidEnter() { 
     this.openMenu("user");
   }
   openMenu(menuId:string){
@@ -26,7 +26,7 @@ export class MenusComponent  implements AfterViewInit {
   }
   closeMenu(menuId:string){
     this.menuCtrl.getOpen().then(v => console.log(v)).catch(v => console.log(v));
-    this.menuCtrl.close(menuId);
+    this.menuCtrl.close();
     this.menuCtrl.isOpen("user").then(v => console.log(v));
   }
 

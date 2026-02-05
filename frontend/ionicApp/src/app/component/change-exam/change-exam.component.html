@@ -1,0 +1,116 @@
+<p>
+  change-exam works!
+</p>
+
+<section>
+  <ion-list class="examValues">
+    <ion-item>
+      <ion-input
+        type="text"
+        [(ngModel)]="data.exam.testName"
+        name="theme"
+        label="Theme" 
+        placeholder="Enter Theme"
+        label-placement="floating" 
+        fill="outline" 
+        value="">
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input
+        type="number"
+        [(ngModel)]="data.exam.weight"
+        name="weight"
+        label="Weight" 
+        placeholder="Enter Weight"
+        label-placement="floating" 
+        fill="outline" 
+        value="">
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input
+        type="text"
+        [(ngModel)]="data.exam.description"
+        name="description"
+        label="Description" 
+        placeholder="Enter Description"
+        label-placement="floating" 
+        fill="outline" 
+        value="">
+    </ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input
+      type="text"
+      [(ngModel)]="data.exam.location"
+      name="location"
+      label="Location" 
+      placeholder="Enter Location"
+      label-placement="floating" 
+      fill="outline" 
+      value="">
+    </ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-datetime-button datetime="date"></ion-datetime-button>
+  </ion-item>
+  <ion-item>
+    <ion-datetime-button datetime="starttime"></ion-datetime-button>
+  </ion-item>
+  <ion-item>
+    <ion-datetime-button datetime="endtime"></ion-datetime-button>
+  </ion-item>
+
+    <ion-button (click)="printData()">
+      data
+    </ion-button>
+  </ion-list>
+  <ion-list class="grades">
+    @for(student of data.grades; track student.grade ){
+      <ion-item>
+        <ion-list class="gradesValues">
+          <ion-item>
+            <student class="firstname"></student>
+          </ion-item>
+        </ion-list>
+      </ion-item>
+    }
+  </ion-list>
+</section>
+
+
+
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime 
+      displayFormat="YYYY-MM-DD" 
+      pickerFormat="YYYY-MM-DD"
+      [(ngModel)]="this.data.exam.date" 
+      id="date"
+      presentation="date"
+    ></ion-datetime>
+  </ng-template>
+</ion-modal>
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime 
+      displayFormat="HH:mm" 
+      pickerFormat="HH:mm"
+      [(ngModel)]="this.data.exam.starttime" 
+      id="starttime"
+      presentation="time"
+    ></ion-datetime>
+  </ng-template>
+</ion-modal>
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime 
+      displayFormat="HH:mm" 
+      pickerFormat="HH:mm"
+      [(ngModel)]="this.data.exam.endtime" 
+      id="endtime"
+      presentation="time"
+    ></ion-datetime>
+  </ng-template>
+</ion-modal>

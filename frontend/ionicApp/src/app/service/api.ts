@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,9 +12,19 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
 
-  sendRequest(data: Object,substring: string): Observable<any> {
+  sendRequestPost(data: Object,substring: string): Observable<any> {
     console.log(JSON.stringify(data))
     return this.http.post<any>(this.baseUrl+substring, data,{ headers: new HttpHeaders({'Content-Type':'application/json'})});
+  }
+  sendRequestGet(data: any, substring: string): Observable<any> {
+    let params = new HttpParams();
+    console.log(data);
+    for (let key in data){
+      if (data[""+key]){
+        params=params.set(""+key, data[""+key]);
+      }
+    }
+    return this.http.get<any>(this.baseUrl+substring,{params});
   }
   
 }

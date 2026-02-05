@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { MenuController } from '@ionic/angular';
-import { IonButton, IonAvatar, IonMenu, IonContent } from "@ionic/angular/standalone";
+import { IonAvatar } from "@ionic/angular/standalone";
 
 import { AuthService } from '../../service/auth';
 import { ApiService } from '../../service/api';
@@ -11,14 +11,14 @@ import { ApiService } from '../../service/api';
   selector: 'app-user-small',
   templateUrl: './user-small.component.html',
   styleUrls: ['./user-small.component.scss'],
-  imports: [IonButton, IonMenu, IonContent, IonAvatar]
+  imports: [IonAvatar]
 })
 export class UserSmallComponent  implements OnInit {
   constructor(private authService: AuthService, private router: Router, private api: ApiService, private menu: MenuController) {}
 
   ngOnInit() {}
   logout(){
-    this.api.sendRequest({},"endSession").subscribe({
+    this.api.sendRequestPost({},"endSession").subscribe({
       next: res => {
         this.authService.clearUuid();
         console.log("loged out")
@@ -44,4 +44,5 @@ export class UserSmallComponent  implements OnInit {
   closeMenu(){
     this.menu.close("user");
   }
+
 }

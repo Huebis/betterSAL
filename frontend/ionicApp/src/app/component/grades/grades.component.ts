@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { IonButton, IonItem, IonLabel,  IonList, IonItemGroup} from '@ionic/angular/standalone';
 
 import { ApiService } from '../../service/api';
-
-import { Observable } from 'rxjs';
-
-
 
 export interface grade{
   date:string;
@@ -19,33 +18,64 @@ export interface subject{
   name:string;
 };
 
-
 @Component({
   selector: 'app-grades',
   templateUrl: './grades.component.html',
   styleUrls: ['./grades.component.scss'],
+  imports: [IonButton, IonItem, IonList, CommonModule,IonLabel],
 })
 export class GradesComponent  implements OnInit {
-  
-  
 
   constructor(private api: ApiService) { }
 
-  subjects: any[] = [];
-  getSubjects() {
-    this.api.sendRequest({},"/getGradesStudent").subscribe(v => {this.subjects=v.grades; console.log(v.grades)});
-  }
-  ngOnInit() {
-    this.getSubjects();
-  }
-  getAverage(grades:grade[]){
-    let average=0;
-    let amount=0;
-    grades.forEach(grade => {average+=grade.grade*grade.weight; amount+=grade.weight});
-    return Math.round(average/amount*100)/100;
-  }
-  getFile(fileId:string){
-    console.log(fileId);
+  subjects: any[] = [
+    {name:"test",open:false,grades:[
+      {date:"1",testName:"2",message:"3",weight:4,grade:5,fileId:""},
+      {date:"1",testName:"2",message:"3",weight:4,grade:5,fileId:""}
+    ]},
+    {name:"test",open:false,grades:[
+      {date:"1",testName:"2",message:"3",weight:4,grade:5,fileId:""},
+      {date:"1",testName:"2",message:"3",weight:4,grade:5,fileId:""}
+    ]},
+    {name:"test",open:false,grades:[
+      {date:"1",testName:"2",message:"3",weight:4,grade:5,fileId:""},
+      {date:"1",testName:"2",message:"3",weight:4,grade:5,fileId:""}
+    ]}
+  ];
+
+    
+    getSubjects() {
+      this.api.sendRequestGet({},"/getGradesStudent").subscribe({
+        next: res => {
+          this.subjects=res.subjects.map((v:any) => {
+            v.grades.map( (v: any) =>{
+              v.open=false; return v;
+            });
+            return v;
+          })
+          console.log(this.subjects);
+            
+        },
+        error: err => console.error('HTTP Error:', err)
+      });
+    }
+    ngOnInit() {
+      this.getSubjects();
+    }
+    getAverage(grades:grade[]){
+      let average=0;
+      let amount=0;
+      console.log(Array.isArray(grades))
+      grades.forEach(exam => {average+=exam.grade*exam.weight; amount+=exam.weight});
+      return Math.floor(average/amount*100)/100;
+    }
+    getFile(fileId:string){
+      console.log(fileId);
+    }
+    toggleSubject(subject:any){
+      subject.open=!subject.open;
+      console.log(this.subjects);
+    }
+  
   }
 
-}
