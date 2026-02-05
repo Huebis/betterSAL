@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 
-import { IonInput, IonDatetime, IonItem, IonLabel, IonButton, IonIcon, IonDatetimeButton, IonModal, IonList } from '@ionic/angular/standalone';
+import { IonInput, IonDatetime, IonItem, IonButton, IonDatetimeButton, IonModal, IonList, IonFooter, IonHeader, IonContent, IonToolbar } from '@ionic/angular/standalone';
 import { ApiService } from 'src/app/service/api';
 
 
@@ -33,7 +33,7 @@ export interface Data{
   selector: 'app-change-exam',
   templateUrl: './change-exam.component.html',
   styleUrls: ['./change-exam.component.scss'],
-  imports: [FormsModule, IonInput, IonDatetime, IonItem, IonLabel, IonButton, IonIcon, IonDatetimeButton, IonModal, IonList],
+  imports: [FormsModule, IonInput, IonDatetime, IonItem, IonButton, IonDatetimeButton, IonModal, IonList, IonFooter, IonHeader, IonContent, IonToolbar],
 
 })
 export class ChangeExamComponent  implements OnInit {
@@ -56,7 +56,91 @@ export class ChangeExamComponent  implements OnInit {
         fileID:"1",
         firstName:"Eliah",
         lastName:"Huebis",
-        grade:1,
+        grade:0,
+        message:"test"
+      },
+      {
+        fileID:"1",
+        firstName:"Eliah",
+        lastName:"Huebis",
+        grade:0,
+        message:"test"
+      },
+      {
+        fileID:"1",
+        firstName:"Eliah",
+        lastName:"Huebis",
+        grade:0,
+        message:"test"
+      },
+      {
+        fileID:"1",
+        firstName:"Eliah",
+        lastName:"Huebis",
+        grade:0,
+        message:"test"
+      },
+      {
+        fileID:"1",
+        firstName:"Eliah",
+        lastName:"Huebis",
+        grade:0,
+        message:"test"
+      },
+      {
+        fileID:"1",
+        firstName:"Eliah",
+        lastName:"Huebis",
+        grade:0,
+        message:"test"
+      },
+      {
+        fileID:"1",
+        firstName:"Eliah",
+        lastName:"Huebis",
+        grade:0,
+        message:"test"
+      },
+      {
+        fileID:"1",
+        firstName:"Eliah",
+        lastName:"Huebis",
+        grade:0,
+        message:"test"
+      },
+      {
+        fileID:"1",
+        firstName:"Eliah",
+        lastName:"Huebis",
+        grade:0,
+        message:"test"
+      },
+      {
+        fileID:"1",
+        firstName:"Eliah",
+        lastName:"Huebis",
+        grade:0,
+        message:"test"
+      },
+      {
+        fileID:"1",
+        firstName:"Eliah",
+        lastName:"Huebis",
+        grade:0,
+        message:"test"
+      },
+      {
+        fileID:"1",
+        firstName:"Eliah",
+        lastName:"Huebis",
+        grade:0,
+        message:"test"
+      },
+      {
+        fileID:"1",
+        firstName:"Eliah",
+        lastName:"Huebis",
+        grade:0,
         message:"test"
       }
     ]
@@ -105,21 +189,25 @@ export class ChangeExamComponent  implements OnInit {
     textColor: '#800080',
     backgroundColor: '#ffc0cb',
     border: '1px solid #e91e63',
-  },
-]
- printData(){
-  console.log(this.data);
- }
- 
- openDatePicker() {
-  this.showDatePicker = true;
-}
-
-formatDate() {
-  if (this.selectedDate) {
-    const date = new Date(this.selectedDate);
-    this.formattedDate = `${('0' + date.getDate()).slice(-2)}, ${('0' + (date.getMonth() + 1)).slice(-2)}, ${date.getFullYear()}`;
-    this.showDatePicker = false; // Close the date picker after selection
+  }]
+  printData(){
+    console.log(this.data);
   }
-}
+  
+  formatDate() {
+    if (this.selectedDate) {
+      const date = new Date(this.selectedDate);
+      this.formattedDate = `${('0' + date.getDate()).slice(-2)}, ${('0' + (date.getMonth() + 1)).slice(-2)}, ${date.getFullYear()}`;
+      this.showDatePicker = false; // Close the date picker after selection
+    }
+  }
+  saveChanges(){
+    this.api.sendRequestPost(this.data,"/saveTest").subscribe({
+      next: res =>{
+        console.log("saved Succesfully");
+      },
+      error: err => console.error('HTTP Error:', err)
+    });
+  }
+
 }
