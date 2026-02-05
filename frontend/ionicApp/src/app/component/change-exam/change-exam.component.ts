@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 
-import { IonInput, IonDatetime, IonItem, IonButton, IonDatetimeButton, IonModal, IonList, IonFooter, IonHeader, IonContent, IonToolbar } from '@ionic/angular/standalone';
+import { IonInput, IonDatetime, IonItem, IonButton, IonDatetimeButton, IonModal, IonList, IonHeader, IonContent, IonToolbar } from '@ionic/angular/standalone';
 import { ApiService } from 'src/app/service/api';
 
 
@@ -33,7 +33,7 @@ export interface Data{
   selector: 'app-change-exam',
   templateUrl: './change-exam.component.html',
   styleUrls: ['./change-exam.component.scss'],
-  imports: [FormsModule, IonInput, IonDatetime, IonItem, IonButton, IonDatetimeButton, IonModal, IonList, IonFooter, IonHeader, IonContent, IonToolbar],
+  imports: [FormsModule, IonInput, IonDatetime, IonItem, IonButton, IonDatetimeButton, IonModal, IonList, IonHeader, IonContent, IonToolbar],
 
 })
 export class ChangeExamComponent  implements OnInit {
@@ -51,99 +51,7 @@ export class ChangeExamComponent  implements OnInit {
       testName:"Test",
       weight:1
     },
-    grades:[
-      {
-        fileID:"1",
-        firstName:"Eliah",
-        lastName:"Huebis",
-        grade:0,
-        message:"test"
-      },
-      {
-        fileID:"1",
-        firstName:"Eliah",
-        lastName:"Huebis",
-        grade:0,
-        message:"test"
-      },
-      {
-        fileID:"1",
-        firstName:"Eliah",
-        lastName:"Huebis",
-        grade:0,
-        message:"test"
-      },
-      {
-        fileID:"1",
-        firstName:"Eliah",
-        lastName:"Huebis",
-        grade:0,
-        message:"test"
-      },
-      {
-        fileID:"1",
-        firstName:"Eliah",
-        lastName:"Huebis",
-        grade:0,
-        message:"test"
-      },
-      {
-        fileID:"1",
-        firstName:"Eliah",
-        lastName:"Huebis",
-        grade:0,
-        message:"test"
-      },
-      {
-        fileID:"1",
-        firstName:"Eliah",
-        lastName:"Huebis",
-        grade:0,
-        message:"test"
-      },
-      {
-        fileID:"1",
-        firstName:"Eliah",
-        lastName:"Huebis",
-        grade:0,
-        message:"test"
-      },
-      {
-        fileID:"1",
-        firstName:"Eliah",
-        lastName:"Huebis",
-        grade:0,
-        message:"test"
-      },
-      {
-        fileID:"1",
-        firstName:"Eliah",
-        lastName:"Huebis",
-        grade:0,
-        message:"test"
-      },
-      {
-        fileID:"1",
-        firstName:"Eliah",
-        lastName:"Huebis",
-        grade:0,
-        message:"test"
-      },
-      {
-        fileID:"1",
-        firstName:"Eliah",
-        lastName:"Huebis",
-        grade:0,
-        message:"test"
-      },
-      {
-        fileID:"1",
-        firstName:"Eliah",
-        lastName:"Huebis",
-        grade:0,
-        message:"test"
-      }
-    ]
+    grades:[]
 
   };
   selectedDate: string="";
@@ -156,6 +64,7 @@ export class ChangeExamComponent  implements OnInit {
     this.route.params.subscribe(params => {
       this.eventID = params['eventID'];
       this.courseID = params['courseID'];
+      console.log(this.eventID)
     });
     this.api.sendRequestGet({"courseID":this.courseID,"eventID":this.eventID},"/getAllGradesFromTest").subscribe({
       next: res => {
@@ -166,48 +75,22 @@ export class ChangeExamComponent  implements OnInit {
     });
   }
 
-  highlightedDates = [(isoString: string) => {
-    const date = new Date(isoString);
-    const utcDay = date.getUTCDate()-2;
-
-    if (utcDay % 7 === 0) {//lessons
-      return {
-        backgroundColor: '#00ff3717',
-        border: '1px solid #00ff0075',
-      };
-    }
-    if (utcDay % 7 === 2) {//tests
-      return {
-        backgroundColor: '#ff000017',
-        border: '1px solid #ff000075',
-      };
-    }
-    return undefined;
-  },
-  {
-    date: '2026-02-05',
-    textColor: '#800080',
-    backgroundColor: '#ffc0cb',
-    border: '1px solid #e91e63',
-  }]
-  printData(){
-    console.log(this.data);
-  }
-  
-  formatDate() {
-    if (this.selectedDate) {
-      const date = new Date(this.selectedDate);
-      this.formattedDate = `${('0' + date.getDate()).slice(-2)}, ${('0' + (date.getMonth() + 1)).slice(-2)}, ${date.getFullYear()}`;
-      this.showDatePicker = false; // Close the date picker after selection
-    }
-  }
   saveChanges(){
-    this.api.sendRequestPost(this.data,"/saveTest").subscribe({
-      next: res =>{
-        console.log("saved Succesfully");
-      },
-      error: err => console.error('HTTP Error:', err)
-    });
+    if (this.eventID!=0){
+      this.api.sendRequestPost(this.data,"/saveExam").subscribe({
+        next: res =>{
+          console.log("saved Succesfully");
+        },
+        error: err => console.error('HTTP Error:', err)
+      });
+    }else{
+      this.api.sendRequestPost(this.data.exam,"/createExam").subscribe({
+        next: res =>{
+          console.log("saved Succesfully");
+        },
+        error: err => console.error('HTTP Error:', err)
+      });
+    }
   }
 
 }

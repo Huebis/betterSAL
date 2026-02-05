@@ -1,4 +1,5 @@
-<ion-header>
+
+<div class="subheader">
   <ion-toolbar>
     <ion-list class="examValues">
       <ion-item>
@@ -50,24 +51,27 @@
         </ion-input>
       </ion-item>
       <ion-item>
-        <ion-datetime-button datetime="date"></ion-datetime-button>
+        Date   
+        <ion-datetime-button slot="end" datetime="date"></ion-datetime-button>
       </ion-item>
       <ion-item>
-        <ion-datetime-button datetime="starttime"></ion-datetime-button>
+        Starttime   
+        <ion-datetime-button slot="end" datetime="starttime"></ion-datetime-button>
       </ion-item>
       <ion-item>
-        <ion-datetime-button datetime="endtime"></ion-datetime-button>
+        Endtime  
+        <ion-datetime-button slot="end" datetime="endtime"></ion-datetime-button>
       </ion-item>
     </ion-list>
     <ion-button (click)="saveChanges()">Save Changes</ion-button>
 
   </ion-toolbar>
-</ion-header>
+</div>
 <ion-content>
   <div>
-  @if (courseID!=0){
+  @if (this.eventID!=0){
     <ion-list class="grades">
-      @for(student of data.grades; track student.grade ){
+      @for(student of data.grades; track student.firstName ){
         <ion-item>
           <ion-list class="gradesValues">
             <ion-item>
@@ -105,10 +109,8 @@
       }
     </ion-list>
   }
-</div>
+  </div>
 </ion-content>
-
-
 
 <ion-modal [keepContentsMounted]="true">
   <ng-template>

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { IonItem, IonInput, IonIcon, IonButton, IonInputPasswordToggle} from '@ionic/angular/standalone';
+import {IonInput, IonButton, IonInputPasswordToggle, IonContent } from '@ionic/angular/standalone';
 
 import { AuthService } from '../../service/auth';
 import { ApiService } from '../../service/api';
@@ -11,7 +11,7 @@ import { ApiService } from '../../service/api';
   selector: 'app-loginpage',
   templateUrl: './loginpage.component.html',
   styleUrls: ['./loginpage.component.scss'],
-  imports: [FormsModule, IonItem, IonInput, IonButton, IonInputPasswordToggle]
+  imports: [FormsModule, IonInput, IonButton, IonInputPasswordToggle, IonContent]
 })
 export class LoginPage  implements OnInit {
   ngOnInit() {}
