@@ -11,6 +11,10 @@ __pycache__/
 venv/
 
 
+#Private Keys
+
+bettersal-firebase*
+
 
 #Storage of user files
 user_documents/
