@@ -34,7 +34,7 @@ export class LoginPage  implements OnInit {
         this.password="";
         this.router.navigate(['/home'])
       },
-      error: err => console.error('HTTP Error:', err)
+      error: err => console.error('HTTP Error:', JSON.stringify(err))
     }); 
 
   }

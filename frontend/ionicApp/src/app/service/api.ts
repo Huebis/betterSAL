@@ -13,7 +13,6 @@ export class ApiService {
 
 
   sendRequestPost(data: Object,substring: string): Observable<any> {
-    console.log(JSON.stringify(data))
     return this.http.post<any>(this.baseUrl+substring, data,{ headers: new HttpHeaders({'Content-Type':'application/json'})});
   }
   sendRequestGet(data: any, substring: string): Observable<any> {

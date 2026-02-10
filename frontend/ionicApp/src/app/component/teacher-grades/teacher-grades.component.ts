@@ -5,6 +5,7 @@ import { IonButton, IonItem, IonLabel,  IonList, IonItemGroup} from '@ionic/angu
 
 import { ApiService } from '../../service/api';
 import { Router } from '@angular/router';
+import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 
 export interface Exam{
   date:string;
@@ -14,7 +15,7 @@ export interface Exam{
 };
 export interface Course{
   grades: Exam[];
-  name:string;
+  name: string;
 };
 @Component({
   selector: 'app-teacher-grades',

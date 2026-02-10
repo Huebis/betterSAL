@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "413157110993",
+    "project_id": "bettersal",
+    "storage_bucket": "bettersal.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413157110993:android:6d94fc67aa080a2f7041f0",
+        "android_client_info": {
+          "package_name": "betterSAL.test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCb5ghrlM7wvOHw7fOO76j_8yqokLviTmw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413157110993:android:23cf6427236cef207041f0",
+        "android_client_info": {
+          "package_name": "io.ionic.starter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCb5ghrlM7wvOHw7fOO76j_8yqokLviTmw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -16,6 +16,9 @@ export interface Exam{
   location:string;
   testName:string;
   weight:number;
+  courseID:string;
+  eventID:string;
+
 }
 export interface Student{
   fileID:string;
@@ -23,6 +26,7 @@ export interface Student{
   lastName:string;
   grade:number;
   message:string;
+
 }
 export interface Data{
   exam:Exam;
@@ -49,7 +53,9 @@ export class ChangeExamComponent  implements OnInit {
       starttime:"00:00",
       location:"000",
       testName:"Test",
-      weight:1
+      weight:1,
+      courseID:"",
+      eventID:"",
     },
     grades:[]
 
@@ -64,6 +70,8 @@ export class ChangeExamComponent  implements OnInit {
     this.route.params.subscribe(params => {
       this.eventID = params['eventID'];
       this.courseID = params['courseID'];
+      this.data.exam.courseID=""+this.courseID;
+      this.data.exam.eventID=""+this.courseID;
       console.log(this.eventID)
     });
     this.api.sendRequestGet({"courseID":this.courseID,"eventID":this.eventID},"/getAllGradesFromTest").subscribe({
