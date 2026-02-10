@@ -1,0 +1,24 @@
+meta {
+  name: updateAllGradesFromTest
+  type: http
+  seq: 9
+}
+
+post {
+  url: http://127.0.0.1:5000/postAllGradesFromAllStudentsOfTest
+  body: json
+  auth: inherit
+}
+
+headers {
+  token: 8a16c389-67e5-4234-9821-675614a50ac5
+}
+
+body:json {
+  {"exam":{"courseID":"10d1ebbc-2914-4cdd-a87e-2ea07185a0c7","date":"2024-04-12","description":"Dies ist die Describtion oder Description","endtime":"12:30","eventID":"f8ee95ca-da2a-44db-933d-ec39a8a491cb","location":"P001","starttime":"11:30","testName":"Contrôle de mathématiques","weight":0.3},"grades":[{"fileID":"","firstName":"Eliah","grade":6,"lastName":"Hueber","message":"","userID":"584c39f7-d926-4950-928e-9f963bb51785"},{"fileID":"","firstName":"Emil","grade":0,"lastName":"Peterson","message":"","userID":"b16dd4e1-e688-4a20-bf4b-3a3a34988767"},{"fileID":"","firstName":"Nahia","grade":0,"lastName":"Weyeneth","message":"","userID":"077b5a0d-cee3-47f6-802e-944198746fed"},{"fileID":"","firstName":"Paul","grade":0,"lastName":"Konzili","message":"","userID":"1e069609-3b49-449e-bbcd-ed25e1d4bcdd"},{"fileID":"","firstName":"Esben","grade":0,"lastName":"Duss","message":"","userID":"7d028959-a8c2-46c8-9dd9-104fe2f4b78c"},{"fileID":"","firstName":"Moritz","grade":0,"lastName":"Brotbeck","message":"","userID":"5d2e2a09-79f9-4e4a-adb2-581a82274fd2"},{"fileID":"","firstName":"Manuel","grade":0,"lastName":"Kron","message":"","userID":"2823b7ef-01ad-427a-80dd-0cbf21189295"},{"fileID":"","firstName":"Aurel","grade":0,"lastName":"Richterich","message":"","userID":"df6d6be2-7192-4896-a2b3-f8b4a7a390e6"},{"fileID":"","firstName":"Loic","grade":0,"lastName":"Eicher","message":"","userID":"f5ec72fd-6947-4acd-96bf-02e7e4c23cec"},{"fileID":"","firstName":"Walter","grade":0,"lastName":"Kutz","message":"","userID":"d7f43922-0625-4b19-bf0a-896652518227"},{"fileID":"","firstName":"Theo","grade":0,"lastName":"Böhm","message":"","userID":"f3264402-ccba-4c84-bd92-f3527566b163"},{"fileID":"","firstName":"Marlon","grade":0,"lastName":"Auchli","message":"","userID":"b25147d3-4423-4cbf-85ec-6f59e4539049"},{"fileID":"","firstName":"Melanie","grade":0,"lastName":"Anklin","message":"","userID":"a1229ade-98f3-4b33-bac0-4857b6b35746"}]}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

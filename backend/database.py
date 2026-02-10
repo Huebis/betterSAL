@@ -506,13 +506,28 @@ class Database:
                 u.lastname,
                 g.grade,
                 g.message,
-                g.fileid
+                g.fileid,
+                g.userid
             FROM grade AS g
             INNER JOIN user AS u
                 ON g.userid = u.userid
             WHERE g.eventid = ?;
             """
         self.cursor.execute(sql,(eventID,))
+        output = self.cursor.fetchall()
+        self.conn.commit()
+        return output
+
+    def updateGradeWithEventIDAndUserID(self,grade,message,fileID,eventID,userID):
+        sql = """
+            UPDATE grade
+                SET grade = ?,
+                    message = ?,
+                    fileid = ?
+            WHERE eventid = ?
+                AND userid = ?;
+            """
+        self.cursor.execute(sql,(grade,message,fileID,eventID,userID))
         output = self.cursor.fetchall()
         self.conn.commit()
         return output
@@ -526,7 +541,9 @@ class Database:
                 ev.date,
                 ev.starttime,
                 ev.endtime,
-                ev.describtion
+                ev.describtion,
+                ex.courseid,
+                ex.eventid
             FROM examen AS ex
             INNER JOIN event AS ev
                 ON ex.eventid = ev.eventid
@@ -537,6 +554,29 @@ class Database:
         self.conn.commit()
         return output[0]
 
+
+    def updateAllExamAndEventDataWithEventID(self,testName,weight,location,date,starttime,endtime,description,courseID,eventID):
+        sql = """
+            UPDATE examen
+                SET testname = ?,
+                    weight = ?
+                WHERE eventid = ? 
+            """
+        self.cursor.execute(sql,(testName,weight,eventID))
+        self.conn.commit()
+        sql = """
+            UPDATE event
+                SET location = ?,
+                    date = ?,
+                    starttime = ?,
+                    endtime = ?,
+                    describtion = ?
+
+                WHERE eventid = ? 
+            """
+        self.cursor.execute(sql,(location,date,starttime,endtime,description,eventID))
+        self.conn.commit()
+        return
 
 
     """

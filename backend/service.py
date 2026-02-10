@@ -85,10 +85,29 @@ def getAllGradesFromAllStudentsOfTest(db, eventID):
             "grade": grade[2],
             "message": grade[3],
             "fileID": grade[4],
+            "userID": grade[5],
             }
         gradeslist.append(gradeDict)
     
     return gradeslist
+
+
+def updateAllGradesFromAllStudentsOfTest(db,grades,eventID):
+    for gradeDict in grades:
+        if "userID" not in gradeDict:
+            continue
+        if "message" not in gradeDict:
+            continue 
+        if "fileID" not in gradeDict:
+            continue
+        if "userID" not in gradeDict:
+            continue
+        grade = gradeDict["grade"]
+        message = gradeDict["message"]
+        fileID = gradeDict["fileID"]
+        userID = gradeDict["userID"]
+        db.updateGradeWithEventIDAndUserID(grade,message,fileID,eventID,userID)
+    return
 
 
 
@@ -103,9 +122,45 @@ def getAllExamAndEventDataWithEventID(db,eventID):
             "starttime": examData[4],
             "endtime": examData[5],
             "description": examData[6],
+            "courseID":examData[7],
+            "eventID": examData[8],
             }
 
     return examDict
+
+def updateAllExamAndEventDataWithEventIDAndCourseID(db,exam):
+    if "testName" not in exam:
+        return False
+    if "weight" not in exam:
+        return False
+    if "location" not in exam:
+        return False
+    if "date" not in exam:
+        return False
+    if "starttime" not in exam:
+        return False
+    if "endtime" not in exam:
+        return False
+    if "description" not in exam:
+        return False
+    if "eventID" not in exam:
+        return False
+    testName = exam["testName"]
+    weight = exam["weight"]
+    location = exam["location"]
+    date = exam["date"]
+    starttime = exam["starttime"]
+    endtime = exam["endtime"]
+    description = exam["description"]
+    eventID = exam["eventID"]
+    courseID = exam["courseID"]
+
+    db.updateAllExamAndEventDataWithEventID(testName,weight,location,date,starttime,endtime,description,courseID,eventID)
+
+    return True
+
+
+
 ################ NOCH NICHT FERTIG ###############################
 def saveNewFile(file):
     oldFileName = file.filename

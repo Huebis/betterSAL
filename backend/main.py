@@ -348,22 +348,65 @@ def testFcmToken():
 
     return jsonify({}), 200
 
+
+#Only for teacher
 @app.route('/postAllGradesFromAllStudentsOfTest', methods=["Post"])
 def postAllGradesFromAllStudentsOfTest():
 
+    token = request.headers.get("token")
+
+    if not token:
+        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
+
+
+    db = get_db()
+
+    userID = db.getUseridFromToken(token)
+
+    if userID == False:
+        return jsonify({"error": "token ist nicht valid"}), 403
+
+
+    role = db.getRolefromUserWithUserID(userID)
+    if role != 2:#überprüft ob es wirklich ein Lehrer*in ist
+        return jsonify({"error": "user do not have the permission to change that"}), 403
+
+
+
+
+   
     data = request.get_json()
 
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if "fcmToken" not in data:
+    if "grades" not in data:
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
+    if "exam" not in data:
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
-    fcmToken = data["fcmToken"]
+    exam = data["exam"]
+    grades = data["grades"]
 
-    notification.sendPush(fcmToken,"Test","Der Token funktioniert!!!")
+    if "courseID" not in exam:
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
+    courseID = exam["courseID"]
+
+    if "eventID" not in exam:
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    
+    eventID = exam["eventID"]
+
+    if not db.isUserIDinCourse(userID,courseID):
+        return jsonify({"error": "user do not have the permission to change that"}), 403
+
+    response = service.updateAllExamAndEventDataWithEventIDAndCourseID(db,exam)
+    if not response:
+        return jsonify({"error": "Objekt war falsch"}), 400
+
+    service.updateAllGradesFromAllStudentsOfTest(db,grades,eventID)
 
     return jsonify({}), 200
 
