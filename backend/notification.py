@@ -19,8 +19,8 @@ def send_push(token, title, body):
 
 
 print(send_push(
-    token="cILTay5eTjqXdmPXAdUOAX:APA91bEpvN--ge2PxGmR9CLumZNi09kZrtHTzuZ33rgDq76CeqMIwzBinAaWiN8LC3ce-eNH5HsLWrqMbPS7z3z2wEm1IiE8KjCVdSLNea0MRm52KQ4OUEc",
-    title="Hallo!",
-    body="Das ist eine Push-Nachricht"
+    token="f5KVjRZUQB-iboK7KakJet:APA91bFassSDzVBJbfmSq14v6VWDAg8VpfbmsFLGjs5p5w4Mm--zeWVhJ2Sq2v1t75Hg73SnFVIjoPQ5AK0gQ87dNfCUM-oyO-0DtrBMXhQv0ZM4-h6j6Is",
+    title="Unterricht!",
+    body="Die Stunde geht noch 10 Minuten "
 ))
 
