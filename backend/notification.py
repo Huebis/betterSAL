@@ -5,7 +5,7 @@ cred = credentials.Certificate("bettersal-firebase-adminsdk-fbsvc-75263d9492.jso
 firebase_admin.initialize_app(cred)
 
 
-def send_push(token, title, body):
+def sendPush(token, title, body):
     message = messaging.Message(
         notification=messaging.Notification(
             title=title,
@@ -18,9 +18,11 @@ def send_push(token, title, body):
     return response
 
 
-print(send_push(
-    token="dhfSI4esQ1GDL2nFUYIpwb:APA91bHqYNwaI2ezidpjDdyT6bOKAHLPZsBbwbtYadkHeyBtM9fP0Jxnyy0NZcJtddVjguOVwFVYyCD1Be9-UR1CptuNkoPOor1Gq01xEoMRsk-5Le8aPzA",
+"""
+print(sendPush(
+    token="f5KVjRZUQB-iboK7KakJet:APA91bFassSDzVBJbfmSq14v6VWDAg8VpfbmsFLGjs5p5w4Mm--zeWVhJ2Sq2v1t75Hg73SnFVIjoPQ5AK0gQ87dNfCUM-oyO-0DtrBMXhQv0ZM4-h6j6Is",
     title="Hallo!",
     body="Das ist eine Push-Nachricht"
 ))
 
+"""

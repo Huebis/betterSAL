@@ -3,6 +3,7 @@ from flask import Flask, request, Response, render_template, g, jsonify
 from database import Database
 import service
 from flask_cors import CORS
+import notification
 
 
 #source venv/bin/activate 
@@ -288,7 +289,7 @@ def getAllTests():
 
 
 
-###########Nicht fertig #####################################
+
 #Teacher only
 @app.route('/getAllGradesFromTest', methods=["get"])
 def getAllGradesFromAllStudentsOfTest():
@@ -323,6 +324,27 @@ def getAllGradesFromAllStudentsOfTest():
 
     return jsonify({"grades": grades,"exam":exam}), 200
 
+
+
+
+@app.route('/testFcmToken', methods=["Post"])
+def getAllGradesFromAllStudentsOfTest():
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+    if "fcmToken" not in data:
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+
+    fcmToken = data["fcmToken"]
+
+    notification.sendPush(fcmToken,"Test","Der Token funktioniert!!!")
+
+
+    return jsonify({}), 200
 
 
 
