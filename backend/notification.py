@@ -18,10 +18,11 @@ def sendPush(token, title, body):
     return response
 
 
-
+"""
 print(sendPush(
     token="f5KVjRZUQB-iboK7KakJet:APA91bFassSDzVBJbfmSq14v6VWDAg8VpfbmsFLGjs5p5w4Mm--zeWVhJ2Sq2v1t75Hg73SnFVIjoPQ5AK0gQ87dNfCUM-oyO-0DtrBMXhQv0ZM4-h6j6Is",
     title="Hallo!",
     body="Das ist eine Push-Nachricht"
 ))
 
+"""

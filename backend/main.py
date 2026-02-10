@@ -328,7 +328,28 @@ def getAllGradesFromAllStudentsOfTest():
 
 
 @app.route('/testFcmToken', methods=["Post"])
-def getAllGradesFromAllStudentsOfTest():
+def testFcmToken():
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+    if "fcmToken" not in data:
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+
+    fcmToken = data["fcmToken"]
+
+    print(fcmToken)
+
+    notification.sendPush(fcmToken,"Test","Der Token funktioniert!!!")
+
+
+    return jsonify({}), 200
+
+@app.route('/postAllGradesFromAllStudentsOfTest', methods=["Post"])
+def postAllGradesFromAllStudentsOfTest():
 
     data = request.get_json()
 
@@ -345,8 +366,6 @@ def getAllGradesFromAllStudentsOfTest():
 
 
     return jsonify({}), 200
-
-
 
 ###########################################################
 #Tests#
