@@ -18,6 +18,37 @@ def get_db():
         db = g._database = Database()
     return db
  
+def isEveryDataNameinObject(testedObject,dataNames):
+    for name in dataNames:
+        if name not in testedObject:
+            return False
+    return True
+
+
+#return True,UserID, None, None when everything is fine
+#return False,None, error, Fehlernummer when something is wrong
+def tokenAndRoleVerfication(db,token, allowedRoles = None): # Bei None sind einfach alle Rollen zugelassen
+    if not token:
+        return False, None, jsonify({"error": "Token wurden nicht übermittelt"}), 400
+
+
+    userID = db.getUseridFromToken(token)
+
+    if userID == False:
+        return False, None, jsonify({"error": "token ist nicht valid"}), 450
+
+    if allowedRoles == None:
+        return True,userID,None
+
+
+    role = db.getRolefromUserWithUserID(userID)
+
+    if role not in allowedRoles:
+        return False, None,jsonify({"error": "user do not have the permission to enter the site"}), 403
+    
+    return True,userID,None,None
+
+    
 
 
 
@@ -28,38 +59,30 @@ CORS(app)
 
 
 #ERRORS:
-#0:No error
-#1:User already exists
-#2:
+#450: token is invalid
 
 
 #route musste angepasst werden wegen dem Server
 @app.route('/changePassword', methods=["POST"])
 def requestChangePassword():
 
-
-    token = request.headers.get("token")
-
-
-    if not token:
-        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
-
     data = request.get_json()
 
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if "password" not in data or "newpassword" not in data:
-        return jsonify({"error": "password oder/und neues password wurden nicht übermittelt"}), 400
+    if not isEveryDataNameinObject(data, ["password", "newpassword"]):
+        return jsonify({"error": "username und password wurden nicht übermittelt"}), 400
 
 
 
+    token = request.headers.get("token")
     db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
 
-    userID = db.getUseridFromToken(token)
+    if not boolien:
+        return json,errorNumber
 
-    if userID == False:
-        return jsonify({"error": "token ist nicht valid"}), 403
 
     password = data["password"]
     newPassword = data["newpassword"]
@@ -81,8 +104,10 @@ def loginUser():
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if "username" not in data or "password" not in data:
+    if not isEveryDataNameinObject(data, ["username", "password"]):
         return jsonify({"error": "username und password wurden nicht übermittelt"}), 400
+
+      
 
     db = get_db()
     username = data["username"]
@@ -90,9 +115,6 @@ def loginUser():
 
     userID = db.isUserValid_getUserID(username,password)
     
-
-
-
     if userID == False:
         return jsonify({"error": "username and password are wrong"}), 400
 
@@ -124,18 +146,12 @@ def deletToken():
 def postAllUserInformation():
 
     token = request.headers.get("token")
-
-
-    if not token:
-        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
-
-
     db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
 
-    userID = db.getUseridFromToken(token)
+    if not boolien:
+        return json,errorNumber
 
-    if userID == False:
-        return jsonify({"error": "token ist nicht valid"}), 403
 
     userData = db.getAllUserDataWithUserID(userID)
 
@@ -148,26 +164,13 @@ def postAllUserInformation():
 def postAllGradesFromUser():
 
     token = request.headers.get("token")
-
-
-    if not token:
-        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
-
-
-
-
-
     db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,[1])
 
-    userID = db.getUseridFromToken(token)
-
-    if userID == False:
-        return jsonify({"error": "token ist nicht valid"}), 403
+    if not boolien:
+        return json,errorNumber
 
 
-    role = db.getRolefromUserWithUserID(userID)
-    if role != 1:#überprüft ob es wirklich ein Schüler*in ist
-        return jsonify({"error": "user do not have the permission to enter the site"}), 403
 
     output = service.getAllGradesforStudents(db,userID)
 
@@ -180,26 +183,11 @@ def postAllGradesFromUser():
 def addNewTest():
 
     token = request.headers.get("token")
-
-
-    if not token:
-        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
-
-
     db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,[2])
 
-    userID = db.getUseridFromToken(token)
-
-    if userID == False:
-        return jsonify({"error": "token ist nicht valid"}), 403
-
-
-    role = db.getRolefromUserWithUserID(userID)
-    if role != 2:#überprüft ob es wirklich ein Lehrer*in ist
-        return jsonify({"error": "user do not have the permission to change that"}), 403
-
-
-
+    if not boolien:
+        return json,errorNumber
 
     #User ist nun Lehrer und hat gültigen Token
 
@@ -210,26 +198,10 @@ def addNewTest():
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if "courseID" not in data:
+
+    if not isEveryDataNameinObject(data,["courseID","testName","weight","location","date","starttime","endtime","description"]):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
-    if "testName" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
-
-    if "weight" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
-
-    if "location" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
-
-    if "date" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
-    if "starttime" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
-    if "endtime" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
-    if "description" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
     courseID = data["courseID"]
     testName = data["testName"]
@@ -249,38 +221,18 @@ def addNewTest():
 
 
 
-
-
-    
-
-    output = service.getAllGradesforStudents(db,userID)
-
-
-    return jsonify({"grades": output}), 200
-
-
 #Teacher only
 @app.route('/getAllTests', methods=["get"])
 def getAllTests():
 
     token = request.headers.get("token")
-
-
-    if not token:
-        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
-
-
     db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,[2])
 
-    userID = db.getUseridFromToken(token)
-
-    if userID == False:
-        return jsonify({"error": "token ist nicht valid"}), 403
+    if not boolien:
+        return json,errorNumber
 
 
-    role = db.getRolefromUserWithUserID(userID)
-    if role != 2:#überprüft ob es wirklich ein Lehrer*in ist
-        return jsonify({"error": "user do not have the permission to change that"}), 403
 
     output = service.getAllCoursesWithAllExamsFromUserID(db,userID)
 
@@ -295,23 +247,12 @@ def getAllTests():
 def getAllGradesFromAllStudentsOfTest():
 
     token = request.headers.get("token")
-
-
-    if not token:
-        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
-
-
     db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,[2])
 
-    userID = db.getUseridFromToken(token)
+    if not boolien:
+        return json,errorNumber
 
-    if userID == False:
-        return jsonify({"error": "token ist nicht valid"}), 403
-
-
-    role = db.getRolefromUserWithUserID(userID)
-    if role != 2:#überprüft ob es wirklich ein Lehrer*in ist
-        return jsonify({"error": "user do not have the permission to change that"}), 403
 
     eventID = request.args.get("eventID")
     courseID = request.args.get("courseID")
@@ -354,22 +295,11 @@ def testFcmToken():
 def postAllGradesFromAllStudentsOfTest():
 
     token = request.headers.get("token")
-
-    if not token:
-        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
-
-
     db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,[2])
 
-    userID = db.getUseridFromToken(token)
-
-    if userID == False:
-        return jsonify({"error": "token ist nicht valid"}), 403
-
-
-    role = db.getRolefromUserWithUserID(userID)
-    if role != 2:#überprüft ob es wirklich ein Lehrer*in ist
-        return jsonify({"error": "user do not have the permission to change that"}), 403
+    if not boolien:
+        return json,errorNumber
 
 
 

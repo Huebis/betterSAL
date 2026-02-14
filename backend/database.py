@@ -439,7 +439,8 @@ class Database:
         FROM examen AS ex
         INNER JOIN event AS ev
             ON ex.eventid = ev.eventid
-        WHERE courseid = ?;
+        WHERE courseid = ?
+        ORDER BY ev.date ASC;
         """
         self.cursor.execute(sql, (courseID,))
         output = self.cursor.fetchall()
@@ -462,7 +463,8 @@ class Database:
                 AND g.userid = ?
             INNER JOIN event AS ev
                 ON ev.eventid = ex.eventid
-            WHERE ex.courseid = ?;
+            WHERE ex.courseid = ?
+            ORDER BY ev.date ASC;
             """
         self.cursor.execute(sql,(userID, courseID))
         output = self.cursor.fetchall()
