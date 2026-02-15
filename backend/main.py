@@ -38,7 +38,7 @@ def tokenAndRoleVerfication(db,token, allowedRoles = None): # Bei None sind einf
         return False, None, jsonify({"error": "token ist nicht valid"}), 450
 
     if allowedRoles == None:
-        return True,userID,None
+        return True,userID,None,None
 
 
     role = db.getRolefromUserWithUserID(userID)
@@ -219,6 +219,44 @@ def addNewTest():
 
     return jsonify({}), 200
 
+#Teacher only
+@app.route('/deleteTest', methods=["Post"])
+def deleteTest():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,[2])
+
+    if not boolien:
+        return json,errorNumber
+
+    #User ist nun Lehrer und hat gültigen Token
+
+
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+
+    if not isEveryDataNameinObject(data,["eventID"]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+
+    eventID = data["eventID"]
+
+
+    if not db.isUserIDinEvent(userID,eventID):
+        return jsonify({"error": "user do not have the permission to change that"}), 403
+
+
+    db.deleteAllGradesWithEventID(eventID)
+    db.deleteEventWithEventID(eventID)
+    db.deleteExamWithEventID(eventID)
+
+
+    return jsonify({}), 200
 
 
 #Teacher only
@@ -310,22 +348,17 @@ def postAllGradesFromAllStudentsOfTest():
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if "grades" not in data:
+    if not isEveryDataNameinObject(data, ["grades", "exam"]):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
-    if "exam" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
     exam = data["exam"]
     grades = data["grades"]
 
-    if "courseID" not in exam:
+    if not isEveryDataNameinObject(exam, ["courseID", "eventID"]):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
     courseID = exam["courseID"]
-
-    if "eventID" not in exam:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
     
     eventID = exam["eventID"]
 

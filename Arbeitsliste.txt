@@ -1,5 +1,78 @@
 
-eventID bei lehrer get Tests mitliefern
+WICHTIG !!!!!!!
+
+FileId immer zu user hinzufügen
+überprüfen ob EventID bei updateGrades wirklich eine passende courseID hat
 
 
-Test mit files machen (low)
+
+
+Nächste Schritte:
+
+FCM-table erstellen
+User anpassen für Notification erlaubnis (für alle verschiedene)
+    Neue Noten
+    heutige Absenzen (Lehrpersonen)
+    morgige Absenzen (Lehrpersonen)
+    morgige Prüfungen
+    spezielle Termine von morgen melden
+    Absenzen sind morgen fällig
+
+notification funktion machen mit verschiedenen möglichekeiten
+    mit verschiedenen Messages
+
+
+ParentUser hinzufügen + Rechte einschränken + Table user anpassen (geburtsdatum und )
+
+
+
+
+
+normal Scedule erstellen
+Events implementieren (Krank, Ausfall, Spezialevents)
+
+
+Lehrpersonen können Absenzen von Schüler eintragen
+Schüler können Absenzen vor begin eintragen
+Schüler 
+
+
+
+
+Prüfungen
+deleteTest
+
+
+
+Fehlermeldungen Noch zu bearbeiten:
+
+127.0.0.1 - - [11/Feb/2026 14:07:36] "OPTIONS /getAllGradesFromTest?courseID=2e6369a0-c29b-48b7-a050-868021bd4204&eventID=0 HTTP/1.1" 200 -
+1
+2
+[2026-02-11 14:07:36,062] ERROR in app: Exception on /getAllGradesFromTest [GET]
+Traceback (most recent call last):
+  File "/var/www/huebis.dev/repos/betterSAL/backend/venv/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/www/huebis.dev/repos/betterSAL/backend/venv/lib/python3.11/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/www/huebis.dev/repos/betterSAL/backend/venv/lib/python3.11/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/var/www/huebis.dev/repos/betterSAL/backend/venv/lib/python3.11/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/www/huebis.dev/repos/betterSAL/backend/venv/lib/python3.11/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/www/huebis.dev/repos/betterSAL/backend/main.py", line 323, in getAllGradesFromAllStudentsOfTest
+    exam = service.getAllExamAndEventDataWithEventID(db,eventID)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/www/huebis.dev/repos/betterSAL/backend/service.py", line 115, in getAllExamAndEventDataWithEventID
+    examData = db.getAllExamAndEventDataWithEventID(eventID)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/www/huebis.dev/repos/betterSAL/backend/database.py", line 555, in getAllExamAndEventDataWithEventID
+    return output[0]
+           ~~~~~~^^^
+IndexError: list index out of range
