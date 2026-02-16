@@ -22,10 +22,11 @@ def sendPush(token, title, body):
     return response
 
 
-
+"""
 print(sendPush(
     token="dzxVSBmWTWKaOiqd23iq04:APA91bHcg4A9f94IcXAjG_59N9Nt0Eq5LQty_0pT2muoUueqy3y0ESrTGJH95NjAdDb2A1BL4AHf3CU8FtBtNURWxlJrpesisaNwfJQdy6g_XIopM8gHVjE",
     title="Hallo Theo!",
     body="Du wurdest gehacked"
 ))
 
+"""

@@ -9,14 +9,8 @@ FileId immer zu user hinzufügen
 
 Nächste Schritte:
 
-FCM-table erstellen
-User anpassen für Notification erlaubnis (für alle verschiedene)
-    Neue Noten
-    heutige Absenzen (Lehrpersonen)
-    morgige Absenzen (Lehrpersonen)
-    morgige Prüfungen
-    spezielle Termine von morgen melden
-    Absenzen sind morgen fällig
+
+
 
 notification funktion machen mit verschiedenen möglichekeiten
     mit verschiedenen Messages
@@ -39,8 +33,11 @@ Schüler
 
 
 
-Prüfungen
+Prüfen:
 deleteTest
+postFcmToken
+postUserData
+getUserData
 
 
 

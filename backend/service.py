@@ -159,7 +159,76 @@ def updateAllExamAndEventDataWithEventIDAndCourseID(db,exam):
 
     return True
 
+def postFcmToken(db,userID,fcmToken,hardwareID):
+    if db.isFcmTokenExistWithUserIDandHardwareID(userID,hardwareID)
+        db.updateFcmTokenWithUserIDAndHardwareToken(userID,fcmToken,hardwareID)
+        return hardwareID
+    hardwareID = str(uuid.uuid4())
+    db.addNewFcmToken(userID,fcmToken,hardwareToken):
+    return hardwareID
 
+
+def getAllUserData(db,userID):
+    userData = db.getAllUserDataWithUserID(userID)
+    for a in range(7,12,1):
+        if userData[a] == None:
+            userData = 1
+
+
+    outputDict = {
+        "userName": userData[0]
+        "className": userData[1]
+        "major": userData[2]
+        "email": userData[3]
+        "role": userData[4]
+        "firstName": userData[5]
+        "lastName": userData[6]
+        "notifAbsenceOfTeacherToday": userData[7]
+        "notifAbsenceOfTeacherTomorrow": userData[8]
+        "notifExamTomorrow": userData[9]
+        "notifEventTomorrow": userData[10]
+        "notifAbsenceDueTomorrow": userData[11]
+        ""
+    }
+    return outputDict
+
+def postAllUserInformation(db,data,userID):
+    userName = data["userName"]
+    email = data["email"]
+    notifAbsenceOfTeacherToday = data["notifAbsenceOfTeacherToday"]
+    notifAbsenceOfTeacherTomorrow = data["notifAbsenceOfTeacherTomorrow"]
+    notifExamTomorrow = data["notifExamTomorrow"]
+    notifEventTomorrow = data["notifEventTomorrow"]
+    notifAbsenceDueTomorrow = data["notifAbsenceDueTomorrow"]
+
+    if not isinstance(userName,str):
+        return False
+    if not isinstance(email,str):
+        return False
+
+    if not isinstance(notifAbsenceOfTeacherToday,int):
+        return False
+    
+    if not isinstance(notifAbsenceOfTeacherTomorrow,int):
+        return False
+    if not isinstance(notifExamTomorrow,int):
+        return False
+    if not isinstance(notifEventTomorrow,int):
+        return False
+    if not isinstance(notifAbsenceDueTomorrow,int):
+        return False
+    if notifAbsenceOfTeacherToday != 0 and notifAbsenceOfTeacherToday != 1 :
+        return False
+    if notifAbsenceOfTeacherTomorrow != 0 and notifAbsenceOfTeacherTomorrow != 1 :
+        return False
+    if notifExamTomorrow != 0 and notifExamTomorrow != 1 :
+        return False
+    if notifEventTomorrow != 0 and notifEventTomorrow != 1 :
+        return False
+    if notifAbsenceDueTomorrow != 0 and notifAbsenceDueTomorrow != 1 :
+        return False
+    db.updateUserDataFromUserWithUserID(userID,userName,email,notifAbsenceOfTeacherToday,notifAbsenceOfTeacherTomorrow,notifExamTomorrow,notifEventTomorrow,notifAbsenceDueTomorrow)
+    return True
 
 ################ NOCH NICHT FERTIG ###############################
 def saveNewFile(file):

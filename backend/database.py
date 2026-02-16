@@ -165,7 +165,8 @@ class User:
 
     def __init__(self):
         return
-    
+
+
     
     def creatTableUser(self):
         self.cursor.execute("DROP TABLE IF EXISTS user")
@@ -179,7 +180,12 @@ class User:
             email TEXT NOT NULL,
             role INT NOT NULL,
             firstname TEXT NOT NULL,
-            lastname TEXT NOT NULL
+            lastname TEXT NOT NULL,
+            notifabsenceofteachertoday INT,
+            notifabsenceofteachertomorrow INT,
+            notifexamtomorrow INT,
+            notifeventtomorrow INT,
+            notifabsenceduetomorrow INT
         );
         """
         self.cursor.execute(table_creation_query)
@@ -259,13 +265,37 @@ class User:
         return userID
 
 
+
     def getAllUserDataWithUserID(self,userID):
-        sql = "SELECT * FROM user WHERE userid = ?"
+        sql = """
+        SELECT (username,classname,major,email,role,firstname,lastname,
+        notifabsenceofteachertoday,notifabsenceofteachertomorrow,notifexamtomorrow,notifeventtomorrow,notifabsenceduetomorrow) 
+        FROM user WHERE userid = ?
+        """
         self.cursor.execute(sql, (userID,))
-        output = self.cursor.fetchall()
+        output = self.cursor.fetchone()
         self.conn.commit()
 
         return output
+
+    def updateUserDataFromUserWithUserID(self,userID,userName, email, notifAbsenceOfTeacherToday,notifAbsenceOfTeacherTomorrow, notifExamTomorrow, notifEventTomorrow,  notifAbsenceDueTomorrow):
+
+        sql = """
+        UPDATE user
+        SET username =?,
+            email =?,
+            notifabsenceofteachertoday =?,
+            notifabsenceofteachertomorrow =?,
+            notifexamtomorrow =?,
+            notifeventtomorrow =?,
+            notifabsenceduetomorrow =?,
+        FROM user WHERE userid = ?
+        """
+        self.cursor.execute(sql, (userName, email,notifAbsenceOfTeacherToday, notifAbsenceOfTeacherTomorrow, notifExamTomorrow, notifEventTomorrow,notifAbsenceDueTomorrow))
+        self.conn.commit()
+        return
+
+
 
     def readAndReturnTableUser(self):
         self.cursor.execute("SELECT * FROM user")

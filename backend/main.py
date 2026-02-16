@@ -142,24 +142,6 @@ def deletToken():
     return jsonify({}), 200
 
 
-@app.route('/userData', methods=["Get"])
-def postAllUserInformation():
-
-    token = request.headers.get("token")
-    db = get_db()
-    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
-
-    if not boolien:
-        return json,errorNumber
-
-
-    userData = db.getAllUserDataWithUserID(userID)
-
-
-    return jsonify({"data": userData}), 200
-
-
-
 @app.route('/getGradesStudent', methods=["Get"])
 def postAllGradesFromUser():
 
@@ -372,6 +354,84 @@ def postAllGradesFromAllStudentsOfTest():
     service.updateAllGradesFromAllStudentsOfTest(db,grades,eventID)
 
     return jsonify({}), 200
+
+@app.route('/postFcmToken', methods=["Post"])
+def postFcmToken():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+
+
+
+
+   
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+    if not isEveryDataNameinObject(data, ["fcmToken", "hardwareID"]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+    hardwareID = service.postFcmToken(db,userID,fcmToken,hardwareID)
+
+    return jsonify({"hardwareID": hardwareID}), 200
+
+
+
+
+@app.route('/getUserData', methods=["Get"])
+def getAllUserData():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+
+
+    output = service.getAllUserData(db,userID)
+
+
+    return jsonify(output), 200
+
+@app.route('/postUserData', methods=["post"])
+def postAllUserInformation():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+
+    
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+
+    if not isEveryDataNameinObject(data,["userName","email","notifAbsenceOfTeacherToday","notifAbsenceOfTeacherTomorrow","notifExamTomorrow","notifEventTomorrow","notifAbsenceDueTomorrow"]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+
+    
+
+
+    boolien = service.postAllUserInformation(db,data,userID)
+
+    if boolien:
+        return jsonify({}), 200
+
+
+    return jsonify({"error": "Einträge im JSON sind falsch"}), 400
+
 
 ###########################################################
 #Tests#
