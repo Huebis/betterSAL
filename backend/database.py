@@ -185,7 +185,9 @@ class User:
             notifabsenceofteachertomorrow INT,
             notifexamtomorrow INT,
             notifeventtomorrow INT,
-            notifabsenceduetomorrow INT
+            notifabsenceduetomorrow INT,
+            birthdate TEXT,
+            childuserid TEXT
         );
         """
         self.cursor.execute(table_creation_query)
@@ -250,15 +252,15 @@ class User:
             return True
         return False
 
-    def addNewUser(self,username,password,classname,major,email,role,firstName, lastName):
+    def addNewUser(self,username,password,classname,major,email,role,firstName, lastName,birthDate = None,childUserID = None):
 
         if self.isUserExist(username):
             return False
 
 
-        sql = "INSERT INTO user (userid,username,password,classname,major,email,role,firstname,lastname) VALUES (?,?,?,?,?,?,?,?,?)"
+        sql = "INSERT INTO user (userid,username,password,classname,major,email,role,firstname,lastname,birthdate,childuserid) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
         userID = str(uuid.uuid4())
-        self.cursor.execute(sql, (userID,username,password,classname,major,email,role,firstName,lastName))
+        self.cursor.execute(sql, (userID,username,password,classname,major,email,role,firstName,lastName,birthDate,childUserID))
         self.conn.commit()
 
         
@@ -268,15 +270,33 @@ class User:
 
     def getAllUserDataWithUserID(self,userID):
         sql = """
-        SELECT (username,classname,major,email,role,firstname,lastname,
-        notifabsenceofteachertoday,notifabsenceofteachertomorrow,notifexamtomorrow,notifeventtomorrow,notifabsenceduetomorrow) 
+        SELECT username,classname,major,email,role,firstname,lastname,
+        notifabsenceofteachertoday,notifabsenceofteachertomorrow,notifexamtomorrow,notifeventtomorrow,notifabsenceduetomorrow
         FROM user WHERE userid = ?
         """
         self.cursor.execute(sql, (userID,))
         output = self.cursor.fetchone()
-        self.conn.commit()
 
-        return output
+
+        return list(output)
+
+    def getBirthdateWithUserID(self,userID):
+        sql = """
+        SELECT birthdate
+        FROM user WHERE userid = ?
+        """
+        self.cursor.execute(sql, (userID,))
+        output = self.cursor.fetchone()
+        return output[0]
+
+    def getChildUserIDWithParentUserID(self,userID):
+        sql = """
+        SELECT childuserid
+        FROM user WHERE userid = ?
+        """
+        self.cursor.execute(sql, (userID,))
+        output = self.cursor.fetchone()
+        return output[0]
 
     def updateUserDataFromUserWithUserID(self,userID,userName, email, notifAbsenceOfTeacherToday,notifAbsenceOfTeacherTomorrow, notifExamTomorrow, notifEventTomorrow,  notifAbsenceDueTomorrow):
 
@@ -288,10 +308,10 @@ class User:
             notifabsenceofteachertomorrow =?,
             notifexamtomorrow =?,
             notifeventtomorrow =?,
-            notifabsenceduetomorrow =?,
-        FROM user WHERE userid = ?
+            notifabsenceduetomorrow =?
+        WHERE userid = ?
         """
-        self.cursor.execute(sql, (userName, email,notifAbsenceOfTeacherToday, notifAbsenceOfTeacherTomorrow, notifExamTomorrow, notifEventTomorrow,notifAbsenceDueTomorrow))
+        self.cursor.execute(sql, (userName, email,notifAbsenceOfTeacherToday, notifAbsenceOfTeacherTomorrow, notifExamTomorrow, notifEventTomorrow,notifAbsenceDueTomorrow,userID))
         self.conn.commit()
         return
 

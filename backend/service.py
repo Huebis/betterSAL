@@ -160,11 +160,11 @@ def updateAllExamAndEventDataWithEventIDAndCourseID(db,exam):
     return True
 
 def postFcmToken(db,userID,fcmToken,hardwareID):
-    if db.isFcmTokenExistWithUserIDandHardwareID(userID,hardwareID)
+    if db.isFcmTokenExistWithUserIDandHardwareID(userID,hardwareID):
         db.updateFcmTokenWithUserIDAndHardwareToken(userID,fcmToken,hardwareID)
         return hardwareID
     hardwareID = str(uuid.uuid4())
-    db.addNewFcmToken(userID,fcmToken,hardwareToken):
+    db.addNewFcmToken(userID,fcmToken,hardwareToken)
     return hardwareID
 
 
@@ -172,23 +172,22 @@ def getAllUserData(db,userID):
     userData = db.getAllUserDataWithUserID(userID)
     for a in range(7,12,1):
         if userData[a] == None:
-            userData = 1
+            userData[a] = 0
 
 
     outputDict = {
-        "userName": userData[0]
-        "className": userData[1]
-        "major": userData[2]
-        "email": userData[3]
-        "role": userData[4]
-        "firstName": userData[5]
-        "lastName": userData[6]
-        "notifAbsenceOfTeacherToday": userData[7]
-        "notifAbsenceOfTeacherTomorrow": userData[8]
-        "notifExamTomorrow": userData[9]
-        "notifEventTomorrow": userData[10]
+        "userName": userData[0],
+        "className": userData[1],
+        "major": userData[2],
+        "email": userData[3],
+        "role": userData[4],
+        "firstName": userData[5],
+        "lastName": userData[6],
+        "notifAbsenceOfTeacherToday": userData[7],
+        "notifAbsenceOfTeacherTomorrow": userData[8],
+        "notifExamTomorrow": userData[9],
+        "notifEventTomorrow": userData[10],
         "notifAbsenceDueTomorrow": userData[11]
-        ""
     }
     return outputDict
 

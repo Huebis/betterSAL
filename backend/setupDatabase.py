@@ -11,21 +11,36 @@ db = database.Database()
 
 def insertTestDataTableUserAndCourse(db):
     testData = [
-            [0,"Eliah" , "Eliah", "M4G", "A","test@test.ch", 1,"Eliah", "Hueber"],
-            [0,"Emil" , "Emil", "M4G", "B","test@test.ch", 1,"Emil", "Peterson"],
-            [0,"Nahia" , "Nahia", "M4G", "B","test@test.ch", 1,"Nahia", "Weyeneth"],
-            [0,"Paul" , "Paul", "M4G", "W","test@test.ch", 1,"Paul", "Konzili"],
-            [0,"Esben" , "Esben", "M4G", "A","test@test.ch", 1,"Esben", "Duss"],
-            [0,"Moritz" , "Moritz", "M4G", "A","test@test.ch", 1,"Moritz", "Brotbeck"],
-            [0,"Manuel" , "Manuel", "M4G", "W","test@test.ch", 1,"Manuel", "Kron"],
-            [0,"Aurel" , "Aurel", "M4G", "W","test@test.ch", 1,"Aurel", "Richterich"],
-            [0,"Loic" , "Loic", "M4G", "W","test@test.ch", 1,"Loic", "Eicher"],
-            [0,"Walter" , "Walter", "M4G", "A","test@test.ch", 1,"Walter", "Kutz"],
-            [0,"Theo" , "Theo", "M4G", "A","test@test.ch", 1,"Theo", "Böhm"],
-            [0,"Marlon" , "Marlon", "M4G", "A","test@test.ch", 1,"Marlon", "Auchli"],
-            [0, "Anklin", "Anklin", "M4G", "", "test@test.ch",2,"Melanie", "Anklin"],
-            [0, "Zulauf", "Zulauf", "", "", "test@test.ch",2,"Lester", "Zulauf"],
-            [0, "admin", "admin", "", "", "test@test.ch",5,"admin", "admin"]
+        [0,"Eliah","Eliah","M4G","A","test@test.ch",1,"Eliah","Hueber","2005-03-14"],
+        [0,"Emil","Emil","M4G","B","test@test.ch",1,"Emil","Peterson","2009-07-22"],
+        [0,"Nahia","Nahia","M4G","B","test@test.ch",1,"Nahia","Weyeneth","2008-11-02"],
+        [0,"Paul","Paul","M4G","W","test@test.ch",1,"Paul","Konzili","2009-01-18"],
+        [0,"Esben","Esben","M4G","A","test@test.ch",1,"Esben","Duss","2008-09-30"],
+        [0,"Moritz","Moritz","M4G","A","test@test.ch",1,"Moritz","Brotbeck","2009-05-12"],
+        [0,"Manuel","Manuel","M4G","W","test@test.ch",1,"Manuel","Kron","2008-12-03"],
+        [0,"Aurel","Aurel","M4G","W","test@test.ch",1,"Aurel","Richterich","2009-04-27"],
+        [0,"Loic","Loic","M4G","W","test@test.ch",1,"Loic","Eicher","2008-08-16"],
+        [0,"Walter","Walter","M4G","A","test@test.ch",1,"Walter","Kutz","2009-10-09"],
+        [0,"Theo","Theo","M4G","A","test@test.ch",1,"Theo","Böhm","2004-06-25"],
+        [0,"Marlon","Marlon","M4G","A","test@test.ch",1,"Marlon","Auchli","2004-06-25"],
+        [0,"Anklin","Anklin","M4G","","test@test.ch",2,"Melanie","Anklin",None],
+        [0,"Zulauf","Zulauf","","","test@test.ch",2,"Lester","Zulauf",None],
+        [0,"admin","admin","","","test@test.ch",5,"admin","admin",None]
+        ]
+
+    testDataParents = [
+        [0,"ParentEliah","ParentEliah","","","test@test.ch",0,"",""],
+        [0,"ParentEmil","ParentEmil","","","test@test.ch",0,"",""],
+        [0,"ParentNahia","ParentNahia","","","test@test.ch",0,"",""],
+        [0,"ParentPaul","ParentPaul","","","test@test.ch",0,"",""],
+        [0,"ParentEsben","ParentEsben","","","test@test.ch",0,"",""],
+        [0,"ParentMoritz","ParentMoritz","","","test@test.ch",0,"",""],
+        [0,"ParentManuel","ParentManuel","","","test@test.ch",0,"",""],
+        [0,"ParentAurel","ParentAurel","","","test@test.ch",0,"",""],
+        [0,"ParentLoic","ParentLoic","","","test@test.ch",0,"",""],
+        [0,"ParentWalter","ParentWalter","","","test@test.ch",0,"",""],
+        [0,"ParentTheo","ParentTheo","","","test@test.ch",0,"",""],
+        [0,"ParentMarlon","ParentMarlon","","","test@test.ch",0,"",""],
         ]
 
     ph = PasswordHasher()
@@ -45,6 +60,11 @@ def insertTestDataTableUserAndCourse(db):
             db.addNewCourse(EnglischM4GcourseID,row[0],"E","E-M4G-26")
     
     # [[testname, weight, changedatum, grade, message]]
+
+    #add ParentUsers
+    for a,row in enumerate(testDataParents):
+        row[2] = ph.hash(row[2]) 
+        row[0] = db.addNewUser(row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],None,testData[a][0])
 
     testGradesfuerEliahFranzösisch = [
     ["Contrôle de mathématiques", 0.3, "2024-04-12", 1, "Bon travail"],

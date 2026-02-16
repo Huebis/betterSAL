@@ -4,6 +4,8 @@ from database import Database
 import service
 from flask_cors import CORS
 import notification
+from datetime import date
+
 
 
 #source venv/bin/activate 
@@ -25,9 +27,14 @@ def isEveryDataNameinObject(testedObject,dataNames):
     return True
 
 
+
+def isAdult(birthDate):
+    today = date.today()
+    return (today.year - birthDate.year - 
+           ((today.month, today.day) < (birthDate.month, birthDate.day))) >= 18
 #return True,UserID, None, None when everything is fine
 #return False,None, error, Fehlernummer when something is wrong
-def tokenAndRoleVerfication(db,token, allowedRoles = None): # Bei None sind einfach alle Rollen zugelassen
+def tokenAndRoleVerfication(db,token, allowedRoles = None,parentLock = False): # Bei None sind einfach alle Rollen zugelassen
     if not token:
         return False, None, jsonify({"error": "Token wurden nicht übermittelt"}), 400
 
@@ -37,11 +44,31 @@ def tokenAndRoleVerfication(db,token, allowedRoles = None): # Bei None sind einf
     if userID == False:
         return False, None, jsonify({"error": "token ist nicht valid"}), 450
 
+
+    role = db.getRolefromUserWithUserID(userID)
+
+    if parentLock:
+        if role == 0: #Parent
+            childUserID = db.getChildUserIDWithParentUserID(userID)
+            birthDate = db.getBirthdateWithUserID(childUserID)
+            if isAdult(birthDate):
+                return False, None,jsonify({"error": "user do not have the permission to enter the site"}), 403
+            else:
+                userID = childUserID
+        elif role == 1: #Student
+            birthDate = db.getBirthdateWithUserID(userID)
+            if not isAdult(birthDate):
+                return False, None,jsonify({"error": "user do not have the permission to enter the site"}), 403
+        
+
+
+
+
     if allowedRoles == None:
         return True,userID,None,None
 
 
-    role = db.getRolefromUserWithUserID(userID)
+    
 
     if role not in allowedRoles:
         return False, None,jsonify({"error": "user do not have the permission to enter the site"}), 403
@@ -346,6 +373,11 @@ def postAllGradesFromAllStudentsOfTest():
 
     if not db.isUserIDinCourse(userID,courseID):
         return jsonify({"error": "user do not have the permission to change that"}), 403
+    
+    if not db.isUserIDinEvent(userID,eventID):
+        return jsonify({"error": "user do not have the permission to change that"}), 403
+
+
 
     response = service.updateAllExamAndEventDataWithEventIDAndCourseID(db,exam)
     if not response:

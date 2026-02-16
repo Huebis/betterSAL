@@ -2,7 +2,7 @@
 WICHTIG !!!!!!!
 
 FileId immer zu user hinzufügen
-überprüfen ob EventID bei updateGrades wirklich eine passende courseID hat
+
 
 
 
@@ -14,11 +14,6 @@ Nächste Schritte:
 
 notification funktion machen mit verschiedenen möglichekeiten
     mit verschiedenen Messages
-
-
-ParentUser hinzufügen + Rechte einschränken + Table user anpassen (geburtsdatum und )
-
-
 
 
 
