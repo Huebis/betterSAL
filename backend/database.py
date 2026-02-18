@@ -669,10 +669,79 @@ class Course:
         return  
 
 
+    def creatTableCourse(self):
+        self.cursor.execute("DROP TABLE IF EXISTS course")
+        tableCreationQuery = """
+        CREATE TABLE course (
+            courseid TEXT NOT NULL,
+            userid TEXT NOT NULL,
+            subject TEXT NOT NULL,
+            courseName TEXT NOT NULL            
+        );
+        """
+        self.cursor.execute(tableCreationQuery)
+        self.conn.commit()
+        return True
+    
+
+class Schedule:
+
+    conn = None
+    cursor = None
+
+    def __init__(self):
+        return  
+    
+    
+    def creatTableSchedule(self):
+        self.cursor.execute("DROP TABLE IF EXISTS schedule")
+        table_creation_query = """
+        CREATE TABLE schedule (
+            courseid TEXT NOT NULL,
+            weekday INT NOT NULL,
+            starttime TEXT NOT NULL,
+            endtime TEXT NOT NULL,
+            location TEXT NOT NUll
+        );
+        """
+        self.cursor.execute(table_creation_query)
+        self.conn.commit()
+        return True
+    def addNewSchedule(self,courseID,weekday,starttime,endtime,location):
+        sql = """INSERT INTO schedule (courseid,weekday,starttime,endtime,location) 
+        VALUES (?,?,?,?,?);
+        """
+        self.cursor.execute(sql, (courseID,weekday,starttime,endtime,location))
+        self.conn.commit()
+        return True
+
+    def getScheduleOfWeekdayWithTimeIntervalWithUserID(self,userID,weekday,starttime,endtime,date):
+        sql = """SELECT sc.starttime,sc.endtime,sc.location,sc.courseid,co.subject,co.courseName
+        FROM schedule AS sc 
+        INNER JOIN course AS co
+            ON co.courseid = sc.courseid
+        WHERE weekday = ?
+            AND co.userid = ?
+            AND endtime > ?
+            AND starttime < ?
+        ORDER BY sc.starttime ASC;"""
+        self.cursor.execute(sql, (weekday,userID,starttime,endtime,))
+        outputTuble = self.cursor.fetchall()
+        output = []
+        for lection in outputTuble:
+            lection = list(lection)
+            lection[0] = date + " " + lection[0]
+            lection[1] = date + " " + lection[1]
+            output.append(lection)
+
+        return output
 
 
-class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course):
 
+
+
+
+class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule):
     conn = None
     cursor = None
 
@@ -699,55 +768,7 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course):
         self.conn.commit()
         return True
 
-    def creatTableSchedule(self):
-        self.cursor.execute("DROP TABLE IF EXISTS schedule")
-        table_creation_query = """
-        CREATE TABLE schedule (
-            courseid TEXT NOT NULL,
-            subject TEXT NOT NULL,
-            date TEXT NOT NULL,
-            starttime TEXT NOT NULL,
-            endtime TEXT NOT NULL,
-            change INT not NULL,
-            major TEXT NOT NULL
-        );
-        """
-        self.cursor.execute(table_creation_query)
-        self.conn.commit()
-        return True
 
-
-    # Nicht mehr in gebrauch
-    def creatTableSubject(self): 
-        self.cursor.execute("DROP TABLE IF EXISTS subject")
-        """
-        tableCreationQuery = 
-        #CREATE TABLE subject (
-        #    listofteachers TEXT NOT NULL,
-        #    name TEXT NOT NULL,
-        #    listofstudents TEXT NOT NULL
-        #);
-        """
-        #self.cursor.execute(tableCreationQuery)
-        self.conn.commit()
-        return True
-
-
-
-    def creatTableCourse(self):
-        self.cursor.execute("DROP TABLE IF EXISTS course")
-        tableCreationQuery = """
-        CREATE TABLE course (
-            courseid TEXT NOT NULL,
-            userid TEXT NOT NULL,
-            subject TEXT NOT NULL,
-            courseName TEXT NOT NULL            
-        );
-        """
-        self.cursor.execute(tableCreationQuery)
-        self.conn.commit()
-        return True
-    
 
     def creatTableEvent(self):
         self.cursor.execute("DROP TABLE IF EXISTS event")
@@ -755,7 +776,7 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course):
         CREATE TABLE event (
             eventid TEXT NOT NULL,
             location TEXT NOT NULL,
-            date TEXT NOT NULL,
+            date TEXT,
             starttime TEXT NOT NULL,
             endtime TEXT NOT NULL,
             courseID TEXT NOT NULL,

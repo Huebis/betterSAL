@@ -1,10 +1,12 @@
 import database
 import uuid
 import os
+from datetime import datetime,timedelta
+
+
 
 
 uploadFolder = "user_documents"
-
 
 
 def getAllGradesforStudents(db, userID):
@@ -229,6 +231,48 @@ def postAllUserInformation(db,data,userID):
     db.updateUserDataFromUserWithUserID(userID,userName,email,notifAbsenceOfTeacherToday,notifAbsenceOfTeacherTomorrow,notifExamTomorrow,notifEventTomorrow,notifAbsenceDueTomorrow)
     return True
 
+def getSchedule(db,userID,starttime,endtime):
+    starttime = datetime.strptime(starttime, "%Y-%m-%d %H:%M")
+    endtime = datetime.strptime(endtime, "%Y-%m-%d %H:%M")
+
+    if starttime > endtime:
+        return False
+
+    ## Get normal Schedule
+
+    
+
+    if endtime.date() == starttime.date():
+        schedule = db.getScheduleOfWeekdayWithTimeIntervalWithUserID(userID,starttime.weekday(),starttime.strftime("%H:%M"),endtime.strftime("%H:%M"), starttime.strftime("%Y-%m-%d"))
+
+    else:
+        schedule = []
+        tempTime = starttime
+        schedule.extend(db.getScheduleOfWeekdayWithTimeIntervalWithUserID(userID,tempTime.weekday(),tempTime.strftime("%H:%M"),"23:59",tempTime.strftime("%Y-%m-%d")))
+        tempTime = tempTime + timedelta(days=1)
+        while tempTime.date() != endtime.date():
+            print("Hello")
+            schedule.extend(db.getScheduleOfWeekdayWithTimeIntervalWithUserID(userID,tempTime.weekday(),"00:01","23:59",tempTime.strftime("%Y-%m-%d")))
+            tempTime = tempTime + timedelta(days=1)
+        
+        schedule.extend(db.getScheduleOfWeekdayWithTimeIntervalWithUserID(userID,tempTime.weekday(),"00:01",endtime.strftime("%H:%M"),tempTime.strftime("%Y-%m-%d")))
+
+    output = []
+    for lection in schedule:
+        lectionDict = {
+            " starttime": lection[0],
+            "endtime": lection[1],
+            "location": lection[2],
+            "courseID" : lection[3],
+            "subject": lection[4],
+            "courseName": lection[5]
+        }
+        output.append(lectionDict)
+
+    return output
+        
+
+
 ################ NOCH NICHT FERTIG ###############################
 def saveNewFile(file):
     oldFileName = file.filename
@@ -244,4 +288,6 @@ def lookUpFile(fileId):
         return False
     
     return 
+
+
 

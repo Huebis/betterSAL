@@ -465,6 +465,25 @@ def postAllUserInformation():
     return jsonify({"error": "Einträge im JSON sind falsch"}), 400
 
 
+@app.route('/getSchedule', methods=["Get"])
+def getSchedule():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+
+    #Zeitpunkte noch implementieren, im Header
+    starttime = "2026-02-18 09:00"
+    endtime = "2026-02-19 15:00"
+    output = service.getSchedule(db,userID,starttime,endtime)
+
+
+    return jsonify({"schedule": output}), 200
+
+
 ###########################################################
 #Tests#
 ########################################
