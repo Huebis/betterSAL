@@ -231,6 +231,30 @@ def postAllUserInformation(db,data,userID):
     db.updateUserDataFromUserWithUserID(userID,userName,email,notifAbsenceOfTeacherToday,notifAbsenceOfTeacherTomorrow,notifExamTomorrow,notifEventTomorrow,notifAbsenceDueTomorrow)
     return True
 
+
+def getScheduleOfOneDay(db,userID,date,starttime=None,endtime =None):
+    schedule = []
+
+    if not db.isHolidateAtdate(date)
+        schedule = db.getScheduleOfWeekdayWithTimeIntervalWithUserID(userID,date.weekday(),"00:01","23:59", date.strftime("%Y-%m-%d"))
+
+    
+    events = db.getEventsAtDayWithUserID(userID,date.strftime("%Y-%m-%d"))
+
+
+    output = []
+    if schedule == []:
+        output = events
+    
+    #event : ev.starttime,ev.endtime,ev.location,ev.courseid,co.subject,co.courseName,ev.type
+    #schedule: sc.starttime,sc.endtime,sc.location,sc.courseid,co.subject,co.courseName
+    else: 
+        #merge Event with Schedule
+
+        #Overwrite schedule with examens
+
+
+
 def getSchedule(db,userID,starttime,endtime):
     starttime = datetime.strptime(starttime, "%Y-%m-%d %H:%M")
     endtime = datetime.strptime(endtime, "%Y-%m-%d %H:%M")

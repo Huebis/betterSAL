@@ -656,8 +656,48 @@ class Event:
         self.cursor.execute(sql,(eventID,))
         self.conn.commit()
         return 
-
     
+    
+    def isHolidateAtdate(self,date):
+        starttime = date + " 00:01"
+        endtime = date + " 23:59"
+
+        sql = """SELECT CASE
+            WHEN EXISTS (
+                SELECT 1
+                FROM event
+                WHERE type = 100
+                    AND endtime > ?
+                    AND starttime < ?
+            )
+            THEN 1
+            ELSE 0
+            END;
+        """
+       
+        self.cursor.execute(sql, (starttime, endtime))
+        output = self.cursor.fetchone()[0] 
+        self.conn.commit()
+
+        if output == 1:
+            return True
+        return False
+
+    def getEventsAtDayWithUserID(self,userID,date):
+        starttime = date + " 00:01"
+        endtime = date + " 23:59"
+        sql = """SELECT ev.starttime,ev.endtime,ev.location,ev.courseid,co.subject,co.courseName,ev.type
+        FROM event AS ev
+        INNER JOIN course AS co
+            ON co.courseid = ev.courseid
+        WHERE co.userid = ?
+            AND ev.endtime > ?
+            AND ev.starttime < ?
+            AND ev.type > 100
+        ORDER BY ev.starttime ASC;"""
+        self.cursor.execute(sql, (userID,starttime,endtime,))
+        output = self.cursor.fetchall()
+        return output
 
 
 class Course:
@@ -735,6 +775,8 @@ class Schedule:
             output.append(lection)
 
         return output
+
+
 
 
 
