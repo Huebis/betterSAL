@@ -41,11 +41,11 @@ def getAllGradesforStudents(db, userID):
 
     return output
             
-def addNewExamenForCourseWithEventAndDefaultGrades(db,courseID,examenName,weight,location,date,starttime,endtime,describtion):
+def addNewExamenForCourseWithEventAndDefaultGrades(db,courseID,examenName,weight,location,starttime,endtime,describtion):
     eventID = str(uuid.uuid4())
     db.addNewExamen(courseID,eventID,examenName,weight)
     db.addNewGradesForExamForEveryoneInCourse(courseID,eventID)
-    db.addNewEvent(eventID,location,date,starttime,endtime,describtion, 666,courseID)
+    db.addNewEvent(eventID,location,starttime,endtime,describtion, 666,courseID)
     return True
 
 #Teacher Only
@@ -120,12 +120,11 @@ def getAllExamAndEventDataWithEventID(db,eventID):
             "testName": examData[0],
             "weight": examData[1],
             "location": examData[2],
-            "date":examData[3],
-            "starttime": examData[4],
-            "endtime": examData[5],
-            "description": examData[6],
-            "courseID":examData[7],
-            "eventID": examData[8],
+            "starttime": examData[3],
+            "endtime": examData[4],
+            "description": examData[5],
+            "courseID":examData[6],
+            "eventID": examData[7],
             }
 
     return examDict
@@ -136,8 +135,6 @@ def updateAllExamAndEventDataWithEventIDAndCourseID(db,exam):
     if "weight" not in exam:
         return False
     if "location" not in exam:
-        return False
-    if "date" not in exam:
         return False
     if "starttime" not in exam:
         return False
@@ -150,14 +147,13 @@ def updateAllExamAndEventDataWithEventIDAndCourseID(db,exam):
     testName = exam["testName"]
     weight = exam["weight"]
     location = exam["location"]
-    date = exam["date"]
     starttime = exam["starttime"]
     endtime = exam["endtime"]
     description = exam["description"]
     eventID = exam["eventID"]
     courseID = exam["courseID"]
 
-    db.updateAllExamAndEventDataWithEventID(testName,weight,location,date,starttime,endtime,description,courseID,eventID)
+    db.updateAllExamAndEventDataWithEventID(testName,weight,location,starttime,endtime,description,courseID,eventID)
 
     return True
 
@@ -232,15 +228,27 @@ def postAllUserInformation(db,data,userID):
     return True
 
 
-def getScheduleOfOneDay(db,userID,date,starttime=None,endtime =None):
+def getScheduleOfOneDay(db,userID,date,starttime=None,endtime=None):
     schedule = []
 
-    if not db.isHolidateAtdate(date)
+    if not db.isHolidateAtdate(date.strftime("%Y-%m-%d %H:%M")):
         schedule = db.getScheduleOfWeekdayWithTimeIntervalWithUserID(userID,date.weekday(),"00:01","23:59", date.strftime("%Y-%m-%d"))
 
     
     events = db.getEventsAtDayWithUserID(userID,date.strftime("%Y-%m-%d"))
 
+    #sind Tuble
+    events = [list(t) for t in events]
+    schedule = [list(t) for t in schedule]
+
+    for event in events:
+        event[0] = datetime.strptime(event[0], "%Y-%m-%d %H:%M")
+        event[1] = datetime.strptime(event[1], "%Y-%m-%d %H:%M")
+
+    for lection in schedule:
+        lection[0] = datetime.strptime(lection[0], "%Y-%m-%d %H:%M")
+        lection[1] = datetime.strptime(lection[1], "%Y-%m-%d %H:%M")
+        lection.append(0)
 
     output = []
     if schedule == []:
@@ -251,7 +259,98 @@ def getScheduleOfOneDay(db,userID,date,starttime=None,endtime =None):
     else: 
         #merge Event with Schedule
 
+
+
+        #Lektionen veränderungen
+
+        for event in events:
+            if event[6] == 301:
+                for lection in schedule:
+                    if lection[3] == event[3]:
+                        if lection[0] == event[0] and lection[1] == event[1]:
+                            lection = event
+
+
+
+        #Lektionen absagen
+        for event in events:
+            if event[6] == 400:
+                for lection in schedule:
+                    if lection[3] == event[3]:
+                        if lection[0] == event[0] and lection[1] == event[1]:
+                            lection = event
+
+
         #Overwrite schedule with examens
+        for event in events:
+            if event[6] == 666:
+                for lection in schedule:
+                    if lection[3] == event[3]:
+                        if lection[0] > event[0] and lection[0] < event[1]:
+                            lection[0] = event[1]
+
+                        if lection[1] > event[0] and lection[1] < event[1]:
+                            lection[1] = event[0]
+
+                output.append(event)
+
+
+        #Urlaubsgesuche überschreiben
+        for event in events:
+            if event[6] == 150:
+                for lection in schedule:
+                    if lection[0] > event[0] and lection[0] < event[1]:
+                        lection[0] = event[1]
+
+                    if lection[1] > event[0] and lection[1] < event[1]:
+                        lection[1] = event[0]
+                
+                output.append(event)
+        
+
+        output.extend(schedule)
+
+
+        if starttime != None:
+            #starttime = datetime.strptime(starttime, "%Y-%m-%d %H:%M")
+
+            for lection in output:
+                if lection[0] < starttime:
+                    lection[0] = starttime
+        
+        if endtime != None:
+            #endtime = datetime.strptime(starttime, "%Y-%m-%d %H:%M")
+
+            for lection in output:
+                if lection[1] > endtime:
+                    lection[1] = endtime
+        
+
+        for a in range(len(output)-1,-1,-1):
+            if output[a][0] >= output[a][1]:
+                output.pop(a)
+        
+
+        
+    #schedule: sc.starttime,sc.endtime,sc.location,sc.courseid,co.subject,co.courseName
+        outputDict = []
+        for a,lection in enumerate(output):
+            lectionDict = {
+                "starttime" : lection[0].strftime("%Y-%m-%d %H:%M"),
+                "endtime" : lection[1].strftime("%Y-%m-%d %H:%M"),
+                "location" : lection[2],
+                "courseID" : lection[3],
+                "subject" : lection[4],
+                "courseName" : lection[5],
+                "type" : lection[6]
+            }
+            outputDict.append(lectionDict)
+
+        return outputDict
+            
+
+
+
 
 
 
@@ -263,37 +362,311 @@ def getSchedule(db,userID,starttime,endtime):
         return False
 
     ## Get normal Schedule
-
+    output = []
     
 
     if endtime.date() == starttime.date():
-        schedule = db.getScheduleOfWeekdayWithTimeIntervalWithUserID(userID,starttime.weekday(),starttime.strftime("%H:%M"),endtime.strftime("%H:%M"), starttime.strftime("%Y-%m-%d"))
+        scheduleDict = getScheduleOfOneDay(db,userID,endtime.date(),starttime,endtime)
+        outputDict = {
+            "schedule" : scheduleDict,
+            "date" : endtime.strftime("%Y-%m-%d")
+        }
+
+        output.append(outputDict)
+        return output
 
     else:
-        schedule = []
+
+        scheduleDict = getScheduleOfOneDay(db,userID,starttime.date(),starttime,None)
+        outputDict = {
+            "schedule" : scheduleDict,
+            "date" : starttime.strftime("%Y-%m-%d")
+        }
+
+        output.append(outputDict)
         tempTime = starttime
-        schedule.extend(db.getScheduleOfWeekdayWithTimeIntervalWithUserID(userID,tempTime.weekday(),tempTime.strftime("%H:%M"),"23:59",tempTime.strftime("%Y-%m-%d")))
+        
         tempTime = tempTime + timedelta(days=1)
         while tempTime.date() != endtime.date():
-            print("Hello")
-            schedule.extend(db.getScheduleOfWeekdayWithTimeIntervalWithUserID(userID,tempTime.weekday(),"00:01","23:59",tempTime.strftime("%Y-%m-%d")))
+            scheduleDict = getScheduleOfOneDay(db,userID,tempTime.date(),starttime,None)
+            outputDict = {
+            "schedule" : scheduleDict,
+            "date" : tempTime.strftime("%Y-%m-%d")
+            }
+            output.append(outputDict)
+            
             tempTime = tempTime + timedelta(days=1)
         
-        schedule.extend(db.getScheduleOfWeekdayWithTimeIntervalWithUserID(userID,tempTime.weekday(),"00:01",endtime.strftime("%H:%M"),tempTime.strftime("%Y-%m-%d")))
-
-    output = []
-    for lection in schedule:
-        lectionDict = {
-            " starttime": lection[0],
-            "endtime": lection[1],
-            "location": lection[2],
-            "courseID" : lection[3],
-            "subject": lection[4],
-            "courseName": lection[5]
+        scheduleDict = getScheduleOfOneDay(db,userID,tempTime.date(),None,endtime)
+        outputDict = {
+        "schedule" : scheduleDict,
+        "date" : tempTime.strftime("%Y-%m-%d")
         }
-        output.append(lectionDict)
+        output.append(outputDict)
+
 
     return output
+        
+
+
+
+
+
+
+
+def getAbsenceUser(db,userID):
+    #finish Absence
+    arrayFinishAbsence = db.getAbsenceWithUserIDAndType(userID,2)
+
+    finishAbsenceDictArray = []
+    for absence in arrayFinishAbsence:
+        eventDictArray = []
+        arrayAbsenceEvent = db.getAllAbsenceEventWithAbsenceID(absence[0])
+        for event in arrayAbsenceEvent:
+            eventDict = {
+                "eventID": event[0],
+                "location": event[1],
+                "starttime": event[2],
+                "endtime": event[3],
+                "subject": event[4],
+                "courseName": event[5]
+            }
+            eventDictArray.append(eventDict)
+        
+        absenceDict = {
+            "events": eventDictArray,
+            "absenceid": absence[0],
+            "endday": absence[1],
+            "fileid": absence[2],
+            "description": absence[3]
+        }
+        finishAbsenceDictArray.append(absenceDict)
+
+    #Excused Absence
+    arrayExcusedAbsence = db.getAbsenceWithUserIDAndType(userID,1)
+
+    excusedAbsenceDictArray = []
+    for absence in arrayExcusedAbsence:
+        eventDictArray = []
+        arrayAbsenceEvent = db.getAllAbsenceEventWithAbsenceID(absence[0])
+        for event in arrayAbsenceEvent:
+            eventDict = {
+                "eventID": event[0],
+                "location": event[1],
+                "starttime": event[2],
+                "endtime": event[3],
+                "subject": event[4],
+                "courseName": event[5]
+            }
+            eventDictArray.append(eventDict)
+        
+        absenceDict = {
+            "events": eventDictArray,
+            "absenceid": absence[0],
+            "endday": absence[1],
+            "fileid": absence[2],
+            "description": absence[3]
+        }
+        excusedAbsenceDictArray.append(absenceDict)
+
+
+
+    #NOT Excused Absence
+    arrayNotExcusedAbsence = db.getAbsenceWithUserIDAndType(userID,0)
+
+    notExcusedAbsenceDictArray = []
+    for absence in arrayNotExcusedAbsence:
+        eventDictArray = []
+        arrayAbsenceEvent = db.getAllAbsenceEventWithAbsenceID(absence[0])
+        for event in arrayAbsenceEvent:
+            eventDict = {
+                "eventID": event[0],
+                "location": event[1],
+                "starttime": event[2],
+                "endtime": event[3],
+                "subject": event[4],
+                "courseName": event[5]
+            }
+            eventDictArray.append(eventDict)
+        
+        absenceDict = {
+            "events": eventDictArray,
+            "absenceid": absence[0],
+            "endday": absence[1],
+            "fileid": absence[2],
+            "description": absence[3]
+        }
+        notExcusedAbsenceDictArray.append(absenceDict)
+    
+
+    userinfo = getAllUserDataWithUserID(userID)
+    outputDict = {
+        "userID": userID,
+        "firstName": userinfo[5],
+        "lastName": userinfo[6],
+        "finished": finishAbsenceDictArray
+        "excused": excusedAbsenceDichtArray,
+        "notExcused": notExcusedAbsenceDictArray
+    }
+    return outputDict
+
+
+def getAbsenceTeacher(db,userID):
+    className = db.getMajorWithUserID(userID)
+
+    output = []
+
+    if className == "" or className == None:
+        return output
+    
+
+    students = db.getUserWithclassName(className)
+
+    for student in students:
+
+        if student[1] != 1: #Teacher ausschliessen
+            continue
+        
+        output.append(db.getAbsenceUser(studnet[0]))
+
+    return output
+
+
+
+
+def isClassTeacher(db,teacherUserID,studentUserID):
+    className = db.getMajorWithUserID(teacherUserID)
+
+
+    if className == "" or className == None:
+        return False
+    
+
+    students = db.getUserWithclassName(className)
+
+    for student in students:
+
+        if student == studentUserID:
+            return True
+
+    return False
+
+
+
+def mergeAbsence(db,userID,role,absenceIDlist):
+
+    # userid,endday,excused,description,fileid
+
+
+    absences = []
+
+    for absenceID in absenceIDlist:
+        absence = db.getAbsenceWithAbsenceID()
+        if absence == []:
+            return False
+        absences.append(absence)
+    
+
+    for absence in absences:
+        if absence[0] != absences[0][0]: # wenn nicht alle userID gleich sind return Fehler
+            return False
+        if absence[2] != absences[0][2]: # wenn nicht alle Excused type gleich sind return Fehler
+            return False
+
+
+
+    if absences[0][2] == 2 and role == 2: #Only teacher are able to change that
+        return False
+
+
+    if role == 2 and not isClassTeacher(db,userID,absences[0][0]): # If Teacher, only Classteacher has permisson to change
+        return False
+
+    if role < 2 and userID != absences[0][0]: #When User, only User is able to change
+        return False
+
+    
+    # get one Fileid 
+    fileID = ""
+
+    for absence in absences:
+        if absence[4] != "" and absence[4] != None:
+            fileID = absence[4]
+            break
+
+    # get one description
+    description = ""
+
+    for absence in absences:
+        if absence[3] != "" and absence[3] != None:
+            description = absence[3]
+            break
+
+    endday = datetime.strptime(absences[0][1], "%Y-%m-%d")
+
+    for absence in absences:
+        if datetime.strptime(absence[1], "%Y-%m-%d") < endday:
+            endday = datetime.strptime(absence[1], "%Y-%m-%d")
+    
+
+    #Update eines Eintrangs
+    db.updateAbsenceWithAbsenceID(absenceIDlist[0],endday,absences[0][2],description,fileid):
+
+    #Löschung der restlichen Einträge Absencen und überschreibung der AbsenceID der AbsenceEvents
+    for a in range(1,len(absenceIDlist),1):
+        db.updateAbsenceIDOfEventWithAbsenceID(absenceIDlist[a])
+        db.deleteAbsenceWithAbsenceID(absenceIDlist[a])
+
+    return True
+
+
+
+
+
+
+
+
+    # Delete one Absence
+
+    #rewrite Event with new AbsenceID
+
+    return
+
+def changeAbsence(db,userID,role,absence):
+    #userid,endday,excused,description,fileid
+    absenceID = absence["absenceID"]
+    excused = absence["excused"]
+    description = absence["description"]
+    fileID = absence["fileid"]
+
+
+    #userid,endday,excused,description,fileid
+    databaseAbsence = db.getAbsenceWithAbsenceID()
+
+
+
+    if (databaseAbsence[0][2] == 2 or excused == 2) and role == 2: #Only teacher are able to change that
+        return False
+
+    if role == 2 and not isClassTeacher(db,userID,databaseAbsence[0]): # If Teacher, only Classteacher has permisson to change
+        return False
+
+    if role < 2 and userID != databaseAbsence[0]: #When User, only User is able to change
+        return False
+
+    
+    
+
+
+
+
+def deleteAbsenceEvent(db,userID,role,eventID):
+
+def addAbsence(db,userID,absenceEvents)
+
+
+
+
         
 
 

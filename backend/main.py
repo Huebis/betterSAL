@@ -121,9 +121,6 @@ def requestChangePassword():
     return jsonify({"error": "password ist nicht valid"}), 403
 
 
-
-
-
 @app.route('/login', methods=["POST"])
 def loginUser():
     data = request.get_json()
@@ -150,8 +147,6 @@ def loginUser():
 
     return jsonify({"token": token, "role": role}), 200
 
-
-
 @app.route('/endSession', methods=["Get"])
 def deletToken():
 
@@ -167,7 +162,6 @@ def deletToken():
     db.deletToken(token)
 
     return jsonify({}), 200
-
 
 @app.route('/getGradesStudent', methods=["Get"])
 def postAllGradesFromUser():
@@ -185,8 +179,6 @@ def postAllGradesFromUser():
 
 
     return jsonify({"subjects": output}), 200
-
-
 
 @app.route('/addNewTest', methods=["Post"])
 def addNewTest():
@@ -286,9 +278,6 @@ def getAllTests():
     return jsonify({"courses": output}), 200
 
 
-
-
-
 #Teacher only
 @app.route('/getAllGradesFromTest', methods=["get"])
 def getAllGradesFromAllStudentsOfTest():
@@ -311,8 +300,6 @@ def getAllGradesFromAllStudentsOfTest():
     exam = service.getAllExamAndEventDataWithEventID(db,eventID)
 
     return jsonify({"grades": grades,"exam":exam}), 200
-
-
 
 
 @app.route('/testFcmToken', methods=["Post"])
@@ -475,13 +462,65 @@ def getSchedule():
     if not boolien:
         return json,errorNumber
 
-    #Zeitpunkte noch implementieren, im Header
-    starttime = "2026-02-18 09:00"
-    endtime = "2026-02-19 15:00"
+
+    starttime = request.args.get("starttime")
+    endtime = request.args.get("endtime")
     output = service.getSchedule(db,userID,starttime,endtime)
 
 
     return jsonify({"schedule": output}), 200
+
+
+@app.route('/Absence', methods=["post"])
+def addAbsence():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+
+    if not isEveryDataNameinObject(data,["userName","email","notifAbsenceOfTeacherToday","notifAbsenceOfTeacherTomorrow","notifExamTomorrow","notifEventTomorrow","notifAbsenceDueTomorrow"]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+
+
+    return jsonify({}), 200
+
+
+@app.route('/Absence', methods=["get"])
+def getAbsence():
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+    
+
+    output = []
+
+    if role == 2:
+        output = getAbsenceTeacher(db,userID)
+
+
+    if role < 2:
+        output = []
+        output.append(getAbsenceUser(db,userID))
+    
+
+    return jsonify({"absence": output}), 200
+
+    
+
 
 
 ###########################################################

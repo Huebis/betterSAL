@@ -331,6 +331,21 @@ class User:
 
         return output[0][0]
 
+    def getclassNameWithUserID(userID):
+        sql = "SELECT classname FROM user WHERE userid = ?"
+        self.cursor.execute(sql, (userID,))
+        output = self.cursor.fetchall()
+        self.conn.commit()
+        return output[0][0]
+
+    def getUserWithclassName(className):
+        sql = "SELECT userID,role FROM user WHERE classname = ?"
+        self.cursor.execute(sql, (className,))
+        output = self.cursor.fetchall()
+        self.conn.commit()
+        return output
+
+
 class File:
 
     conn = None
@@ -478,7 +493,7 @@ class Grade:
                 g.grade,
                 g.message,
                 g.fileId,
-                ev.date
+                ev.starttime
             FROM examen AS ex
             LEFT JOIN grade AS g
                 ON g.eventid = ex.eventid
@@ -486,7 +501,7 @@ class Grade:
             INNER JOIN event AS ev
                 ON ev.eventid = ex.eventid
             WHERE ex.courseid = ?
-            ORDER BY ev.date ASC;
+            ORDER BY ev.starttime ASC;
             """
         self.cursor.execute(sql,(userID, courseID))
         output = self.cursor.fetchall()
@@ -546,13 +561,13 @@ class Exam:
         sql = """SELECT 
         ex.testname, 
         ex.weight,
-        ev.date,
+        ev.starttime,
         ex.eventid
         FROM examen AS ex
         INNER JOIN event AS ev
             ON ex.eventid = ev.eventid
         WHERE ex.courseid = ?
-        ORDER BY ev.date ASC;
+        ORDER BY ev.starttime ASC;
         """
         self.cursor.execute(sql, (courseID,))
         output = self.cursor.fetchall()
@@ -568,7 +583,6 @@ class Exam:
                 ex.testname,
                 ex.weight,
                 ev.location,
-                ev.date,
                 ev.starttime,
                 ev.endtime,
                 ev.describtion,
@@ -585,7 +599,7 @@ class Exam:
         return output[0]
 
 
-    def updateAllExamAndEventDataWithEventID(self,testName,weight,location,date,starttime,endtime,description,courseID,eventID):
+    def updateAllExamAndEventDataWithEventID(self,testName,weight,location,starttime,endtime,description,courseID,eventID):
         sql = """
             UPDATE examen
                 SET testname = ?,
@@ -597,14 +611,13 @@ class Exam:
         sql = """
             UPDATE event
                 SET location = ?,
-                    date = ?,
                     starttime = ?,
                     endtime = ?,
                     describtion = ?
 
                 WHERE eventid = ? 
             """
-        self.cursor.execute(sql,(location,date,starttime,endtime,description,eventID))
+        self.cursor.execute(sql,(location,starttime,endtime,description,eventID))
         self.conn.commit()
         return
 
@@ -698,7 +711,29 @@ class Event:
         self.cursor.execute(sql, (userID,starttime,endtime,))
         output = self.cursor.fetchall()
         return output
+    
 
+    def deleteEventWithabsenceID(self,absenceID):
+        sql = """DELETE FROM event WHERE absenceid = ?;"""
+        self.cursor.execute(sql, (absenceID))
+        self.conn.commit()
+        return
+
+    def updateAbsenceIDOfEventWithEventID(self,eventID,absenceID):
+        sql = """UPDATE event 
+                    SET absenceid = ?
+                WHERE eventID = ?;"""
+        self.cursor.execute(sql, (absenceID,eventID))
+        self.conn.commit()
+        return
+
+    def updateAbsenceIDOfEventWithAbsenceID(self,oldAbsenceID,newAbsenceID):
+        sql = """UPDATE event 
+                    SET absenceid = ?
+                WHERE absenceid = ?;"""
+        self.cursor.execute(sql, (newAbsenceID,oldAbsenceID))
+        self.conn.commit()
+        return
 
 class Course:
 
@@ -716,7 +751,8 @@ class Course:
             courseid TEXT NOT NULL,
             userid TEXT NOT NULL,
             subject TEXT NOT NULL,
-            courseName TEXT NOT NULL            
+            courseName TEXT NOT NULL,
+            type INT NOT NULL            
         );
         """
         self.cursor.execute(tableCreationQuery)
@@ -778,12 +814,70 @@ class Schedule:
 
 
 
+class Absence:
+
+    conn = None
+    cursor = None
+
+    def __init__(self):
+        return  
+
+    def creatTableAbsence(self):
+        self.cursor.execute("DROP TABLE IF EXISTS absence")
+        table_creation_query = """
+        CREATE TABLE absence (
+            userid TEXT NOT NULL,
+            endday TEXT NOT NULL,
+            excused INT not NULL,
+            absenceid TEXT NOT NULL,
+            fileid TEXT,
+            description TEXT
+        );
+        """
+        self.cursor.execute(table_creation_query)
+        self.conn.commit()
+        return True
+
+
+    def getAbsenceWithUserIDAndType(self,userID,kind):
+
+        sql = "SELECT absenceid,endday,fileid,description FROM absence WHERE userid = ? AND excused = ?"
+        self.cursor.execute(sql, (userID,kind))
+        output = self.cursor.fetchall()
+
+        return output
+
+    def getAbsenceWithAbsenceID(self,absenceID):
+
+        sql = "SELECT userid,endday,excused,description,fileid FROM absence WHERE absenceid = ?"
+        self.cursor.execute(sql, (absenceID,))
+        output = self.cursor.fetchall()
+        return output
+    
+    def deleteAbsenceWithAbsenceID(self,absenceID)
+        sql = "DELETE FROM absence WHERE absenceid = ?"
+        self.cursor.execute(sql, (absenceID,))
+        self.conn.cursor()
+        return output
+
+    def updateAbsenceWithAbsenceID(self,absenceID,endday,excused,description,fileid):
+        sql = """UPDATE absence 
+                    SET endday = ?,
+                        excused  = ?,
+                        description = ?,
+                        fileid = ?
+                WHERE absenceid = ?"""
+        self.cursor.execute(sql, (endday,excused,describtion,fileid,absenceID))
+        self.conn.cursor()
+        return output
 
 
 
 
 
-class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule):
+
+
+class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule,Absence):
     conn = None
     cursor = None
 
@@ -794,22 +888,6 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule):
 
 
 
-    def creatTableAbsence(self):
-        self.cursor.execute("DROP TABLE IF EXISTS absence")
-        table_creation_query = """
-        CREATE TABLE absence (
-            userid TEXT NOT NULL,
-            subject TEXT NOT NULL,
-            date TEXT NOT NULL,
-            starttime TEXT NOT NULL,
-            endtime TEXT NOT NULL,
-            excused INT not NULL
-        );
-        """
-        self.cursor.execute(table_creation_query)
-        self.conn.commit()
-        return True
-
 
 
     def creatTableEvent(self):
@@ -818,12 +896,13 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule):
         CREATE TABLE event (
             eventid TEXT NOT NULL,
             location TEXT NOT NULL,
-            date TEXT,
             starttime TEXT NOT NULL,
             endtime TEXT NOT NULL,
             courseID TEXT NOT NULL,
             describtion TEXT,
-            type INT            
+            type INT,
+            absenceid TEXT,
+            userid TEXT,            
         );
         """
 
@@ -832,6 +911,19 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule):
         self.conn.commit()
         return True
 
+    def getAllAbsenceEventWithAbsenceID(absenceID):
+        sql = """SELECT ev.eventid,ev.location,ev.starttime,ev.endtime,co.subject, co.courseName
+                    FROM event AS ev
+                    INNER JOIN course AS co
+                        ON ev.courseid = ev.courseid
+                WHERE absenceid = ?"""
+
+        self.cursor.execute(sql, (userID,))
+        output = self.cursor.fetchall()
+        self.conn.commit()
+
+        return output
+    
 
 
 
@@ -848,16 +940,16 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule):
         return output
 
 
-    def addNewCourse(self,courseID,userID,subject,courseName):
-        sql = "INSERT INTO course (courseid,userid,subject,courseName) VALUES (?,?,?,?)"
-        self.cursor.execute(sql, (courseID,userID,subject,courseName))
+    def addNewCourse(self,courseID,userID,subject,courseName,kind):
+        sql = "INSERT INTO course (courseid,userid,subject,courseName,type) VALUES (?,?,?,?,?)"
+        self.cursor.execute(sql, (courseID,userID,subject,courseName,kind))
         self.conn.commit()
         return True
 
 
-    def addNewEvent(self,eventID,location,date,starttime,endtime,describtion,kind,courseID):
-        sql = "INSERT INTO event (eventid, location, date, starttime, endtime, describtion, type,courseid) VALUES (?,?,?,?,?,?,?,?)"
-        self.cursor.execute(sql, (eventID,location,date, starttime, endtime, describtion, kind,courseID))
+    def addNewEvent(self,eventID,location,starttime,endtime,describtion,kind,courseID):
+        sql = "INSERT INTO event (eventid, location, starttime, endtime, describtion, type,courseid) VALUES (?,?,?,?,?,?,?)"
+        self.cursor.execute(sql, (eventID,location, starttime, endtime, describtion, kind,courseID))
         self.conn.commit()
         return True
     
@@ -892,7 +984,7 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule):
 
 
     def getALLCourseWithUserID(self,userID):
-        sql = "SELECT courseid,subject,courseName FROM course WHERE userid = ?"
+        sql = "SELECT courseid,subject,courseName FROM course WHERE userid = ? and type = 1"
         self.cursor.execute(sql, (userID,))
         output = self.cursor.fetchall()
         self.conn.commit()
