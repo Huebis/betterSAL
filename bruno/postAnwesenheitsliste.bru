@@ -1,0 +1,106 @@
+meta {
+  name: postAnwesenheitsliste
+  type: http
+  seq: 22
+}
+
+post {
+  url: http://127.0.0.1:5000/anwesenheitsliste?starttime=2026-02-26 08:00&endtime=2026-02-26 08:45&eventID=nothing&courseID=6a0b65bd-0374-4d59-a841-f60a640dc27a
+  body: json
+  auth: inherit
+}
+
+params:query {
+  starttime: 2026-02-26 08:00
+  endtime: 2026-02-26 08:45
+  eventID: nothing
+  courseID: 6a0b65bd-0374-4d59-a841-f60a640dc27a
+}
+
+headers {
+  token: ffa6187b-0ebe-462a-bfd2-1f8145265e2b
+}
+
+body:json {
+  {
+    "anwesenheitsliste": [
+      {
+        "absence": 0,
+        "firstName": "Eliah",
+        "lastName": "Hueber",
+        "userID": "11fa9804-fb93-4449-a1c8-5de0fe776edb"
+      },
+      {
+        "absence": 0,
+        "firstName": "Emil",
+        "lastName": "Peterson",
+        "userID": "c7e6b837-ca1b-4730-8025-1fe620cae5a7"
+      },
+      {
+        "absence": 0,
+        "firstName": "Nahia",
+        "lastName": "Weyeneth",
+        "userID": "c25ee156-22b7-4277-8de8-de6de8408051"
+      },
+      {
+        "absence": 0,
+        "firstName": "Paul",
+        "lastName": "Konzili",
+        "userID": "05858ed0-af01-401b-a38e-25262f5ba438"
+      },
+      {
+        "absence": 0,
+        "firstName": "Esben",
+        "lastName": "Duss",
+        "userID": "16a1a178-d711-4b6b-9523-fc979807aca7"
+      },
+      {
+        "absence": 0,
+        "firstName": "Moritz",
+        "lastName": "Brotbeck",
+        "userID": "03435305-1544-4780-8a7f-af67edb87d10"
+      },
+      {
+        "absence": 0,
+        "firstName": "Manuel",
+        "lastName": "Kron",
+        "userID": "5c68c4ef-2b1e-4ac3-b1d7-8b6803f424e0"
+      },
+      {
+        "absence": 0,
+        "firstName": "Aurel",
+        "lastName": "Richterich",
+        "userID": "dcdee5c3-5ec6-4351-a535-1f0d008544b4"
+      },
+      {
+        "absence": 0,
+        "firstName": "Loic",
+        "lastName": "Eicher",
+        "userID": "b773e540-9329-4a11-9f54-e61805914436"
+      },
+      {
+        "absence": 0,
+        "firstName": "Walter",
+        "lastName": "Kutz",
+        "userID": "313670d2-188c-4899-afae-ff58b081cbcd"
+      },
+      {
+        "absence": 0,
+        "firstName": "Theo",
+        "lastName": "Böhm",
+        "userID": "6433e668-fc57-469e-868c-32f763c19504"
+      },
+      {
+        "absence": 0,
+        "firstName": "Marlon",
+        "lastName": "Auchli",
+        "userID": "f75651ea-1182-4381-b616-7e17e52ea91a"
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,36 @@
+meta {
+  name: postAbsence
+  type: http
+  seq: 18
+}
+
+post {
+  url: http://127.0.0.1:5000/absence?requestType=change
+  body: json
+  auth: inherit
+}
+
+params:query {
+  requestType: change
+}
+
+headers {
+  token: 0173ca7b-18ef-4ef1-b276-470bb451f379
+}
+
+body:json {
+  {
+    "absence": {
+      "absenceID": "ba8795ff-aebc-4540-ba98-8771110fb2b5",
+      "description": "HALLO",
+      "endday": "2026-03-05",
+      "excused": 0,
+      "fileID": ""
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

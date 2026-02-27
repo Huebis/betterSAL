@@ -331,14 +331,13 @@ class User:
 
         return output[0][0]
 
-    def getclassNameWithUserID(userID):
+    def getClassNameWithUserID(self,userID):
         sql = "SELECT classname FROM user WHERE userid = ?"
         self.cursor.execute(sql, (userID,))
         output = self.cursor.fetchall()
-        self.conn.commit()
         return output[0][0]
 
-    def getUserWithclassName(className):
+    def getUserWithclassName(self,className):
         sql = "SELECT userID,role FROM user WHERE classname = ?"
         self.cursor.execute(sql, (className,))
         output = self.cursor.fetchall()
@@ -658,7 +657,7 @@ class Event:
             """
         self.cursor.execute(sql, (userID,eventID))
 
-        return bool(cursor.fetchone()[0])
+        return bool(self.cursor.fetchone()[0])
 
 
     def deleteEventWithEventID(self,eventID):
@@ -742,7 +741,7 @@ class Event:
         return
 
     def isAbsenceEventExistWithUserIDCourseIDAndTime(self,userID,courseID,starttime,endtime):
-            sql = """
+        sql = """
             SELECT EXISTS(
                 SELECT 1
                 FROM event
@@ -754,8 +753,8 @@ class Event:
             );
             """
         self.cursor.execute(sql, (userID,courseID,starttime,endtime))
-
-        return bool(cursor.fetchone()[0])
+        print()
+        return bool(self.cursor.fetchone()[0])
 
 
     
@@ -773,7 +772,7 @@ class Event:
             """
         self.cursor.execute(sql, (courseID,eventID,starttime,endtime))
 
-        return bool(cursor.fetchone()[0])
+        return bool(self.cursor.fetchone()[0])
 
 
 
@@ -817,7 +816,7 @@ class Course:
         WHERE co.courseid = ?
             AND us.role = 1
             
-        );
+        ;
         """
         self.cursor.execute(sql,(courseID,))
         output = self.cursor.fetchall()
@@ -883,7 +882,7 @@ class Schedule:
         sql = """
             SELECT EXISTS(
                 SELECT 1
-                FROM event
+                FROM schedule
                 WHERE courseid = ?
                     AND starttime = ?
                     AND endtime = ?
@@ -891,7 +890,7 @@ class Schedule:
             );
             """
         self.cursor.execute(sql, (courseID,starttime,endtime,weekday))
-        return bool(cursor.fetchone()[0])
+        return bool(self.cursor.fetchone()[0])
 
 
 
@@ -919,8 +918,8 @@ class Absence:
         self.conn.commit()
         return True
 
-    def addAbsence(self,userId,endday,excused,absenceid,fileID = "",description = "")
-        sql = "INSERT INTO absence userid,endday,excused,absenceid,fileid,description VALUES (?,?,?,?,?,?,?)"
+    def addAbsence(self,userID,endday,excused,absenceID,fileID = "",description = ""):
+        sql = "INSERT INTO absence (userid,endday,excused,absenceid,fileid,description) VALUES (?,?,?,?,?,?)"
         self.cursor.execute(sql, (userID,endday,excused,absenceID,fileID,description))
         self.conn.commit()
         return
@@ -940,22 +939,22 @@ class Absence:
         output = self.cursor.fetchall()
         return output
     
-    def deleteAbsenceWithAbsenceID(self,absenceID)
+    def deleteAbsenceWithAbsenceID(self,absenceID):
         sql = "DELETE FROM absence WHERE absenceid = ?"
         self.cursor.execute(sql, (absenceID,))
         self.conn.commit()
         return
 
-    def updateAbsenceWithAbsenceID(self,absenceID,endday,excused,description,fileid):
+    def updateAbsenceWithAbsenceID(self,absenceID,endday,excused,description,fileID):
         sql = """UPDATE absence 
                     SET endday = ?,
                         excused  = ?,
                         description = ?,
                         fileid = ?
                 WHERE absenceid = ?"""
-        self.cursor.execute(sql, (endday,excused,describtion,fileid,absenceID))
-        self.conn.cursor()
-        return output
+        self.cursor.execute(sql, (endday,excused,description,fileID,absenceID))
+        self.conn.commit()
+        return
 
 
 
@@ -988,7 +987,7 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule,Absence
             describtion TEXT,
             type INT,
             absenceid TEXT,
-            userid TEXT,            
+            userid TEXT            
         );
         """
 
@@ -997,32 +996,33 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule,Absence
         self.conn.commit()
         return True
 
-    def getAllAbsenceEventWithAbsenceID(absenceID):
+    def getAllAbsenceEventWithAbsenceID(self,absenceID,userID):
         sql = """SELECT ev.eventid,ev.location,ev.starttime,ev.endtime,co.subject, co.courseName
                     FROM event AS ev
                     INNER JOIN course AS co
-                        ON ev.courseid = ev.courseid
-                WHERE absenceid = ?;"""
+                        ON ev.courseid = co.courseid
+                WHERE absenceid = ?
+                    AND co.userid = ?;"""
 
-        self.cursor.execute(sql, (userID,))
+        self.cursor.execute(sql, (absenceID,userID))
         output = self.cursor.fetchall()
         self.conn.commit()
 
         return output
     
     def addAbsenceEventInEvent(self,eventID,starttime,endtime,courseID,absenceID,userID):
-        sql = "INSERT INTO event eventid,starttime,endtime,courseid,type,absenceid,userid VALUES (?,?,?,?,10,?,?);"
+        sql = "INSERT INTO event (eventid,starttime,endtime,courseid,type,absenceid,userid) VALUES (?,?,?,?,10,?,?);"
         self.cursor.execute(sql, (eventID,starttime,endtime,courseID,absenceID,userID))
         self.conn.commit()
         return
 
     def deleteAbsenceEventInEvent(self,starttime,endtime,courseID,userID):
-        sql = """DELETE event 
+        sql = """DELETE FROM event 
             WHERE starttime = ?
-                endtime = ?
-                courseid = ?
-                type = 10
-                userid = ?;"""
+                AND endtime = ?
+                AND courseid = ?
+                AND type = 10
+                AND userid = ?;"""
         self.cursor.execute(sql, (starttime,endtime,courseID,userID))
         self.conn.commit()
         return

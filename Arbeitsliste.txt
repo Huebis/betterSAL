@@ -3,6 +3,8 @@ WICHTIG !!!!!!!
 
 FileId immer zu user hinzufügen
 
+bei getSchedule für jeden Kurs noch die EventID hinzufügen !!!!
+
 
 
 

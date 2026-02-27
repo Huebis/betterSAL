@@ -5,13 +5,18 @@ meta {
 }
 
 get {
-  url: http://127.0.0.1:5000/getSchedule
+  url: http://127.0.0.1:5000/getSchedule?starttime=2026-02-26 08:00&endtime=2026-02-27 08:00
   body: none
   auth: inherit
 }
 
+params:query {
+  starttime: 2026-02-26 08:00
+  endtime: 2026-02-27 08:00
+}
+
 headers {
-  token: 74a101b8-daa4-460b-ac36-6fe5a5af8ccd
+  token: 86a3cc94-0204-40b3-9428-1f75b7ea512c
 }
 
 settings {

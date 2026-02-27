@@ -57,7 +57,7 @@ def insertTestDataTableUserAndCourse(db):
         if(row[6] == 1 or row[1] == "Anklin"):
             #print("hello")
             db.addNewCourse(FranzösischM4GcourseID,row[0],"F","F-M4G-26",1)
-            db.addNewCourse(FranzösischM4GcourseID,row[0],"K","M4G",0)
+            db.addNewCourse(Klasse4MgCourseID,row[0],"K","M4G",0)
         if(row[6] == 1 or row[1] == "Zulauf"):
             db.addNewCourse(EnglischM4GcourseID,row[0],"E","E-M4G-26",1)
 
