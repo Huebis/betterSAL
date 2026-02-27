@@ -657,8 +657,8 @@ class Event:
             );
             """
         self.cursor.execute(sql, (userID,eventID))
-        self.conn.commit()
-        return True
+
+        return bool(cursor.fetchone()[0])
 
 
     def deleteEventWithEventID(self,eventID):
@@ -708,14 +708,14 @@ class Event:
             AND ev.starttime < ?
             AND ev.type > 100
         ORDER BY ev.starttime ASC;"""
-        self.cursor.execute(sql, (userID,starttime,endtime,))
+        self.cursor.execute(sql, (userID,starttime,endtime))
         output = self.cursor.fetchall()
         return output
     
 
     def deleteEventWithabsenceID(self,absenceID):
         sql = """DELETE FROM event WHERE absenceid = ?;"""
-        self.cursor.execute(sql, (absenceID))
+        self.cursor.execute(sql, (absenceID,))
         self.conn.commit()
         return
 
@@ -734,6 +734,49 @@ class Event:
         self.cursor.execute(sql, (newAbsenceID,oldAbsenceID))
         self.conn.commit()
         return
+
+    def deleteEventWithabsenceIDAndEventIDAnd(self,absenceID,eventID):
+        sql = """DELETE FROM event WHERE absenceid = ? AND eventid = ?;"""
+        self.cursor.execute(sql, (absenceID,eventID))
+        self.conn.commit()
+        return
+
+    def isAbsenceEventExistWithUserIDCourseIDAndTime(self,userID,courseID,starttime,endtime):
+            sql = """
+            SELECT EXISTS(
+                SELECT 1
+                FROM event
+                WHERE userid = ?
+                    AND courseid = ?
+                    AND starttime = ?
+                    AND endtime = ?
+                    AND type = 10
+            );
+            """
+        self.cursor.execute(sql, (userID,courseID,starttime,endtime))
+
+        return bool(cursor.fetchone()[0])
+
+
+    
+    def isEventExistsWithEventIDCourseIDStarttimeEndtime(self,eventID,courseID,starttime,endtime):
+        sql = """
+            SELECT EXISTS(
+                SELECT 1
+                FROM event
+                WHERE courseid = ?
+                    AND eventid = ?
+                    AND starttime = ?
+                    AND endtime = ?
+                    AND type != 10
+            );
+            """
+        self.cursor.execute(sql, (courseID,eventID,starttime,endtime))
+
+        return bool(cursor.fetchone()[0])
+
+
+
 
 class Course:
 
@@ -758,6 +801,29 @@ class Course:
         self.cursor.execute(tableCreationQuery)
         self.conn.commit()
         return True
+    
+    def getAllStudentsFromCourse(self,courseID):
+        sql = """
+        SELECT
+            co.userid,
+            us.firstname,
+            us.lastname,
+            0
+
+        FROM course AS co
+        INNER JOIN user AS us
+            ON co.userid = us.userid
+    
+        WHERE co.courseid = ?
+            AND us.role = 1
+            
+        );
+        """
+        self.cursor.execute(sql,(courseID,))
+        output = self.cursor.fetchall()
+        return output
+
+
     
 
 class Schedule:
@@ -813,6 +879,21 @@ class Schedule:
         return output
 
 
+    def isScheduleExistsWithCourseIDStarttimeEndtime(self,courseID,starttime,endtime,weekday):
+        sql = """
+            SELECT EXISTS(
+                SELECT 1
+                FROM event
+                WHERE courseid = ?
+                    AND starttime = ?
+                    AND endtime = ?
+                    AND weekday = ?
+            );
+            """
+        self.cursor.execute(sql, (courseID,starttime,endtime,weekday))
+        return bool(cursor.fetchone()[0])
+
+
 
 class Absence:
 
@@ -838,6 +919,11 @@ class Absence:
         self.conn.commit()
         return True
 
+    def addAbsence(self,userId,endday,excused,absenceid,fileID = "",description = "")
+        sql = "INSERT INTO absence userid,endday,excused,absenceid,fileid,description VALUES (?,?,?,?,?,?,?)"
+        self.cursor.execute(sql, (userID,endday,excused,absenceID,fileID,description))
+        self.conn.commit()
+        return
 
     def getAbsenceWithUserIDAndType(self,userID,kind):
 
@@ -857,8 +943,8 @@ class Absence:
     def deleteAbsenceWithAbsenceID(self,absenceID)
         sql = "DELETE FROM absence WHERE absenceid = ?"
         self.cursor.execute(sql, (absenceID,))
-        self.conn.cursor()
-        return output
+        self.conn.commit()
+        return
 
     def updateAbsenceWithAbsenceID(self,absenceID,endday,excused,description,fileid):
         sql = """UPDATE absence 
@@ -895,7 +981,7 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule,Absence
         tableCreationQuery = """
         CREATE TABLE event (
             eventid TEXT NOT NULL,
-            location TEXT NOT NULL,
+            location TEXT,
             starttime TEXT NOT NULL,
             endtime TEXT NOT NULL,
             courseID TEXT NOT NULL,
@@ -916,7 +1002,7 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule,Absence
                     FROM event AS ev
                     INNER JOIN course AS co
                         ON ev.courseid = ev.courseid
-                WHERE absenceid = ?"""
+                WHERE absenceid = ?;"""
 
         self.cursor.execute(sql, (userID,))
         output = self.cursor.fetchall()
@@ -924,7 +1010,22 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule,Absence
 
         return output
     
+    def addAbsenceEventInEvent(self,eventID,starttime,endtime,courseID,absenceID,userID):
+        sql = "INSERT INTO event eventid,starttime,endtime,courseid,type,absenceid,userid VALUES (?,?,?,?,10,?,?);"
+        self.cursor.execute(sql, (eventID,starttime,endtime,courseID,absenceID,userID))
+        self.conn.commit()
+        return
 
+    def deleteAbsenceEventInEvent(self,starttime,endtime,courseID,userID):
+        sql = """DELETE event 
+            WHERE starttime = ?
+                endtime = ?
+                courseid = ?
+                type = 10
+                userid = ?;"""
+        self.cursor.execute(sql, (starttime,endtime,courseID,userID))
+        self.conn.commit()
+        return
 
 
     def readAndReturnTableAbsence(self):

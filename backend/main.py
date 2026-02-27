@@ -472,7 +472,7 @@ def getSchedule():
 
 
 @app.route('/Absence', methods=["post"])
-def addAbsence():
+def changeAndMergeAbsence():
 
     token = request.headers.get("token")
     db = get_db()
@@ -488,12 +488,36 @@ def addAbsence():
         return jsonify({"error": "kein JSON gesendet"}), 400
 
 
-    if not isEveryDataNameinObject(data,["userName","email","notifAbsenceOfTeacherToday","notifAbsenceOfTeacherTomorrow","notifExamTomorrow","notifEventTomorrow","notifAbsenceDueTomorrow"]):
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    requestType = request.args.get("requestType")
+    
+    if requestType == None:
+        jsonify({"error": "Fehlender Parameter"}), 400
+
+
+    if requestType = "change":
+        if not isEveryDataNameinObject(data,["absence"]):
+            return jsonify({"error": "Einträge im JSON fehlen"}), 400
+        
+        if not isEveryDataNameinObject(data["absence"],["absenceID","excused","description","fileid"]):
+            return jsonify({"error": "Einträge im JSON fehlen"}), 400
+        
+        if changeAbsence(db,userID,db.getRolefromUserWithUserID(userID),data["absence"]):
+            return jsonify({}), 200
+    
+    if requestType = "merge":
+        if not isEveryDataNameinObject(data,["absenceIDList"]):
+            return jsonify({"error": "Einträge im JSON fehlen"}), 400
+        
+        if not isinstance(data["absenceIDList"], list):
+            return jsonify({"error": "Einträge im JSON fehlen"}), 400
+            
+        
+        if changeAbsence(db,userID,db.getRolefromUserWithUserID(userID),data["absenceIDList"]):
+            return jsonify({}), 200
 
 
 
-    return jsonify({}), 200
+    return jsonify({"error": "Ein Fehler ist aufgetreten"}), 400
 
 
 @app.route('/Absence', methods=["get"])
@@ -520,7 +544,117 @@ def getAbsence():
     return jsonify({"absence": output}), 200
 
     
+@app.route('/Absence', methods=["delete"])
+def deleteAbsenceEvent():
 
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
+
+    if not boolien:
+        return json,errorNumber
+
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+
+    
+    if not isEveryDataNameinObject(data,["userID","eventID","absenceID"]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+        
+
+        
+    if db.deleteAbsenceEvent(db,userID,data["userID"],data["eventID"],data["absenceID"]):
+        return jsonify({}), 200
+
+
+
+    return jsonify({"error": "Ein Fehler ist aufgetreten"}), 400
+
+
+
+@app.route('/anwesenheitsliste', methods=["get"])
+def getAnwesenheitsliste():
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+    
+
+    starttime = request.args.get("starttime")
+    endtime = request.args.get("endtime")
+    eventID = request.args.get("eventID")
+    courseID = request.args.get("courseID")
+
+    if starttime == None:
+        return jsonify({"error": "Fehlender Parameter"}), 400
+    if endtime == None:
+        return jsonify({"error": "Fehlender Parameter"}), 400
+    if eventID == None:
+        return jsonify({"error": "Fehlender Parameter"}), 400
+    if courseID == None:
+        return jsonify({"error": "Fehlender Parameter"}), 400
+    
+
+
+
+    output = service.getAnwesenheitsliste(userID,courseID,eventID,starttime,endtime)
+
+    if output == False:
+        return jsonify({"error": "Fehler bei der Verarbeitung"}), 400
+    
+
+    return jsonify({"anwesenehitsliste": output}), 200
+
+
+
+@app.route('/anwesenheitsliste', methods=["post"])
+def postAnwesenheitsliste():
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+    
+
+    starttime = request.args.get("starttime")
+    endtime = request.args.get("endtime")
+    eventID = request.args.get("eventID")
+    courseID = request.args.get("courseID")
+
+    if starttime == None:
+        return jsonify({"error": "Fehlender Parameter"}), 400
+    if endtime == None:
+        return jsonify({"error": "Fehlender Parameter"}), 400
+    if eventID == None:
+        return jsonify({"error": "Fehlender Parameter"}), 400
+    if courseID == None:
+        return jsonify({"error": "Fehlender Parameter"}), 400
+    
+    if not isEveryDataNameinObject(data,["anwesenheitsliste"]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+    anwesenheitsliste = data["anwesenheitsliste"]
+    
+
+
+
+    output = service.postAnwesenheitsliste(userID,courseID,eventID,starttime,endtime,anwesenehitsliste)
+
+    if output == False:
+        return jsonify({"error": "Fehler bei der Verarbeitung"}), 400
+    
+
+    return jsonify({}), 200
+    
+
+    
 
 
 ###########################################################

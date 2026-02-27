@@ -641,7 +641,10 @@ def changeAbsence(db,userID,role,absence):
 
 
     #userid,endday,excused,description,fileid
-    databaseAbsence = db.getAbsenceWithAbsenceID()
+    databaseAbsence = db.getAbsenceWithAbsenceID(absenceID)
+
+    if databaseAbsence == []:
+        return False
 
 
 
@@ -654,15 +657,104 @@ def changeAbsence(db,userID,role,absence):
     if role < 2 and userID != databaseAbsence[0]: #When User, only User is able to change
         return False
 
+
+    #User kann nur etwas verändern, wenn endday noch nicht fertig ist.
+
+    if date.today() < datetime.strptime(databaseAbsence[1], "%Y-%m-%d"):
+        return False
+
     
+    db.updateAbsenceWithAbsenceID(absenceID,databaseAbsence[1],excused,description,fileid):
+
+    return True
+
+
+
+#only for Teacher
+def deleteAbsenceEvent(db,teacherUserID,studentUserID,eventID,absenceID):
+
+    if not isClassTeacher(db,teacherUserID,studentUserID):
+        return False
+
+    db.deleteEventWithabsenceIDAndEventIDAnd(absenceID,eventID)
+    return True
+
+
+
+
+def isEventExists(db,courseID,eventID,starttime,endtime):
+    if eventID == "":
+        time1 = datetime.strptime(starttime, "%Y-%m-%d %H:%M")
+        time2 = datetime.strptime(endtime, "%Y-%m-%d %H:%M")
+        if time1.date() != time2.date():
+            return False
+        return db.isScheduleExistsWithCourseIDStarttimeEndtime(courseID,starttime[:-5],endtime[:-5],time1.weekday())
+            
+    else:
+        return db.isEventExistsWithEventIDCourseIDStarttimeEndtime(eventID,courseID,starttime,endtime)
+
+
+
+
+def getAnwesenheitsliste(db,userID,courseID,eventID,starttime,endtime):
+    if not isEventExists(courseID,eventID,starttime,endtime):
+        return False
     
+    if not db.isUserIDinCourse(userID,courseID):
+        return False
+
+    #alle Schüler User bekommen
+    #userID, firstname, lastname,has Event
+    students = db.getAllStudentsFromCourse(courseID)
 
 
+    output = []
+    for student in students:
+        if isAbsenceEventExistWithUserIDCourseIDAndTime(student[0],courseID,starttime,endtime):
+            student[3] = 1
+        
+        studentDict = {
+            "userID":student[0],
+            "firstName": student[1],
+            "lastName": student[2],
+            "absence": student[3]
+        }
+        output.append(studentDict)
+    
+    return output
+        
+        
+def postAnwesenheitsliste(db,userID,courseID,eventID,starttime,endtime,anwesenheitsliste):
+
+    databaseAnwesenheitsliste = getAnwesenheitsliste(db,userID,courseID,eventID,starttime,endtime)
+
+    if databaseAnwesenheitsliste == False:
+        return False
+
+    for databaseStudent in databaseAnwesenheitsliste:
+        for student in anwesenheitsliste:
+            if databaseStudent["userID"] == student["userID"] and databaseStudent["userID"] != None:
+                if databaseStudent["absence"] != student["absence"]:
+                    if databaseStudent["absence"] == 0 and student["absence"] == 1:
+                        absenceID = str(uuid.uuid4())
+
+                        endday = datetime.strptime(endtime, "%Y-%m-%d %H:%M") + timedelta(days=7)
+                        db.addAbsence(self,userId,endday.date(),0,absenceid)
 
 
-def deleteAbsenceEvent(db,userID,role,eventID):
+                        eventID = str(uuid.uuid4())  
 
-def addAbsence(db,userID,absenceEvents)
+                        db.addAbsenceEventInEvent(eventID,starttime,endtime,courseID,absenceID,userID)       
+                        
+                            #AbsenceEvent hinzufügen
+                    if databaseStudent["absence"] == 1 and student["absence"] == 0:
+                        #delete AbsenceEvent
+                        db.deleteAbsenceEventInEvent(starttime,endtime,courseID,userID)
+                
+                break
+
+    return True       
+                    
 
 
 
