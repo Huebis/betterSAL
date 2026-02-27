@@ -400,8 +400,8 @@ class File:
         self.cursor.execute(sql, (fileId,))
         output = self.cursor.fetchone()
         self.conn.commit()
-        nameBefor = output[0][0]
-        nameAfter = output[0][1]
+        nameBefor = output[1]
+        nameAfter = output[0]
 
         
         return nameBefor, nameAfter

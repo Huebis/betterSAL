@@ -1,10 +1,11 @@
 import json
-from flask import Flask, request, Response, render_template, g, jsonify
+from flask import Flask, request, Response, render_template, g, jsonify,send_from_directory
 from database import Database
 import service
 from flask_cors import CORS
 import notification
 from datetime import date
+import os
 
 
 
@@ -82,6 +83,11 @@ def tokenAndRoleVerfication(db,token, allowedRoles = None,parentLock = False): #
 
 app = Flask(__name__)
 CORS(app)
+
+
+#Macht Upload Folder ready und speichert Pfad für später, siehe file
+uploadFolder = "userDocuments"
+os.makedirs(uploadFolder, exist_ok=True)
 
 
 
@@ -588,7 +594,7 @@ def deleteAbsenceEvent():
 def getAnwesenheitsliste():
     token = request.headers.get("token")
     db = get_db()
-    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
 
     if not boolien:
         return json,errorNumber
@@ -628,7 +634,7 @@ def getAnwesenheitsliste():
 def postAnwesenheitsliste():
     token = request.headers.get("token")
     db = get_db()
-    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
 
     if not boolien:
         return json,errorNumber
@@ -673,6 +679,83 @@ def postAnwesenheitsliste():
     
 
     
+
+
+@app.route("/file", methods=["POST"])
+def uploadFile():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
+
+    if not boolien:
+        return json,errorNumber
+
+
+
+
+    if "file" not in request.files:
+        return jsonify({"error": "No file was sent"}), 400
+
+    file = request.files["file"]
+    
+
+    if file.filename == "":
+        return jsonify({"error": "No selected file"}), 400
+
+
+
+    #Permission muss zuerst noch abgefragt werden!!!!!!
+    #Fehlt noch!!!!!
+
+
+
+    oldFileName = file.filename
+    fileID, newFileName = db.addNewFile(oldFileName)
+    file.save(os.path.join(uploadFolder, newFileName))
+
+    return jsonify({"fileID": fileID}), 200
+
+
+@app.route("/file/<fileID>", methods=["GET"])
+def download_file(fileID):
+    
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
+
+    if not boolien:
+        return json,errorNumber
+
+
+
+    nameBefor,nameAfter = db.getNamesOfFile(fileID)
+
+    print(nameBefor)
+    print(nameAfter)
+
+    path = os.path.join(uploadFolder, nameAfter)
+    if not os.path.exists(path):
+         return jsonify({"error": "fileID don't exist"}), 400
+    
+
+    return send_from_directory(
+        uploadFolder,
+        nameAfter,
+        as_attachment=True,
+        download_name=nameBefor
+    )
+
+
+
+
+
+
+
+
+
+
+
 
 
 ###########################################################
