@@ -399,9 +399,13 @@ class File:
 
         self.cursor.execute(sql, (fileId,))
         output = self.cursor.fetchone()
-        self.conn.commit()
-        nameBefor = output[1]
-        nameAfter = output[0]
+
+        if output == []:
+            nameBefor = None
+            nameAfter = None
+        else: 
+            nameBefor = output[1]
+            nameAfter = output[0]
 
         
         return nameBefor, nameAfter
@@ -517,6 +521,27 @@ class Grade:
         self.cursor.execute(sql,(eventID,))
         self.conn.commit()
         return 
+
+    def getUserIDFromGradeWithFileID(self,fileID):
+        sql = "SELECT userid FROM grade WHERE fileid = ?"
+        self.cursor.execute(sql, (fileID,))
+        output = self.cursor.fetchone()
+        if output == []:
+            return None
+        return output[0]
+
+    
+    def getCourseIDFromGradeWithFileID(self,fileID):
+        sql = """SELECT ev.courseid 
+                FROM grade AS gr
+                INNER JOIN event AS ev
+                    ON gr.eventid = ev.eventid
+                WHERE gr.fileid = ?"""
+        self.cursor.execute(sql, (fileID,))
+        output = self.cursor.fetchone()
+        if output == []:
+            return None
+        return output[0]
     
 
 
@@ -773,6 +798,15 @@ class Event:
         self.cursor.execute(sql, (courseID,eventID,starttime,endtime))
 
         return bool(self.cursor.fetchone()[0])
+    
+    def getCourseIDFromEventWithFileID(self,fileID):
+        sql = "SELECT courseid FROM event WHERE fileid = ?"
+        self.cursor.execute(sql, (fileID,))
+        output = self.cursor.fetchone()
+        if output == []:
+            return None
+        return output[0]
+    
 
 
 
@@ -955,6 +989,16 @@ class Absence:
         self.cursor.execute(sql, (endday,excused,description,fileID,absenceID))
         self.conn.commit()
         return
+
+
+    def getUserIDFromAbsenceWithFileID(self,fileID):
+        sql = "SELECT userid FROM absence WHERE fileid = ?"
+        self.cursor.execute(sql, (fileID,))
+        output = self.cursor.fetchone()
+        if output == []:
+            return None
+        return output[0]
+    
 
 
 

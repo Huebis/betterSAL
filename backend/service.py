@@ -801,7 +801,63 @@ def postAnwesenheitsliste(db,userID,courseID,eventID,starttime,endtime,anwesenhe
 
 
 
-        
+def isUserHavePermissionToFileID(db,userID,fileID):
+
+
+    role = db.getRolefromUserWithUserID(userID)
+
+
+    # is fileID in absence
+
+    # if user, Role == 1: muss userID bei Absence stimmen
+    # Oder User ist lehrer, dann muss sie Klassenlehrerin von userID sein.
+    databaseUserID = db.getUserIDFromAbsenceWithFileID(fileID)
+
+    if databaseUserID != None:
+        if role == 1 and databaseUserID == userID:
+            return True
+        if role == 2 and isClassTeacher(db,userID,databaseUserID):
+            return True
+
+    
+    
+    
+    # is fileID in Event
+
+    # user muss in course sein
+
+    courseID = db.getCourseIDFromEventWithFileID(fileID)
+    if db.isUserIDinCourse(userID,courseID):
+        return True
+
+
+
+
+
+
+
+
+
+    #if fileID in Grades
+
+
+    # Role = 1, user muss die Grade gehören
+    # Falls Lehrer, muss er im Course sein
+
+    if role == 1:
+        if userID == db.getUserIDFromGradeWithFileID(fileID):
+            return True
+    
+    if role == 2:
+        courseID = db.getCourseIDFromGradeWithFileID(fileID)
+        if courseID != None:
+            if db.isUserIDinCourse(userID,courseID):
+                return True
+
+
+
+
+    return False
 
 
 

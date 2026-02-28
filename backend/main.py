@@ -728,6 +728,17 @@ def download_file(fileID):
         return json,errorNumber
 
 
+    if fileID == "" or fileID == None:
+        return jsonify({"error": "User do not have permission"}), 400
+    
+    if not service.isUserHavePermissionToFileID(db,userID,fileID):
+        return jsonify({"error": "User do not have permission"}), 400
+
+
+
+
+    #get File
+
 
     nameBefor,nameAfter = db.getNamesOfFile(fileID)
 
