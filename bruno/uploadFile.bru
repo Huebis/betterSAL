@@ -4,14 +4,18 @@ meta {
   seq: 24
 }
 
-get {
+post {
   url: http://127.0.0.1:5000/file
-  body: none
+  body: multipartForm
   auth: inherit
 }
 
 headers {
-  token: 5b39798a-f9ed-482f-a835-bd8dcdfe1fc5
+  token: {{token}}
+}
+
+body:multipart-form {
+  file: @file(/home/eliahh/Downloads/otp.txt) @contentType(file)
 }
 
 settings {

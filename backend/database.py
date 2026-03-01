@@ -534,7 +534,7 @@ class Grade:
         sql = "SELECT userid FROM grade WHERE fileid = ?"
         self.cursor.execute(sql, (fileID,))
         output = self.cursor.fetchone()
-        if output == []:
+        if output == None:
             return None
         return output[0]
 
@@ -811,7 +811,7 @@ class Event:
         sql = "SELECT courseid FROM event WHERE fileid = ?"
         self.cursor.execute(sql, (fileID,))
         output = self.cursor.fetchone()
-        if output == []:
+        if output == None:
             return None
         return output[0]
     
@@ -1003,7 +1003,8 @@ class Absence:
         sql = "SELECT userid FROM absence WHERE fileid = ?"
         self.cursor.execute(sql, (fileID,))
         output = self.cursor.fetchone()
-        if output == []:
+
+        if output == None:
             return None
         return output[0]
     
@@ -1039,7 +1040,8 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule,Absence
             describtion TEXT,
             type INT,
             absenceid TEXT,
-            userid TEXT            
+            userid TEXT,
+            fileid TEXT         
         );
         """
 

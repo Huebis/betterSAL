@@ -662,7 +662,7 @@ def changeAbsence(db,userID,role,absence):
 
 
     #userid,endday,excused,description,fileid
-    databaseAbsence = db.getAbsenceWithAbsenceID(absenceID)[0]
+    databaseAbsence = db.getAbsenceWithAbsenceID(absenceID)
 
     if databaseAbsence == []:
         return False
@@ -682,6 +682,8 @@ def changeAbsence(db,userID,role,absence):
         return False
     print("Ich bin im 3")
 
+    print(databaseAbsence)
+    print(userID)
     if role < 2 and userID != databaseAbsence[0]: #When User, only User is able to change
         return False
     print("Ich bin im 4")

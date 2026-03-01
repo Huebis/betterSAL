@@ -686,7 +686,7 @@ def uploadFile():
 
     token = request.headers.get("token")
     db = get_db()
-    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
 
     if not boolien:
         return json,errorNumber
@@ -722,7 +722,7 @@ def download_file(fileID):
     
     token = request.headers.get("token")
     db = get_db()
-    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
 
     if not boolien:
         return json,errorNumber

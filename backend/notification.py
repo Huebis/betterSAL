@@ -56,7 +56,6 @@ def sentNotificationToUserID(db,userID,title,body,notificationType):
         except:
             #wenn ein FCM-Token nicht funktioniert bzw. Error kommt,  FCM-Token löschen
             db.deleteFcmTokenWithUserIDAndHardwareID(userID,fcmTokenPair[1])
-    
 
     return 
 
@@ -67,7 +66,7 @@ def sentNotificationToUserID(db,userID,title,body,notificationType):
 
 
 
-sentNotificationToUserID("de","","test","test",1)
+#sentNotificationToUserID("de","","test","test",1)
 """
 print(sendPush(
     token="dzxVSBmWTWKaOiqd23iq04:APA91bHcg4A9f94IcXAjG_59N9Nt0Eq5LQty_0pT2muoUueqy3y0ESrTGJH95NjAdDb2A1BL4AHf3CU8FtBtNURWxlJrpesisaNwfJQdy6g_XIopM8gHVjE",
