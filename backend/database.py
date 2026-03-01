@@ -194,6 +194,14 @@ class User:
         self.conn.commit()
         return True
 
+
+    def getNotificationPermissionsOfUser(self,userID):
+        sql = "SELECT notifabsenceofteachertoday,notifabsenceofteachertomorrow,notifexamtomorrow,notifeventtomorrow,notifabsenceduetomorrow FROM user WHERE userid = ?"
+        self.cursor.execute(sql, (userID,))
+        output = self.cursor.fetchone()
+        return output
+
+
     
     def changePassword(self,userID,password,newPassword):
         sql = "SELECT password FROM user WHERE userid = ?"
@@ -970,7 +978,7 @@ class Absence:
 
         sql = "SELECT userid,endday,excused,description,fileid FROM absence WHERE absenceid = ?"
         self.cursor.execute(sql, (absenceID,))
-        output = self.cursor.fetchall()
+        output = self.cursor.fetchone()
         return output
     
     def deleteAbsenceWithAbsenceID(self,absenceID):

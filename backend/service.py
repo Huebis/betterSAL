@@ -574,12 +574,13 @@ def mergeAbsence(db,userID,role,absenceIDlist):
     absences = []
 
     for absenceID in absenceIDlist:
-        absence = db.getAbsenceWithAbsenceID()
+        absence = db.getAbsenceWithAbsenceID(absenceID)
         if absence == []:
             return False
         absences.append(absence)
     
 
+    print(absences)
     for absence in absences:
         if absence[0] != absences[0][0]: # wenn nicht alle userID gleich sind return Fehler
             return False
@@ -615,19 +616,23 @@ def mergeAbsence(db,userID,role,absenceIDlist):
             description = absence[3]
             break
 
+
+    print(absences)
     endday = datetime.strptime(absences[0][1], "%Y-%m-%d")
+
 
     for absence in absences:
         if datetime.strptime(absence[1], "%Y-%m-%d") < endday:
             endday = datetime.strptime(absence[1], "%Y-%m-%d")
+
     
 
     #Update eines Eintrangs
-    db.updateAbsenceWithAbsenceID(absenceIDlist[0],endday,absences[0][2],description,fileid)
+    db.updateAbsenceWithAbsenceID(absenceIDlist[0],endday.date(),absences[0][2],description,fileID)
 
     #Löschung der restlichen Einträge Absencen und überschreibung der AbsenceID der AbsenceEvents
     for a in range(1,len(absenceIDlist),1):
-        db.updateAbsenceIDOfEventWithAbsenceID(absenceIDlist[a])
+        db.updateAbsenceIDOfEventWithAbsenceID(absenceIDlist[a],absenceIDlist[0])
         db.deleteAbsenceWithAbsenceID(absenceIDlist[a])
 
     return True

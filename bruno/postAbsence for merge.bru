@@ -1,0 +1,32 @@
+meta {
+  name: postAbsence for merge
+  type: http
+  seq: 20
+}
+
+post {
+  url: http://127.0.0.1:5000/absence?requestType=merge
+  body: json
+  auth: inherit
+}
+
+params:query {
+  requestType: merge
+}
+
+headers {
+  token: 969ed347-5c3a-4af4-8073-5655e8dfe106
+}
+
+body:json {
+  {
+    "absenceIDList": ["5af271e8-cef1-48da-bc9b-34200c0501b8","4ea8fea4-61c6-4c6c-b415-99df1ba81e00" ]
+  
+  
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

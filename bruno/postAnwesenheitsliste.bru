@@ -5,27 +5,27 @@ meta {
 }
 
 post {
-  url: http://127.0.0.1:5000/anwesenheitsliste?starttime=2026-02-26 08:00&endtime=2026-02-26 08:45&eventID=nothing&courseID=6a0b65bd-0374-4d59-a841-f60a640dc27a
+  url: http://127.0.0.1:5000/anwesenheitsliste?starttime=2026-02-26 15:30&endtime=2026-02-26 16:15&eventID=nothing&courseID=6a0b65bd-0374-4d59-a841-f60a640dc27a
   body: json
   auth: inherit
 }
 
 params:query {
-  starttime: 2026-02-26 08:00
-  endtime: 2026-02-26 08:45
+  starttime: 2026-02-26 15:30
+  endtime: 2026-02-26 16:15
   eventID: nothing
   courseID: 6a0b65bd-0374-4d59-a841-f60a640dc27a
 }
 
 headers {
-  token: ffa6187b-0ebe-462a-bfd2-1f8145265e2b
+  token: f2d35a9a-cb6f-4853-88a1-99132f912f6f
 }
 
 body:json {
   {
     "anwesenheitsliste": [
       {
-        "absence": 0,
+        "absence": 1,
         "firstName": "Eliah",
         "lastName": "Hueber",
         "userID": "11fa9804-fb93-4449-a1c8-5de0fe776edb"
