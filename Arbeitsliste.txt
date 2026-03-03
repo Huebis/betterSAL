@@ -7,6 +7,18 @@ bei getSchedule für jeden Kurs noch die EventID hinzufügen !!!!
 
 
 
+Fehler: Null response Schedule Wochendene:
+
+    {
+      "date": "2026-02-14",
+      "schedule": null
+    },
+    {
+      "date": "2026-02-15",
+      "schedule": null
+    },
+
+
 
 
 Nächste Schritte:

@@ -547,9 +547,10 @@ class Grade:
                 WHERE gr.fileid = ?"""
         self.cursor.execute(sql, (fileID,))
         output = self.cursor.fetchone()
-        if output == []:
+        print(output)
+        if output == None:
             return None
-        return output[0]
+        return output
     
 
 
@@ -684,8 +685,8 @@ class Event:
                 FROM event
                 INNER JOIN course
                     ON course.courseid = event.courseid
-                WHERE userid = ?
-                    AND eventid = ?
+                WHERE course.userid = ?
+                    AND event.eventid = ?
             );
             """
         self.cursor.execute(sql, (userID,eventID))
