@@ -504,8 +504,16 @@ def postFcmToken():
     
     
     fcmToken = data["fcmToken"]
+    print(fcmToken)
+
     hardwareID = data["hardwareID"]
     hardwareID = service.postFcmToken(db,userID,fcmToken,hardwareID)
+    print("alles hat funktioniert mit dem Token")
+
+
+
+
+
 
     return jsonify({"hardwareID": hardwareID}), 200
 
