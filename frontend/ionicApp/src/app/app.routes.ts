@@ -10,6 +10,7 @@ import { ChangeExamSubpage } from './subpages/change-exam/change-exam.subpage';
 import { AbsencesSubpage } from './subpages/absences/absences.subpage';
 import { TimetableSubpage } from './subpages/timetable/timetable.subpage';
 import { CheckPresenseSubpage } from './subpages/check-presense/check-presense.subpage';
+import { UserComponent } from './subpages/user/user.component';
 
 
 export const routes: Routes = [
@@ -24,7 +25,9 @@ export const routes: Routes = [
       
       {path:'timetable',component:TimetableSubpage},
 
-      {path:'presense/:courseName/:starttime/:endtime/:eventID',component:CheckPresenseSubpage}
+      {path:'presense/:courseName/:starttime/:endtime/:eventID',component:CheckPresenseSubpage},
+
+      {path:'user',component:UserComponent},
     ]
   },
   { path: 'login', component:LoginPage},

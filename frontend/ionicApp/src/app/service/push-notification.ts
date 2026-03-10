@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { PushNotifications, Token} from '@capacitor/push-notifications';
 import { ApiService } from './api';
-import { PushNotificationAlertComponent } from '../alerts/push-notification-alert/push-notification-alert.component';
+import { Toast } from '@capacitor/toast'
+import { AuthService } from './auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PushNotification {
   constructor(
-    private api: ApiService){
+    private api: ApiService,
+    private auth: AuthService){
     this.initPushNotifications();
   }
   hardwareID="test";
@@ -32,9 +34,8 @@ export class PushNotification {
     });
     
     PushNotifications.addListener('pushNotificationReceived', async (notification) => {
-      console.log('Push Notification received in foreground:', notification);
-      //await this.showAlert(notification);
-      //await this.showLocalNotification(notification.title ?? 'Neue Nachricht', notification.body ?? '').then();
+        console.log('Push Notification received in foreground:', notification);
+        this.showNotification(notification);
       });
 
     PushNotifications.addListener('registrationError', (error) => {
@@ -43,10 +44,14 @@ export class PushNotification {
   }
 
   registerFcmToken(token:any){
+    this.api.sendRequestPost({fcmToken:token.value},"postFcmToken");
+  }
 
-    this.api.sendRequestPost({fcmToken:token.value, hardwareID: this.hardwareID},"postFcmToken").subscribe( v => {
-      console.log(v);
-    });
+  showNotification = async (notification:any) => {
+    await Toast.show({
+      text: notification.data.body,
+      position: 'top',
+    })
   }
 
 }
