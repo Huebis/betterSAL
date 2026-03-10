@@ -512,7 +512,7 @@ def postFcmToken():
     hardwareID = service.postFcmToken(db,userID,fcmToken,hardwareID)
     print("alles hat funktioniert mit dem Token")
 
-    n
+    
     notification.sentNotificationToUserID(db,userID,"ANGEMOLDEN","Sie haben sich erfolgreich angemolden",5)
 
 
