@@ -414,13 +414,14 @@ def testFcmToken():
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if not isEveryDataNameinObject(data,[["fcmToken","uuid4"]]):
+    if not isEveryDataNameinObject(data,[["fcmToken","string"]]):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
 
     fcmToken = data["fcmToken"]
 
     print(fcmToken)
+    print("wurde ausgeführt")
 
     notification.sendPush(fcmToken,"Test","Der Token funktioniert!!!")
 
