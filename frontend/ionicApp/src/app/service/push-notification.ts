@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { AlertController } from '@ionic/angular';
 import { PushNotifications, Token} from '@capacitor/push-notifications';
 import { ApiService } from './api';
+import { PushNotificationAlertComponent } from '../alerts/push-notification-alert/push-notification-alert.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PushNotification {
-  constructor(private api: ApiService, private alertController: AlertController){
+  constructor(
+    private api: ApiService){
     this.initPushNotifications();
   }
-
+  hardwareID="test";
   
   initPushNotifications() {
     PushNotifications.requestPermissions().then(result => {
@@ -27,14 +28,13 @@ export class PushNotification {
     PushNotifications.register();
 
     PushNotifications.addListener('registration', (token:Token) => {
-      this.api.sendRequestPost({fcmToken:token.value},"testFcmToken").subscribe( v => {
-        console.log(v);
-      });
+      this.registerFcmToken(token);
     });
     
     PushNotifications.addListener('pushNotificationReceived', async (notification) => {
       console.log('Push Notification received in foreground:', notification);
-      await this.showLocalNotification(notification.title ?? 'Neue Nachricht', notification.body ?? '').then();
+      //await this.showAlert(notification);
+      //await this.showLocalNotification(notification.title ?? 'Neue Nachricht', notification.body ?? '').then();
       });
 
     PushNotifications.addListener('registrationError', (error) => {
@@ -42,29 +42,11 @@ export class PushNotification {
     });
   }
 
-  async showLocalNotification(title: string, message: string) {
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Confirm!',
-      message: 'Message <strong>text</strong>!!!',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: (blah) => {
-            console.log('Confirm Cancel: blah');
-          }
-        }, {
-          text: 'Okay',
-          handler: () => {
-            console.log('Confirm Okay');
-          }
-        }
-      ]
-    });
+  registerFcmToken(token:any){
 
-    await alert.present();
+    this.api.sendRequestPost({fcmToken:token.value, hardwareID: this.hardwareID},"postFcmToken").subscribe( v => {
+      console.log(v);
+    });
   }
 
 }

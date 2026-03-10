@@ -21,7 +21,7 @@ export class HomePage{
     this.router.navigate([substing]);
   }
   sendNoti(){
-    this.pushNotification.showLocalNotification("test","test").then();
+    //this.pushNotification.showAlert("test").then();
   }
 
 }

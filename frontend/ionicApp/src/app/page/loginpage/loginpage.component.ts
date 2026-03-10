@@ -6,6 +6,7 @@ import {IonInput, IonButton, IonInputPasswordToggle, IonContent } from '@ionic/a
 
 import { AuthService } from '../../service/auth';
 import { ApiService } from '../../service/api';
+import { PushNotification } from 'src/app/service/push-notification';
 
 @Component({
   selector: 'app-loginpage',
@@ -18,7 +19,11 @@ export class LoginPage  implements OnInit {
   username="";
   password="";
 
-  constructor(private authService: AuthService, private router: Router, private api: ApiService) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private api: ApiService,
+    private notifications: PushNotification ) {}
 
   login(){
     console.log(this.username)
@@ -32,7 +37,8 @@ export class LoginPage  implements OnInit {
         this.authService.setRole(res["role"]);
         this.username="";
         this.password="";
-        this.router.navigate(['/home'])
+        this.router.navigate(['/home']);
+        this.notifications.initPushNotifications();
       },
       error: err => console.error('HTTP Error:', JSON.stringify(err))
     }); 

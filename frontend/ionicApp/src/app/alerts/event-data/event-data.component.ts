@@ -22,5 +22,8 @@ export class EventDataComponent {
     this.router.navigate(['home/presense',this.event.courseName,this.event.starttime, this.event.endtime, this.event.eventID]);
 
   }
+  close(){
+    this.modalController.dismiss();
+  }
 }
 
