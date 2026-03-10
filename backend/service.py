@@ -237,7 +237,9 @@ def getScheduleOfOneDay(db,userID,date,starttime=None,endtime=None):
 
     
     events = db.getEventsAtDayWithUserID(userID,date.strftime("%Y-%m-%d"))
-
+    print("events")
+    print(events)
+    
     #sind Tuble
     events = [list(t) for t in events]
     #schedule = [list(t) for t in schedule] wird schon in db.getScheduleOfWeekdayWithTimeIntervalWithUserID

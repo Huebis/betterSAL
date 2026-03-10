@@ -732,6 +732,11 @@ class Event:
     def getEventsAtDayWithUserID(self,userID,date):
         starttime = date + " 00:01"
         endtime = date + " 23:59"
+        print("zeiten")
+        print(starttime)
+        print(endtime)
+        print(userID)
+        print(date)
         sql = """SELECT ev.starttime,ev.endtime,ev.location,ev.courseid,co.subject,co.courseName,ev.type, ev.eventid
         FROM event AS ev
         INNER JOIN course AS co
