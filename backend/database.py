@@ -55,7 +55,7 @@ class FcmToken:
                 SELECT 1
                 FROM fcmtoken
                 WHERE userid = ? 
-                    AND hardwareid = ?
+                    AND hardwaretoken = ?
             );
             """
         self.cursor.execute(sql,(userID,hardwareToken))
@@ -80,7 +80,7 @@ class FcmToken:
         DELETE
         FROM fcmtoken
         WHERE userid = ? 
-            And hardwareid = ?;
+            And hardwaretoken = ?;
         """
 
         self.cursor.execute(sql,(userID,hardwareToken))
