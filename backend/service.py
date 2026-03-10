@@ -162,7 +162,7 @@ def postFcmToken(db,userID,fcmToken,hardwareID):
         db.updateFcmTokenWithUserIDAndHardwareToken(userID,fcmToken,hardwareID)
         return hardwareID
     hardwareID = str(uuid.uuid4())
-    db.addNewFcmToken(userID,fcmToken,hardwareToken)
+    db.addNewFcmToken(userID,fcmToken,hardwareID)
     return hardwareID
 
 
