@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{event.courseName}}</ion-title>
+    <ion-buttons slot="end">
+      @if (role>1){
+        <ion-button (click)="presence()">presence</ion-button>
+      }
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div>
+    <p>Starttime: {{event.starttime}}</p>
+    <p>Endtime: {{event.endtime}}</p>
+    <br>
+    <p>Subject: {{event.subject}}</p>
+    <br>
+    <p>location: {{event.location}}</p>
+  </div>
+</ion-content>

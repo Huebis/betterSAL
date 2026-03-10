@@ -1,0 +1,21 @@
+<div class="dropdown">
+  <button (click)="toggleDropdown()" 
+    class="dropdown-button">
+    <ng-content 
+      *ngTemplateOutlet="this.headerTemplate;  
+      context: {$implicit: headerItems}">
+      
+    </ng-content>
+  </button>
+  @if (this.isOpen){
+    <div class="dropdown-content">
+      @for (item of items; track item){
+        <ng-content 
+          *ngTemplateOutlet="this.itemTemplate;
+          context: {$implicit: item,
+            headerItems:this.headerItems
+          }"></ng-content>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,15 @@
+<ng-template #itemTemplate let-item>
+    <div>
+        <h2>{{ item.startdate }}</h2>
+        <p>{{ item.startdate }}</p>
+    </div>
+</ng-template>
+<ng-template #headerTemplate>
+<p> Absencen</p>
+</ng-template>
+
+<app-dropdown 
+    [items]="this.absences" 
+    [headerTemplate]="headerTemplate" 
+    [itemTemplate]="itemTemplate">
+</app-dropdown>

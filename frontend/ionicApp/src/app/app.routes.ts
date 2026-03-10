@@ -4,21 +4,27 @@ import {CanMatchGuard} from './service/can-match-guard'
 
 import { LoginPage } from './page/loginpage/loginpage.component';
 import { HomePage } from './page/home/home.page';
-import { GradesComponent } from './component/grades/grades.component';
-import { TeacherGradesComponent } from './component/teacher-grades/teacher-grades.component';
-import { ChangeExamComponent } from './component/change-exam/change-exam.component';
-import { AbsencesComponent } from './component/absences/absences.component';
+import { GradesSubpage } from './subpages/grades/grades.subpage';
+import { TeacherGradesSubpage } from './subpages/teacher-grades/teacher-grades.subpage';
+import { ChangeExamSubpage } from './subpages/change-exam/change-exam.subpage';
+import { AbsencesSubpage } from './subpages/absences/absences.subpage';
+import { TimetableSubpage } from './subpages/timetable/timetable.subpage';
+import { CheckPresenseSubpage } from './subpages/check-presense/check-presense.subpage';
 
 
 export const routes: Routes = [
   { path: 'home', 
     component:HomePage,
     children:[
-      {path:'grades',component:TeacherGradesComponent, canMatch: [CanMatchGuard],data:{allowedRoles:[false,false,true,false,false]}},
-      {path:'grades',component:GradesComponent},
-      {path:'changeExam/:courseID/:eventID',component:ChangeExamComponent},
+      {path:'grades',component:TeacherGradesSubpage, canMatch: [CanMatchGuard],data:{allowedRoles:[false,false,true,false,false]}},
+      {path:'grades',component:GradesSubpage},
+      {path:'changeExam/:courseID/:eventID',component:ChangeExamSubpage},
 
-      {path:'absences',component:AbsencesComponent}
+      {path:'absences',component:AbsencesSubpage},
+      
+      {path:'timetable',component:TimetableSubpage},
+
+      {path:'presense/:courseName/:starttime/:endtime/:eventID',component:CheckPresenseSubpage}
     ]
   },
   { path: 'login', component:LoginPage},
