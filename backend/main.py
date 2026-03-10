@@ -508,7 +508,7 @@ def postFcmToken():
 
 
     hardwareID = data["hardwareID"]
-    print("hardwareID" + str(hardwareID))
+    print("EINGESCHICKTE hardwareID" + str(hardwareID))
     hardwareID = service.postFcmToken(db,userID,fcmToken,hardwareID)
     print("alles hat funktioniert mit dem Token")
 

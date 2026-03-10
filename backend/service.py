@@ -166,6 +166,8 @@ def postFcmToken(db,userID,fcmToken,hardwareID):
     if db.isFcmTokenExistWithUserIDandHardwareID(userID,hardwareID):
         db.updateFcmTokenWithUserIDAndHardwareToken(userID,fcmToken,hardwareID)
         return hardwareID
+
+    print("EINE NEUE EINTRAG MUSSTE ERSTELLT WERDEN")
     hardwareID = str(uuid.uuid4())
     db.addNewFcmToken(userID,fcmToken,hardwareID)
     return hardwareID
