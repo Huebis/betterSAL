@@ -27,7 +27,9 @@ export class PushNotification {
     PushNotifications.register();
 
     PushNotifications.addListener('registration', (token:Token) => {
-      this.api.sendRequestPost({fcmToken:token.value},"testFcmToken").subscribe();
+      this.api.sendRequestPost({fcmToken:token.value},"testFcmToken").subscribe( v => {
+        console.log(v);
+      });
     });
     
     PushNotifications.addListener('pushNotificationReceived', async (notification) => {

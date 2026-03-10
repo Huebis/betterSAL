@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { catchError, Observable, of, switchMap } from 'rxjs';
+import { Router, RouterOutlet } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +11,7 @@ export class ApiService {
   private baseUrl = 'https://huebis.dev/betterSAL/api/';
   //private baseUrl = 'http://127.0.0.1:5000/betterSAL/api/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
 
   sendRequestPost(data: Object,substring: string): Observable<any> {
@@ -23,7 +25,16 @@ export class ApiService {
         params=params.set(""+key, data[""+key]);
       }
     }
-    return this.http.get<any>(this.baseUrl+substring,{params});
+    return this.http.get<any>(this.baseUrl+substring,{params})
+      .pipe(
+        catchError((err) => {
+          if (err.status===450){
+            this.router.navigate(["/login"]);
+          }
+          console.log(err.status)
+          return of();
+        })
+      );
   }
   
 }

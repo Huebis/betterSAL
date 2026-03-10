@@ -1,23 +1,23 @@
 <ion-header [translucent]="true">
   <ion-toolbar class="navbar">
-    <ion-item>
       <ion-button (click)="navigateTo('/home/grades')">
         Grades
       </ion-button>
-    </ion-item>
-    <ion-item>
       <ion-button (click)="navigateTo('/home/absences')">
         Absences
       </ion-button>
-    </ion-item>
+      <ion-button (click)="navigateTo('/home/timetable')">
+        Timetable
+      </ion-button>
+      <ion-button (click)="navigateTo('/home/presense')">
+        presense
+      </ion-button>
     <ion-item slot="end">
       <app-user-small></app-user-small>
     </ion-item>
-    <ion-item>
       <ion-button (click)="sendNoti()">
         showLocalNotification
       </ion-button>
-    </ion-item>
   </ion-toolbar>
 </ion-header>
 

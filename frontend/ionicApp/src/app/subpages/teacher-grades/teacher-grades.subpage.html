@@ -1,0 +1,28 @@
+<ng-template #itemTemplate let-item let-headerItems="headerItems">
+  <div style="display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;">
+      <div>{{ item.testName }}</div>
+      <div>{{ item.date }}</div>
+      <div>{{ item.weight }}</div>
+      <div>
+        <button (click)="editGrade(headerItems.courseID,item.eventID)">
+          Change Exam
+        </button>
+      </div>
+  </div>
+</ng-template>
+<ng-template #headerTemplate let-item>
+  <p> {{item.courseName}}</p>
+  <button (click)="editGrade(''+item.courseID,'0')"> Add Exam</button>
+</ng-template>
+
+
+
+@for (course of courses; track $index){
+  <app-dropdown 
+    [headerItems]="course" 
+    [items]="course.exams" 
+    [headerTemplate]="headerTemplate" 
+    [itemTemplate]="itemTemplate">
+  </app-dropdown>
+}
