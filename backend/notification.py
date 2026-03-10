@@ -34,7 +34,7 @@ def sentNotificationToUserID(db,userID,title,body,notificationType):
     # 0 = notifabsenceofteachertoday
     # 1= notifabsenceofteachertomorrow
     # 2= notifexamtomorrow
-    # 3= otifeventtomorrow
+    # 3= notifeventtomorrow
     # 4= notifabsenceduetomorrow
     permissions = db.getNotificationPermissionsOfUser(userID)
 

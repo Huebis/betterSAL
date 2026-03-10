@@ -162,7 +162,7 @@ def postFcmToken(db,userID,fcmToken,hardwareID):
         db.updateFcmTokenWithUserIDAndHardwareToken(userID,fcmToken,hardwareID)
         return hardwareID
     hardwareID = str(uuid.uuid4())
-    db.addNewFcmToken(userID,fcmToken,hardwareToken)
+    db.addNewFcmToken(userID,fcmToken,hardwareID)
     return hardwareID
 
 
@@ -234,12 +234,19 @@ def getScheduleOfOneDay(db,userID,date,starttime=None,endtime=None):
     if not db.isHolidateAtdate(date.strftime("%Y-%m-%d %H:%M")):
         schedule = db.getScheduleOfWeekdayWithTimeIntervalWithUserID(userID,date.weekday(),"00:01","23:59", date.strftime("%Y-%m-%d"))
 
+
     
     events = db.getEventsAtDayWithUserID(userID,date.strftime("%Y-%m-%d"))
-
+    print("events")
+    print(events)
+    
     #sind Tuble
     events = [list(t) for t in events]
-    schedule = [list(t) for t in schedule]
+    #schedule = [list(t) for t in schedule] wird schon in db.getScheduleOfWeekdayWithTimeIntervalWithUserID
+
+    print(schedule)
+    print("events")
+    print(events)
 
     for event in events:
         event[0] = datetime.strptime(event[0], "%Y-%m-%d %H:%M")
@@ -248,16 +255,33 @@ def getScheduleOfOneDay(db,userID,date,starttime=None,endtime=None):
     for lection in schedule:
         lection[0] = datetime.strptime(lection[0], "%Y-%m-%d %H:%M")
         lection[1] = datetime.strptime(lection[1], "%Y-%m-%d %H:%M")
-        lection.append(0)
+        lection.append("")
 
-    output = []
+
+
     if schedule == []:
-        output = events
+        outputDict = []
+        for a,lection in enumerate(events):
+            lectionDict = {
+                "starttime" : lection[0].strftime("%Y-%m-%d %H:%M"),
+                "endtime" : lection[1].strftime("%Y-%m-%d %H:%M"),
+                "location" : lection[2],
+                "courseID" : lection[3],
+                "subject" : lection[4],
+                "courseName" : lection[5],
+                "type" : lection[6],
+                "eventID": lection[7]
+            }
+            outputDict.append(lectionDict)
+
+        return outputDict
+            
     
-    #event : ev.starttime,ev.endtime,ev.location,ev.courseid,co.subject,co.courseName,ev.type
-    #schedule: sc.starttime,sc.endtime,sc.location,sc.courseid,co.subject,co.courseName
+    #event : ev.starttime,ev.endtime,ev.location,ev.courseid,co.subject,co.courseName,ev.type,eventID
+    #schedule: sc.starttime,sc.endtime,sc.location,sc.courseid,co.subject,co.courseName, type, "" (als eventID)
     else: 
         #merge Event with Schedule
+        output = []
 
 
 
@@ -291,7 +315,7 @@ def getScheduleOfOneDay(db,userID,date,starttime=None,endtime=None):
 
                         if lection[1] > event[0] and lection[1] < event[1]:
                             lection[1] = event[0]
-
+                print("EVENT NDNDNDNDNN")
                 output.append(event)
 
 
@@ -306,24 +330,38 @@ def getScheduleOfOneDay(db,userID,date,starttime=None,endtime=None):
                         lection[1] = event[0]
                 
                 output.append(event)
+                print("djdjdjdj")
         
 
+
+        print("Zuvor")
+        print(output)
         output.extend(schedule)
+
+        print("OUTput")
+        print(output)
 
 
         if starttime != None:
             #starttime = datetime.strptime(starttime, "%Y-%m-%d %H:%M")
 
+            #Hier werden die Termine abgeschnitten, je nach starttime
+            """
             for lection in output:
                 if lection[0] < starttime:
                     lection[0] = starttime
+            """
         
         if endtime != None:
             #endtime = datetime.strptime(starttime, "%Y-%m-%d %H:%M")
 
+            #Hier werden die Termine abgeschnitten, je nach starttime
+            """
             for lection in output:
                 if lection[1] > endtime:
                     lection[1] = endtime
+
+            """
         
 
         for a in range(len(output)-1,-1,-1):
@@ -342,7 +380,8 @@ def getScheduleOfOneDay(db,userID,date,starttime=None,endtime=None):
                 "courseID" : lection[3],
                 "subject" : lection[4],
                 "courseName" : lection[5],
-                "type" : lection[6]
+                "type" : lection[6],
+                "eventID": lection[7]
             }
             outputDict.append(lectionDict)
 

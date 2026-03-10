@@ -55,7 +55,7 @@ class FcmToken:
                 SELECT 1
                 FROM fcmtoken
                 WHERE userid = ? 
-                    AND hardwareid = ?
+                    AND hardwaretoken = ?
             );
             """
         self.cursor.execute(sql,(userID,hardwareToken))
@@ -80,7 +80,7 @@ class FcmToken:
         DELETE
         FROM fcmtoken
         WHERE userid = ? 
-            And hardwareid = ?;
+            And hardwaretoken = ?;
         """
 
         self.cursor.execute(sql,(userID,hardwareToken))
@@ -732,7 +732,12 @@ class Event:
     def getEventsAtDayWithUserID(self,userID,date):
         starttime = date + " 00:01"
         endtime = date + " 23:59"
-        sql = """SELECT ev.starttime,ev.endtime,ev.location,ev.courseid,co.subject,co.courseName,ev.type
+        print("zeiten")
+        print(starttime)
+        print(endtime)
+        print(userID)
+        print(date)
+        sql = """SELECT ev.starttime,ev.endtime,ev.location,ev.courseid,co.subject,co.courseName,ev.type, ev.eventid
         FROM event AS ev
         INNER JOIN course AS co
             ON co.courseid = ev.courseid
@@ -900,7 +905,7 @@ class Schedule:
         return True
 
     def getScheduleOfWeekdayWithTimeIntervalWithUserID(self,userID,weekday,starttime,endtime,date):
-        sql = """SELECT sc.starttime,sc.endtime,sc.location,sc.courseid,co.subject,co.courseName
+        sql = """SELECT sc.starttime,sc.endtime,sc.location,sc.courseid,co.subject,co.courseName,0
         FROM schedule AS sc 
         INNER JOIN course AS co
             ON co.courseid = sc.courseid

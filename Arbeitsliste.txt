@@ -1,22 +1,16 @@
 
 WICHTIG !!!!!!!
 
-FileId immer zu user hinzufügen
 
 bei getSchedule für jeden Kurs noch die EventID hinzufügen !!!!
 
 
 
-Fehler: Null response Schedule Wochendene:
 
-    {
-      "date": "2026-02-14",
-      "schedule": null
-    },
-    {
-      "date": "2026-02-15",
-      "schedule": null
-    },
+event ID zhinzfügen bei GetSchedule: 
+
+
+Schedule nicht mehr löschen bzw. abschneiden 
 
 
 
@@ -26,8 +20,6 @@ Nächste Schritte:
 
 
 
-notification funktion machen mit verschiedenen möglichekeiten
-    mit verschiedenen Messages
 
 
 
