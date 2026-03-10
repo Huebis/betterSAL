@@ -73,7 +73,7 @@ class FcmToken:
         output = self.cursor.fetchall()
         return output
 
-    def deleteFcmTokenWithUserIDAndHardwareID(self,userID,hardwareID):
+    def deleteFcmTokenWithUserIDAndHardwareID(self,userID,hardwareToken):
         sql = """
         DELETE
         FROM fcmtoken
