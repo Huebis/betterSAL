@@ -65,14 +65,12 @@ class FcmToken:
 
     def getAllFcmTokenFromUserID(self,userID):
         sql = """
-            SELECT (fcmtoken,hardwaretoken) 
+            SELECT fcmtoken,hardwaretoken
             FROM fcmtoken
             WHERE userid = ?;
-    
             """
         self.cursor.execute(sql,(userID,))
         output = self.cursor.fetchall()
-        self.conn.commit()
         return output
 
     def deleteFcmTokenWithUserIDAndHardwareID(self,userID,hardwareID):
