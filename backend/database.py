@@ -474,6 +474,18 @@ class Grade:
         output = self.cursor.fetchall()
         self.conn.commit()
         return output
+    
+
+    def getGradeWithEventIDAndUserID(self,eventID,userID):
+        sql = """
+            SELECT grade,message,fileid 
+                FROM grade
+            WHERE eventid = ?
+                AND userid = ?;
+            """
+        self.cursor.execute(sql,(userID))
+        output = self.cursor.fetchone()
+        return output
 
 
     def getAllGradesPlusNamesWithEventID(self,eventID):
