@@ -503,7 +503,8 @@ def postFcmToken():
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
     
     
-
+    fcmToken = data["fcmToken"]
+    hardwareID = data["hardwareID"]
     hardwareID = service.postFcmToken(db,userID,fcmToken,hardwareID)
 
     return jsonify({"hardwareID": hardwareID}), 200
