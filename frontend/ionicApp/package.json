@@ -10,8 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "deploy": "ng build --configuration production --base-href /betterSAL/ && rsync -avz dist/ionicApp/ huebis@huebis.dev:/var/www/huebis.dev/public_html/betterSAL/"
-
+    "deploy": "ng build --configuration production --base-href /betterSAL/ && rsync -avz www/ huebis@huebis.dev:/var/www/huebis.dev/public_html/betterSAL/"
   },
   "private": true,
   "dependencies": {
@@ -30,7 +29,7 @@
     "@capacitor/haptics": "8.0.0",
     "@capacitor/keyboard": "8.0.0",
     "@capacitor/local-notifications": "^8.0.0",
-    "@capacitor/push-notifications": "^8.0.0",
+    "@capacitor/push-notifications": "^8.0.2",
     "@capacitor/status-bar": "8.0.0",
     "@ionic/angular": "^8.0.0",
     "ionicons": "^7.0.0",
