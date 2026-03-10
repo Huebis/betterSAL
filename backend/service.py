@@ -108,6 +108,11 @@ def updateAllGradesFromAllStudentsOfTest(db,grades,eventID):
         message = gradeDict["message"]
         fileID = gradeDict["fileID"]
         userID = gradeDict["userID"]
+
+        #grade,message,fileID
+        dbGrade = db.getGradeWithEventIDAndUserID(eventID,userID)
+        if dbGrade == None:
+            continue
         db.updateGradeWithEventIDAndUserID(grade,message,fileID,eventID,userID)
     return
 

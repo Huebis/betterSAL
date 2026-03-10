@@ -82,9 +82,8 @@ class FcmToken:
         """
 
         self.cursor.execute(sql,(userID,hardwareToken))
-        output = bool(self.cursor.fetchone()[0])
         self.conn.commit()
-        return output
+        return
 
 
 
