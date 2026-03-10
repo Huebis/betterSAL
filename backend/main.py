@@ -498,8 +498,11 @@ def postFcmToken():
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if not isEveryDataNameinObject(data, [["fcmToken", "string"], ["hardwareID", "uuid4"]]):
+    #neuerung, wenn nicht uuid bei hardwareID, dann neuzuweisen und prüfen ob fcmToken stimmt
+    if not isEveryDataNameinObject(data, [["fcmToken", "string"], ["hardwareID", "string"]]):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    
+    
 
     hardwareID = service.postFcmToken(db,userID,fcmToken,hardwareID)
 
