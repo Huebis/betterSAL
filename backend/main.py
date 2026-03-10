@@ -423,7 +423,7 @@ def testFcmToken():
     print(fcmToken)
     print("wurde ausgeführt")
 
-    notification.sendPush(fcmToken,"Test","Der Token funktioniert!!!")
+    notification.sendNotification(fcmToken,"Test","Der Token funktioniert!!!")
 
 
     return jsonify({}), 200
