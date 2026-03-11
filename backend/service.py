@@ -205,31 +205,16 @@ def postAllUserInformation(db,data,userID):
     notifEventTomorrow = data["notifEventTomorrow"]
     notifAbsenceDueTomorrow = data["notifAbsenceDueTomorrow"]
 
-    if not isinstance(userName,str):
-        return False
-    if not isinstance(email,str):
-        return False
-
-    if not isinstance(notifAbsenceOfTeacherToday,int):
-        return False
     
-    if not isinstance(notifAbsenceOfTeacherTomorrow,int):
+    if not (notifAbsenceOfTeacherToday == 0 or notifAbsenceOfTeacherToday == 1) :
         return False
-    if not isinstance(notifExamTomorrow,int):
+    if not (notifAbsenceOfTeacherTomorrow != 0 or notifAbsenceOfTeacherTomorrow != 1) :
         return False
-    if not isinstance(notifEventTomorrow,int):
+    if not (notifExamTomorrow == 0 or notifExamTomorrow == 1) :
         return False
-    if not isinstance(notifAbsenceDueTomorrow,int):
+    if not (notifEventTomorrow == 0 or notifEventTomorrow == 1) :
         return False
-    if notifAbsenceOfTeacherToday != 0 and notifAbsenceOfTeacherToday != 1 :
-        return False
-    if notifAbsenceOfTeacherTomorrow != 0 and notifAbsenceOfTeacherTomorrow != 1 :
-        return False
-    if notifExamTomorrow != 0 and notifExamTomorrow != 1 :
-        return False
-    if notifEventTomorrow != 0 and notifEventTomorrow != 1 :
-        return False
-    if notifAbsenceDueTomorrow != 0 and notifAbsenceDueTomorrow != 1 :
+    if not (notifAbsenceDueTomorrow == 0 or notifAbsenceDueTomorrow == 1) :
         return False
     db.updateUserDataFromUserWithUserID(userID,userName,email,notifAbsenceOfTeacherToday,notifAbsenceOfTeacherTomorrow,notifExamTomorrow,notifEventTomorrow,notifAbsenceDueTomorrow)
     return True
