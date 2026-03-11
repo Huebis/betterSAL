@@ -709,7 +709,8 @@ def deleteAbsenceEvent():
 
 
 
-@app.route('/presencelist', methods=["get"])
+
+@app.route('/presenceList', methods=["get"])
 def getAnwesenheitsliste():
     token = request.headers.get("token")
     db = get_db()
@@ -756,7 +757,7 @@ def getAnwesenheitsliste():
 
 
 
-@app.route('/presencelist', methods=["post"])
+@app.route('/presenceList', methods=["post"])
 def postAnwesenheitsliste():
     token = request.headers.get("token")
     db = get_db()
