@@ -50,9 +50,7 @@ export class TimetableSubpage  implements OnInit {
     private modalController: ModalController) { }
   
   ngOnInit() {
-    
     this.loadData();
-    this.changeShown(1);
   }
   getDate(wantedDate:number){
     if (this.selectedPeriod==="day"){      
@@ -86,6 +84,7 @@ export class TimetableSubpage  implements OnInit {
   loadData(){
     this.days=[]
     this.api.sendRequestGet({},"getSchedule?starttime="+this.getDate(1)+"&endtime="+this.getDate(7)).subscribe(v => {
+      console.log(v);
       let weekday = 0;
       if (this.selectedPeriod==='month'){
         const selectedDate = new Date(v.schedule[0].date);

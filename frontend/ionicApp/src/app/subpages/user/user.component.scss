@@ -6,21 +6,23 @@ ion-toggle{
     text-align: right;
 }
 .notifications {
-    width: fit-content;
-    @media (max-width: 500px){
-        width: 100%;
-    }
+    width: 100%;
 }
 
 .content {
     padding: 10px;
+    width: fit-content;
+    
+    @media (max-width: 500px){
+        width: 100%;
+    }
 }
 .userinformations{
     div div {
         display: flex;
         justify-content: space-between; // Space items evenly in the row
         margin-bottom: 1rem; // Adds spacing between the rows
-        width: 500px;
+        width: 100%;
         @media (max-width: 500px){
             width: 100%;
         }
@@ -33,5 +35,12 @@ ion-toggle{
             margin: 0; // Remove default margin
             align-self: flex-end; // Align paragraph at the end
         }
+        ion-input {
+            display: block;
+        }
     }
+}
+.parent{
+    display: flex;
+    justify-content: center;
 }

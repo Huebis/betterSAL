@@ -21,9 +21,7 @@ export class ApiService {
     let params = new HttpParams();
     console.log(data);
     for (let key in data){
-      if (data[""+key]){
-        params=params.set(""+key, data[""+key]);
-      }
+      params=params.set(""+key, data[""+key] ? data[""+key] : "nothing");
     }
     return this.http.get<any>(this.baseUrl+substring,{params})
       .pipe(

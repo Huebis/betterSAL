@@ -20,7 +20,7 @@ export class EventDataComponent {
   presence() {
     console.log(this.event);
     this.modalController.dismiss();
-    this.router.navigate(['home/presense',this.event.courseName,this.event.starttime, this.event.endtime, this.event.eventID]);
+    this.router.navigate(['home/presense',this.event.courseID,this.event.starttime, this.event.endtime, this.event.eventID]);
 
   }
   close(){

@@ -25,7 +25,7 @@ export const routes: Routes = [
       
       {path:'timetable',component:TimetableSubpage},
 
-      {path:'presense/:courseName/:starttime/:endtime/:eventID',component:CheckPresenseSubpage},
+      {path:'presense/:courseID/:starttime/:endtime/:eventID',component:CheckPresenseSubpage},
 
       {path:'user',component:UserComponent},
     ]

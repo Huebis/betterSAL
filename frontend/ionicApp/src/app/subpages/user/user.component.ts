@@ -16,7 +16,7 @@ export interface User{
   notifEventTomorrow:boolean
   notifExamTomorrow:boolean
   role:number
-  username:string
+  userName:string
 }
 
 @Component({
@@ -38,7 +38,7 @@ export class UserComponent  implements OnInit {
     notifEventTomorrow:false,
     notifExamTomorrow:false,
     role:0,
-    username:"",
+    userName:"",
   };
   editUserInformations=false;
   test:string="blabla";
@@ -57,7 +57,8 @@ export class UserComponent  implements OnInit {
 
   }
   safe(){
-    this.api.sendRequestPost(this.user,"postUserData");
+    console.log(this.user);
+    this.api.sendRequestPost(this.user,"postUserData").subscribe();
   }
   editUserInformation(){
     this.editUserInformations = (this.editUserInformations==false);
