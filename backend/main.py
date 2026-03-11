@@ -725,13 +725,22 @@ def getAnwesenheitsliste():
     eventID = request.args.get("eventID")
     courseID = request.args.get("courseID")
 
+    print(eventID)
+    print(endtime)
+    print(starttime)
+    print(courseID)
+
 
     if starttime == None or endtime == None or eventID == None or courseID == None :
         return jsonify({"error": "Fehlender Parameter"}), 400
     if not verificationDatatype(starttime,"dateMinute"):
+        print("starttime is false")
+        print(starttime)
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
     
     if not verificationDatatype(endtime,"dateMinute"):
+        print("endtime is false")
+        print(endtime)
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
     print("hdhdhdh")
     if not verificationDatatype(eventID,"string"):
