@@ -1066,6 +1066,7 @@ class Database(FcmToken,User,File,Token,Grade,Exam,Event,Course,Schedule,Absence
     def __init__(self):
         self.conn = sqlite3.connect('database.db')
         self.cursor = self.conn.cursor()
+        self.conn.execute("PRAGMA journal_mode=WAL;")
 
 
 

@@ -496,7 +496,7 @@ def postFcmToken():
         return json,errorNumber
 
 
-    
+
 
    
     data = request.get_json()
@@ -911,4 +911,4 @@ def download_file(fileID):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=True, threaded=False)
