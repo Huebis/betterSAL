@@ -58,8 +58,8 @@ def verificationDatatype(parameter, datatype):
         return isinstance(integer, int)
     def isList(liste):
         return isinstance(liste,list)
-    def isDict(dicte)
-        return isinstance(dicte, dict):
+    def isDict(dicte):
+        return isinstance(dicte, dict)
     
     
 
