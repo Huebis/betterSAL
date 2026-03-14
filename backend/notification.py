@@ -55,6 +55,7 @@ def sentNotificationToUserID(db,userID,title,body,notificationType):
     for fcmToken in AllFcmToken:
         try:
             sendNotification(fcmToken[0],title,body)
+            print("hat gesendet")
         except:
             #wenn ein FCM-Token nicht funktioniert bzw. Error kommt,  FCM-Token löschen
             print("FCM TOKEN MUSSTE gelöscht werden, da er nicht gestummen hat ")
