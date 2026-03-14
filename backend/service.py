@@ -119,7 +119,7 @@ def updateAllGradesFromAllStudentsOfTest(db,grades,eventID):
 
         print("test 1")
 
-
+        dbGrade = db.getGradeWithEventIDAndUserID(eventID,userID)
         #aktualisierung DB
         db.updateGradeWithEventIDAndUserID(grade,message,fileID,eventID,userID)
 
@@ -130,7 +130,7 @@ def updateAllGradesFromAllStudentsOfTest(db,grades,eventID):
         print("test 2")
 
         #grade,message,fileID,courseID
-        dbGrade = db.getGradeWithEventIDAndUserID(eventID,userID)
+        
         if dbGrade == None:
             continue
 
