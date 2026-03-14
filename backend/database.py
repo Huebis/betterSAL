@@ -479,8 +479,8 @@ class Grade:
                 FROM grade AS gr
                 INNER JOIN event as ev
                     ON gr.enventid = ev.eventid
-            WHERE eventid = ?
-                AND userid = ?;
+            WHERE gr.eventid = ?
+                AND gr.userid = ?;
             """
         self.cursor.execute(sql,(userID))
         output = self.cursor.fetchone()
