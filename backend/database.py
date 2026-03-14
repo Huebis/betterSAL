@@ -478,7 +478,7 @@ class Grade:
             SELECT gr.grade,gr.message,gr.fileid ,ev.courseid
                 FROM grade AS gr
                 INNER JOIN event as ev
-                    ON gr.enventid = ev.eventid
+                    ON gr.eventid = ev.eventid
             WHERE gr.eventid = ?
                 AND gr.userid = ?;
             """
