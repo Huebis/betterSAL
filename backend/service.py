@@ -187,15 +187,14 @@ def updateAllExamAndEventDataWithEventIDAndCourseID(db,exam):
 
     return True
 
-def postFcmToken(db,userID,fcmToken,hardwareID):
-    if db.isFcmTokenExistWithUserIDandHardwareID(userID,hardwareID):
-        db.updateFcmTokenWithUserIDAndHardwareToken(userID,fcmToken,hardwareID)
-        return hardwareID
+def postFcmToken(db,userID,fcmToken):
+    if db.isFcmTokenExistWithUserID(userID,fcmToken):
+        return
+
 
     print("EINE NEUE EINTRAG MUSSTE ERSTELLT WERDEN")
-    hardwareID = str(uuid.uuid4())
-    db.addNewFcmToken(userID,fcmToken,hardwareID)
-    return hardwareID
+    db.addNewFcmToken(userID,fcmToken)
+    return
 
 
 def getAllUserData(db,userID):

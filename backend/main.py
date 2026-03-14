@@ -492,6 +492,7 @@ def postFcmToken():
     boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
 
     if not boolien:
+        print("Probleme mit der Token verifikation")
         return json,errorNumber
 
 
@@ -501,10 +502,12 @@ def postFcmToken():
     data = request.get_json()
 
     if not data:
+        print("DATA wird nicht mitgeschickt")
         return jsonify({"error": "kein JSON gesendet"}), 400
 
     #neuerung, wenn nicht uuid bei hardwareID, dann neuzuweisen und prüfen ob fcmToken stimmt
-    if not isEveryDataNameinObject(data, [["fcmToken", "string"], ["hardwareID", "string"]]):
+    if not isEveryDataNameinObject(data, [["fcmToken", "string"]]):
+        print("FCM Token wird nicht gesendet")
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
     
     
@@ -512,9 +515,7 @@ def postFcmToken():
     print(fcmToken)
 
 
-    hardwareID = data["hardwareID"]
-    print("EINGESCHICKTE hardwareID" + str(hardwareID))
-    hardwareID = service.postFcmToken(db,userID,fcmToken,hardwareID)
+    service.postFcmToken(db,userID,fcmToken)
     print("alles hat funktioniert mit dem Token")
 
     

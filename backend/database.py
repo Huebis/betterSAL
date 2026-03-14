@@ -22,7 +22,6 @@ class FcmToken:
         CREATE TABLE fcmtoken (
             userid TEXT NOT NULL,
             fcmtoken TEXT NOT NULL,
-            hardwaretoken TEXT NOT NULL
         );
         """
         self.cursor.execute(table_creation_query)
@@ -30,13 +29,13 @@ class FcmToken:
         return
 
 
-    def addNewFcmToken(self,userID,fcmToken,hardwareToken):
-        sql = "INSERT INTO fcmtoken (userid,fcmtoken,hardwaretoken) VALUES (?,?,?)"
-        self.cursor.execute(sql, (userID,fcmToken,hardwareToken))
+    def addNewFcmToken(self,userID,fcmToken):
+        sql = "INSERT INTO fcmtoken (userid,fcmtoken) VALUES (?,?)"
+        self.cursor.execute(sql, (userID,fcmToken))
         self.conn.commit()
         return True
 
-
+### Ist nicht mehr in gebrauch
     def updateFcmTokenWithUserIDAndHardwareToken(self,userID,fcmToken,hardwareToken):
         sql = """
             UPDATE fcmtoken
@@ -49,23 +48,23 @@ class FcmToken:
         self.conn.commit()
         return output
 
-    def isFcmTokenExistWithUserIDandHardwareID(self,userID,hardwareToken):
+    def isFcmTokenExistWithUserID(self,userID,fcmToken):
         sql = """
             SELECT EXISTS(
                 SELECT 1
                 FROM fcmtoken
                 WHERE userid = ? 
-                    AND hardwaretoken = ?
+                    AND fcmtoken = ?
             );
             """
-        self.cursor.execute(sql,(userID,hardwareToken))
+        self.cursor.execute(sql,(userID,fcmToken))
         output = bool(self.cursor.fetchone()[0])
         self.conn.commit()
         return output
 
     def getAllFcmTokenFromUserID(self,userID):
         sql = """
-            SELECT fcmtoken,hardwaretoken
+            SELECT fcmtoken
             FROM fcmtoken
             WHERE userid = ?;
             """
@@ -73,15 +72,15 @@ class FcmToken:
         output = self.cursor.fetchall()
         return output
 
-    def deleteFcmTokenWithUserIDAndHardwareID(self,userID,hardwareToken):
+    def deleteFcmTokenWithUserIDAndHardwareID(self,userID,fcmToken):
         sql = """
         DELETE
         FROM fcmtoken
         WHERE userid = ? 
-            And hardwaretoken = ?;
+            And fcmtoken = ?;
         """
 
-        self.cursor.execute(sql,(userID,hardwareToken))
+        self.cursor.execute(sql,(userID,fcmToken))
         self.conn.commit()
         return
 
