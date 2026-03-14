@@ -2,6 +2,7 @@ import database
 import uuid
 import os
 from datetime import datetime,timedelta
+import time
 
 
 
@@ -120,6 +121,12 @@ def updateAllGradesFromAllStudentsOfTest(db,grades,eventID):
         #aktualisierung DB
         db.updateGradeWithEventIDAndUserID(grade,message,fileID,eventID,userID)
 
+        #test
+        time.sleep(0.5)
+        #test
+
+
+        
         #grade,message,fileID,courseID
         dbGrade = db.getGradeWithEventIDAndUserID(eventID,userID)
         if dbGrade == None:
