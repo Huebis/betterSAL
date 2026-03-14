@@ -474,9 +474,12 @@ def postAllGradesFromAllStudentsOfTest():
     if not db.isUserIDinEvent(userID,eventID):
         return jsonify({"error": "user do not have the permission to change that"}), 403
 
+    print("test 0")
+
 
 
     response = service.updateAllExamAndEventDataWithEventIDAndCourseID(db,exam)
+    print("test 0.5")
     if not response:
         return jsonify({"error": "Objekt war falsch"}), 400
 

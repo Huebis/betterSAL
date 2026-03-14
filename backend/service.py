@@ -117,21 +117,24 @@ def updateAllGradesFromAllStudentsOfTest(db,grades,eventID):
         if grade < 1 and grade != 0:
             continue
 
+        print("test 1")
+
 
         #aktualisierung DB
         db.updateGradeWithEventIDAndUserID(grade,message,fileID,eventID,userID)
 
         #test
-        time.sleep(0.5)
+
         #test
 
+        print("test 2")
 
-        
         #grade,message,fileID,courseID
         dbGrade = db.getGradeWithEventIDAndUserID(eventID,userID)
         if dbGrade == None:
             continue
 
+        print("test 3")
         subject = db.getSubjectWithCourseID(dbGrade[3])
 
         #send messages
@@ -146,6 +149,7 @@ def updateAllGradesFromAllStudentsOfTest(db,grades,eventID):
         if message != dbGrade[1] or fileID != dbGrade[2]:
             notification.sentNotificationToUserID(db,userID,"Noten Anhang Veränderung",f"Bei einer Note im Fach {subject} haben sich die Anhänge verändert",5)
 
+        print("test 4")
     return
 
 
