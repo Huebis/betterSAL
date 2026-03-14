@@ -482,7 +482,7 @@ class Grade:
             WHERE gr.eventid = ?
                 AND gr.userid = ?;
             """
-        self.cursor.execute(sql,(userID))
+        self.cursor.execute(sql,(eventID,userID))
         output = self.cursor.fetchone()
         return output
 
