@@ -496,7 +496,7 @@ def postFcmToken():
         return json,errorNumber
 
 
-
+    
 
    
     data = request.get_json()
@@ -526,7 +526,7 @@ def postFcmToken():
 
 
 
-    return jsonify({"hardwareID": hardwareID}), 200
+    return jsonify({}), 200
 
 
 

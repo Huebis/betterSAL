@@ -49,16 +49,16 @@ def sentNotificationToUserID(db,userID,title,body,notificationType):
     
 
 
-
+    #list of fcmToken (but tuple)
     AllFcmToken = db.getAllFcmTokenFromUserID(userID)
 
     for fcmToken in AllFcmToken:
         try:
-            sendNotification(fcmToken,title,body)
+            sendNotification(fcmToken[0],title,body)
         except:
             #wenn ein FCM-Token nicht funktioniert bzw. Error kommt,  FCM-Token löschen
             print("FCM TOKEN MUSSTE gelöscht werden, da er nicht gestummen hat ")
-            db.deleteFcmTokenWithUserIDAndHardwareID(userID,fcmToken)
+            db.deleteFcmTokenWithUserIDAndHardwareID(userID,fcmToken[0])
 
     return 
 
