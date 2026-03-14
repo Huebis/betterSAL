@@ -475,8 +475,10 @@ class Grade:
 
     def getGradeWithEventIDAndUserID(self,eventID,userID):
         sql = """
-            SELECT grade,message,fileid 
-                FROM grade
+            SELECT gr.grade,gr.message,gr.fileid ,ev.courseid
+                FROM grade AS gr
+                INNER JOIN event as ev
+                    ON gr.enventid = ev.eventid
             WHERE eventid = ?
                 AND userid = ?;
             """
@@ -878,6 +880,49 @@ class Course:
         self.cursor.execute(sql,(courseID,))
         output = self.cursor.fetchall()
         return output
+    
+    def getSubjectWithCourseID(self,courseID):
+        sql = """
+        SELECT
+            subject 
+        FROM course 
+    
+        WHERE courseid = ?;
+        """
+        self.cursor.execute(sql,(courseID,))
+        output = self.cursor.fetchone()
+        match output:
+            case "M":
+                return "Mathematik"
+            case "F":
+                return "Französisch"
+            case "E":
+                return "Englisch"
+            case "D":
+                return "Deutsch"
+            case "IN":
+                return "Informatik"
+            case "P":
+                return "Physik"
+            case "GS":
+                return "Geschichte"
+            case "SP":
+                return "Sport"
+            case "GG":
+                return "Geographie"
+            case "C":
+                return "Chemie"
+            case "BG":
+                return "Bildernisches Gestalten"
+            case "MS":
+                return "Musik"
+            case _:
+                return "Unbekanntes Fach"
+
+        return output
+
+    
+
 
 
     

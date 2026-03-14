@@ -109,11 +109,37 @@ def updateAllGradesFromAllStudentsOfTest(db,grades,eventID):
         fileID = gradeDict["fileID"]
         userID = gradeDict["userID"]
 
-        #grade,message,fileID
+
+        #Unerblaubte noten
+        if grade > 6.5:
+            continue
+        if grade < 1 and grade != 0:
+            continue
+
+
+        #aktualisierung DB
+        db.updateGradeWithEventIDAndUserID(grade,message,fileID,eventID,userID)
+
+        #grade,message,fileID,courseID
         dbGrade = db.getGradeWithEventIDAndUserID(eventID,userID)
         if dbGrade == None:
             continue
-        db.updateGradeWithEventIDAndUserID(grade,message,fileID,eventID,userID)
+
+        subject = db.getSubjectWithCourseID(dbGrade[3])
+
+        #send messages
+        if grade != 0 and dbGrade[0] == 0:
+            notification.sentNotificationToUserID(db,userID,"Neue Note",f"Sie haben eine neue Note im Fach {subject}",5)
+            continue
+        
+        if grade != 0 and dbGrade[0] != 0 and grade != dbGrade[0]:
+            notification.sentNotificationToUserID(db,userID,"Notenänderung",f"Eine Note im Fach {subject} hat sich von {dbGrade[0]} zu {grade} verändert",5)
+            continue
+        
+        if message != dbGrade[1] or fileID != dbGrade[2]:
+            notification.sentNotificationToUserID(db,userID,"Noten Anhang Veränderung",f"Bei einer Note im Fach {subject} haben sich die Anhänge verändert",5)
+
+
     return
 
 
