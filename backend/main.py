@@ -454,7 +454,7 @@ def postAllGradesFromAllStudentsOfTest():
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if not isEveryDataNameinObject(data, [["grades", "dict"], ["exam", "dict"]]):
+    if not isEveryDataNameinObject(data, [["grades", "list"], ["exam", "dict"]]):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
 
