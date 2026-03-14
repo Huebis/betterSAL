@@ -58,6 +58,9 @@ def verificationDatatype(parameter, datatype):
         return isinstance(integer, int)
     def isList(liste):
         return isinstance(liste,list)
+    def isDict(dicte)
+        return isinstance(dicte, dict):
+    
     
 
 
@@ -74,6 +77,8 @@ def verificationDatatype(parameter, datatype):
             return isValidUuid(parameter)
         case "list":
             return isList(parameter)
+        case "dict":
+            return isDict(parameter)
         case _:
             raise Exception("Mistake in Datatype verifikation")
             return False
@@ -449,14 +454,14 @@ def postAllGradesFromAllStudentsOfTest():
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if not isEveryDataNameinObject(data, ["grades", "exam"]):
+    if not isEveryDataNameinObject(data, [["grades", "dict"], ["exam", "dict"]]):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
 
     exam = data["exam"]
     grades = data["grades"]
 
-    if not isEveryDataNameinObject(exam, ["courseID", "eventID"]):
+    if not isEveryDataNameinObject(exam, [["courseID", "uuid4"], ["eventID", "uuid4"]]):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
     courseID = exam["courseID"]

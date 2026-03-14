@@ -139,7 +139,6 @@ def updateAllGradesFromAllStudentsOfTest(db,grades,eventID):
         if message != dbGrade[1] or fileID != dbGrade[2]:
             notification.sentNotificationToUserID(db,userID,"Noten Anhang Veränderung",f"Bei einer Note im Fach {subject} haben sich die Anhänge verändert",5)
 
-
     return
 
 
