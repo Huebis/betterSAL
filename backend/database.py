@@ -21,7 +21,7 @@ class FcmToken:
         table_creation_query = """
         CREATE TABLE fcmtoken (
             userid TEXT NOT NULL,
-            fcmtoken TEXT NOT NULL,
+            fcmtoken TEXT NOT NULL
         );
         """
         self.cursor.execute(table_creation_query)
