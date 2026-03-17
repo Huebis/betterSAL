@@ -315,7 +315,7 @@ def addNewTest():
     if not db.isUserIDinCourse(userID,courseID):
         return jsonify({"error": "user do not have the permission to change that"}), 403
 
-    service.addNewExamenForCourseWithEventAndDefaultGrades(db,courseID,testName,weight,location,date,starttime,endtime,describtion)
+    service.addNewExamenForCourseWithEventAndDefaultGrades(db,courseID,testName,weight,location,starttime,endtime,describtion)
 
     return jsonify({}), 200
 
