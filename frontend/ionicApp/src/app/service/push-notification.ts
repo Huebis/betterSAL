@@ -44,7 +44,7 @@ export class PushNotification {
   }
 
   registerFcmToken(token:any){
-    this.api.sendRequestPost({fcmToken:token.value},"postFcmToken");
+    this.api.sendRequestPost({fcmToken:token.value},"postFcmToken").subscribe();
   }
 
   showNotification = async (notification:any) => {

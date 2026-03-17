@@ -15,6 +15,7 @@ export interface User{
   notifAbsenceOfTeacherTomorrow:boolean
   notifEventTomorrow:boolean
   notifExamTomorrow:boolean
+  notifGradeChange:boolean
   role:number
   userName:string
 }
@@ -37,9 +38,26 @@ export class UserComponent  implements OnInit {
     notifAbsenceOfTeacherTomorrow:false,
     notifEventTomorrow:false,
     notifExamTomorrow:false,
+    notifGradeChange:false,
     role:0,
     userName:"",
   };
+  copyOfUser:User={
+    className:"",
+    email:"",
+    firstName:"",
+    lastName:"",
+    major:"",
+    notifAbsenceDueTomorrow:false,
+    notifAbsenceOfTeacherToday:false, 
+    notifAbsenceOfTeacherTomorrow:false,
+    notifEventTomorrow:false,
+    notifExamTomorrow:false,
+    notifGradeChange:false,
+    role:0,
+    userName:"",
+  };
+  somethingChanged = true;
   editUserInformations=false;
   test:string="blabla";
 
@@ -53,16 +71,23 @@ export class UserComponent  implements OnInit {
     this.api.sendRequestGet({},"getUserData").subscribe(v => {
       console.log(v);
       this.user=v;
+      this.copyOfUser=this.user;
     });
 
   }
+  checkIfChanged(){
+    this.somethingChanged = (this.user !== this.copyOfUser);
+  }
   safe(){
-    console.log(this.user);
+    console.log(this.somethingChanged);
     this.api.sendRequestPost(this.user,"postUserData").subscribe();
+    this.copyOfUser = this.user;
+    this.somethingChanged = true;
   }
   editUserInformation(){
     this.editUserInformations = (this.editUserInformations==false);
     console.log(this.editUserInformations);
+    this.checkIfChanged();
   }
 
 }

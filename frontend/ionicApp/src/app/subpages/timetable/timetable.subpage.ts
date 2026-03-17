@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common'; // Import CommonModule
 import { Component, OnInit } from '@angular/core';
 import { IonItem, IonList, IonButton } from "@ionic/angular/standalone";
 import { ApiService } from '../../service/api';
-import { AlertController } from '@ionic/angular';
+import { AlertController, IonicModule } from '@ionic/angular';
 
 import { EventDataComponent } from '../../alerts/event-data/event-data.component'
 import { ModalController } from '@ionic/angular';
 import { AuthService } from 'src/app/service/auth';
+import { FormsModule } from '@angular/forms';
 
 export interface Event{
   starttime:string
@@ -29,7 +30,7 @@ export interface Day{
   selector: 'app-timetable',
   templateUrl: './timetable.subpage.html',
   styleUrls: ['./timetable.subpage.scss'],
-  imports: [CommonModule, IonButton],
+  imports: [CommonModule, IonicModule, FormsModule],
   providers: [ModalController]
 })
 export class TimetableSubpage  implements OnInit {
@@ -88,7 +89,7 @@ export class TimetableSubpage  implements OnInit {
       let weekday = 0;
       if (this.selectedPeriod==='month'){
         const selectedDate = new Date(v.schedule[0].date);
-        weekday = selectedDate.getDay()-1;
+        weekday = (selectedDate.getDay()+6)%7;
         console.log(weekday);
         for (let i=0; i<weekday; i++){
           this.days.push({
@@ -116,6 +117,7 @@ export class TimetableSubpage  implements OnInit {
         event.height = this.calculateTimePos(event.endtime) - event.top;
         event.left = 0;
         event.width = 100;
+        console.log(this.days[date])
         this.days[date].schedule.push(event);
         let ammount=0;
         for (let i=this.days[date].schedule.length-2; i>=0; i--){

@@ -1,4 +1,4 @@
-<button>
+<button (click)="close()">
 <ion-header>
   <ion-toolbar>
     <ion-title>{{event.courseName}}</ion-title>
@@ -10,13 +10,9 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <div>
     <p>Starttime: {{event.starttime}}</p>
     <p>Endtime: {{event.endtime}}</p>
-    <br>
     <p>Subject: {{event.subject}}</p>
-    <br>
     <p>location: {{event.location}}</p>
-  </div>
 </ion-content>
 </button>

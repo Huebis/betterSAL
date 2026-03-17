@@ -39,17 +39,15 @@ export class GradesSubpage  implements OnInit {
     loadData(){
       this.api.sendRequestGet({},"getGradesStudent").subscribe(v => {
         this.subjects=v.subjects;
-        console.log(v);
       });
 
     };
     getAverage(grades:Grade[]){
-      console.log(grades);
       let average=0;
       let amount=0;
-      console.log(Array.isArray(grades))
-      grades.forEach(exam => {if (exam.grade!=0){average+=exam.grade*exam.weight; amount+=exam.weight}});
-      return Math.floor(average/amount*100)/100;
+      grades.forEach(exam => { if (exam.grade!=0){average+=exam.grade*exam.weight; amount+=exam.weight}});
+      return (amount===0) ? "No Grades": Math.floor(average/amount*100)/100;
+      
     }
     getFile(fileId:string){
       console.log(fileId);

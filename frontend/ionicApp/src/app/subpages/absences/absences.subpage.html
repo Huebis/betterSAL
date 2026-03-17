@@ -1,15 +1,18 @@
-<ng-template #itemTemplate let-item>
-    <div>
-        <h2>{{ item.startdate }}</h2>
-        <p>{{ item.startdate }}</p>
-    </div>
+<ng-template #notExcusedItemTemplate let-item>
+   <div>
+    {{item.events[0].starttime}}
+    {{item.events[item.events.length-1].endtime}}
+    {{item.length}}
+   </div>
 </ng-template>
-<ng-template #headerTemplate>
-<p> Absencen</p>
+<ng-template #notExcusedHeaderTemplate>
+    <p> Not Excused </p>
 </ng-template>
 
+
+
 <app-dropdown 
-    [items]="this.absences" 
-    [headerTemplate]="headerTemplate" 
-    [itemTemplate]="itemTemplate">
+    [items]="this.absences.notExcused" 
+    [headerTemplate]="notExcusedHeaderTemplate" 
+    [itemTemplate]="notExcusedItemTemplate">
 </app-dropdown>

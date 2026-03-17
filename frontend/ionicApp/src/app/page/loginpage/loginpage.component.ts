@@ -22,7 +22,8 @@ export class LoginPage  implements OnInit {
   constructor(
     private authService: AuthService, 
     private router: Router, 
-    private api: ApiService) {}
+    private api: ApiService,
+    private notifications: PushNotification) {}
 
   login(){
     console.log(this.username)
@@ -37,7 +38,8 @@ export class LoginPage  implements OnInit {
         this.username="";
         this.password="";
         this.router.navigate(['/home']);
-        //this.notifications.initPushNotifications();
+        this.notifications.initPushNotifications();
+
       },
       error: err => console.error('HTTP Error:', JSON.stringify(err))
     }); 

@@ -9,7 +9,6 @@ import { ApiService } from 'src/app/service/api';
 
 
 export interface Exam{
-  date:string;
   description:string;
   endtime:string;
   starttime:string;
@@ -48,10 +47,9 @@ export class ChangeExamSubpage  implements OnInit {
   courseID=0;
   data:any={
     exam:{
-      date:"2000-01-01",
       description:"description",
-      endtime:"00:00",
-      starttime:"00:00",
+      endtime:"2000-01-01T00:00",
+      starttime:"2000-01-01T00:00",
       location:"000",
       testName:"Test",
       weight:1,
@@ -60,20 +58,8 @@ export class ChangeExamSubpage  implements OnInit {
     },
     grades:[]
   };
-  copyedData:any={
-    exam:{
-      date:"2000-01-01",
-      description:"description",
-      endtime:"00:00",
-      starttime:"00:00",
-      location:"000",
-      testName:"Test",
-      weight:1,
-      courseID:"",
-      eventID:"",
-    },
-    grades:[]
-  }
+  somethingChanged=false;
+  starttime="2000-01-01T00:00:00";
   selectedDate: string="";
   formattedDate: string="";
   showDatePicker: boolean = false;
@@ -88,51 +74,55 @@ export class ChangeExamSubpage  implements OnInit {
       this.data.exam.eventID=""+this.eventID;
       console.log(this.eventID);
     });
-    this.getData();
+    if (this.eventID!==0){
+      this.getData();
+    }
 
   }
   getData(){
     this.api.sendRequestGet({"courseID":this.courseID,"eventID":this.eventID},"getAllGradesFromTest").subscribe( v =>{
-      console.log(v);
+      v.exam.starttime = v.exam.starttime.replace(" ","T");
+      v.exam.endtime = v.exam.endtime.replace(" ","T");
+      console.log(v.exam.endtime.replace(" ","T"));
       this.data=v;
-      this.copyedData=this.data;
+      
+      this.somethingChanged=true;
     })
   }
   sendRequest(){
     }
 
-  
-  getTest(){
-    if (this.eventID!=0){
-      const res = this.api.sendRequestGet({"courseID":this.courseID,"eventID":this.eventID},"getAllGradesFromTest");
-      this.data=res;
-      this.copyedData=JSON.parse(JSON.stringify(res));
-      
-    }
-  }
-
   saveChanges(){
+    this.data.exam.starttime = this.data.exam.starttime.replace("T"," ").slice(0,16);
+    this.data.exam.endtime = this.data.exam.starttime.slice(0,10)+" "+this.data.exam.endtime.slice(11,16);
     if (this.eventID!=0){
+      
       this.api.sendRequestPost(this.data,"postAllGradesFromAllStudentsOfTest").subscribe({
         next: res =>{
           console.log("saved Succesfully");
+          this.getData();
+          
           
         },
         error: err => console.error('HTTP Error:', err)
       });
     }else{
+      console.log("blabla");
       this.api.sendRequestPost(this.data.exam,"addNewTest").subscribe({
         next: res =>{
           console.log("saved Succesfully");
+          this.router.navigate(["/home/grades"]);
         },
         error: err => console.error('HTTP Error:', err)
       });
     }
-    this.getTest();
+   
   }
   deleteTest(){
-    console.log(this.copyedData);
-    console.log(this.copyedData===this.data);
+    this.api.sendRequestPost(this.data.exam,"deleteTest").subscribe( v => {
+      this.router.navigate(["/home/grades"]);
+    });
+    console.log(this.data);
   }
 
 

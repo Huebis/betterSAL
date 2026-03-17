@@ -3,7 +3,10 @@
     grid-template-columns: 1fr 1fr 1fr;">
       <div>{{ item.testName }}</div>
       <div>{{ item.date }}</div>
-      <div>{{ item.grade }}</div>
+      @if (item.grade){
+        <div>{{ item.grade }}</div>
+      }
+      
   </div>
 </ng-template>
 <ng-template #headerTemplate let-item>
