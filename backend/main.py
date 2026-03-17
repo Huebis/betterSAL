@@ -769,9 +769,18 @@ def getAnwesenheitsliste():
 
     if output == False:
         return jsonify({"error": "Fehler bei der Verarbeitung"}), 400
+
+
+
+    lesson = {
+        "eventID": eventID,
+        "courseID": courseID,
+        "starttime": starttime,
+        "endtime": endtime
+    }
     
 
-    return jsonify({"anwesenheitsliste": output}), 200
+    return jsonify({"anwesenheitsliste": output, "lesson": lesson}), 200
 
 
 
@@ -791,6 +800,7 @@ def postAnwesenheitsliste():
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
     
+    """
 
     starttime = request.args.get("starttime")
     endtime = request.args.get("endtime")
@@ -807,11 +817,23 @@ def postAnwesenheitsliste():
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
     if not verificationDatatype(courseID,"uuid4"):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    """
     
-    if not isEveryDataNameinObject(data,[["anwesenheitsliste","list"]]):
+    if not isEveryDataNameinObject(data,[["anwesenheitsliste","list"],["lesson","dict"]]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    
+    if not isEveryDataNameinObject(data["lesson"],[["eventID","string"],["courseID","uuid4"], ["starttime","dateMinute"],["endtime","dateMinute"]]):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
     anwesenheitsliste = data["anwesenheitsliste"]
+
+    lesson = data["lesson"]
+
+    courseID = lesson["courseID"]
+    eventID = lesson["eventID"]
+    starttime = lesson["starttime"]
+    endtime = lesson["endtime"]
+
     
 
 
