@@ -179,6 +179,7 @@ class User:
             notifexamtomorrow INT,
             notifeventtomorrow INT,
             notifabsenceduetomorrow INT,
+            notifgradechange INT,
             birthdate TEXT,
             childuserid TEXT
         );
@@ -189,7 +190,7 @@ class User:
 
 
     def getNotificationPermissionsOfUser(self,userID):
-        sql = "SELECT notifabsenceofteachertoday,notifabsenceofteachertomorrow,notifexamtomorrow,notifeventtomorrow,notifabsenceduetomorrow FROM user WHERE userid = ?"
+        sql = "SELECT notifabsenceofteachertoday,notifabsenceofteachertomorrow,notifexamtomorrow,notifeventtomorrow,notifabsenceduetomorrow,notifgradechange FROM user WHERE userid = ?"
         self.cursor.execute(sql, (userID,))
         output = self.cursor.fetchone()
         return output
@@ -269,7 +270,7 @@ class User:
     def getAllUserDataWithUserID(self,userID):
         sql = """
         SELECT username,classname,major,email,role,firstname,lastname,
-        notifabsenceofteachertoday,notifabsenceofteachertomorrow,notifexamtomorrow,notifeventtomorrow,notifabsenceduetomorrow
+        notifabsenceofteachertoday,notifabsenceofteachertomorrow,notifexamtomorrow,notifeventtomorrow,notifabsenceduetomorrow,notifgradechange
         FROM user WHERE userid = ?
         """
         self.cursor.execute(sql, (userID,))

@@ -36,13 +36,14 @@ def sentNotificationToUserID(db,userID,title,body,notificationType):
     # 2= notifexamtomorrow
     # 3= notifeventtomorrow
     # 4= notifabsenceduetomorrow
+    # 5 = notifgradechange
     permissions = db.getNotificationPermissionsOfUser(userID)
 
-    if notificationType < 0 or notificationType > 5:
+    if notificationType < 0 or notificationType > 6:
         raise ExceptionType("Wrong notificationType !!!!!!!, fix pleas")
 
     
-    if notificationType != 5: # 5 ist für Sudo
+    if notificationType != 6: # 5 ist für Sudo
         if permissions[notificationType] != 1:
             return 
 

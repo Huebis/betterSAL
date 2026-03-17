@@ -107,6 +107,9 @@ def isEveryDataNameinObject(testedObject,dataValues):
         print("hello")
         print(value)
         if not verificationDatatype(parameter,value[1]):
+            print("FEHLER BEI DER EINGABE DER PARAMETER")
+            print(parameter)
+            print(value)
             return False
 
 
@@ -305,7 +308,6 @@ def addNewTest():
     testName = data["testName"]
     weight = data["weight"]
     location = data["location"]
-    date = data["date"]
     starttime = data["starttime"]
     endtime = data["endtime"]
     describtion = data["description"]
