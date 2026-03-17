@@ -232,7 +232,7 @@ def getAllUserData(db,userID):
         "notifExamTomorrow": userData[9],
         "notifEventTomorrow": userData[10],
         "notifAbsenceDueTomorrow": userData[11],
-        "notifgradechange": userData[12]
+        "notifGradeChange": userData[12]
     }
     return outputDict
 
@@ -244,7 +244,7 @@ def postAllUserInformation(db,data,userID):
     notifExamTomorrow = data["notifExamTomorrow"]
     notifEventTomorrow = data["notifEventTomorrow"]
     notifAbsenceDueTomorrow = data["notifAbsenceDueTomorrow"]
-    notifgradechange = data["notifGradeChange"]
+    notifGradeChange = data["notifGradeChange"]
 
     
     if not (notifAbsenceOfTeacherToday == 0 or notifAbsenceOfTeacherToday == 1) :
@@ -257,9 +257,9 @@ def postAllUserInformation(db,data,userID):
         return False
     if not (notifAbsenceDueTomorrow == 0 or notifAbsenceDueTomorrow == 1) :
         return False
-    if not (notifgradechange == 0 or notifgradechange == 1) :
+    if not (notifGradeChange == 0 or notifGradeChange == 1) :
         return False
-    db.updateUserDataFromUserWithUserID(userID,userName,email,notifAbsenceOfTeacherToday,notifAbsenceOfTeacherTomorrow,notifExamTomorrow,notifEventTomorrow,notifAbsenceDueTomorrow)
+    db.updateUserDataFromUserWithUserID(userID,userName,email,notifAbsenceOfTeacherToday,notifAbsenceOfTeacherTomorrow,notifExamTomorrow,notifEventTomorrow,notifAbsenceDueTomorrow,notifGradeChange)
     return True
 
 

@@ -297,7 +297,7 @@ class User:
         output = self.cursor.fetchone()
         return output[0]
 
-    def updateUserDataFromUserWithUserID(self,userID,userName, email, notifAbsenceOfTeacherToday,notifAbsenceOfTeacherTomorrow, notifExamTomorrow, notifEventTomorrow,  notifAbsenceDueTomorrow):
+    def updateUserDataFromUserWithUserID(self,userID,userName, email, notifAbsenceOfTeacherToday,notifAbsenceOfTeacherTomorrow, notifExamTomorrow, notifEventTomorrow,  notifAbsenceDueTomorrow,notifGradeChange):
 
         sql = """
         UPDATE user
@@ -307,10 +307,11 @@ class User:
             notifabsenceofteachertomorrow =?,
             notifexamtomorrow =?,
             notifeventtomorrow =?,
-            notifabsenceduetomorrow =?
+            notifabsenceduetomorrow =?,
+            notifgradechange = ?
         WHERE userid = ?
         """
-        self.cursor.execute(sql, (userName, email,notifAbsenceOfTeacherToday, notifAbsenceOfTeacherTomorrow, notifExamTomorrow, notifEventTomorrow,notifAbsenceDueTomorrow,userID))
+        self.cursor.execute(sql, (userName, email,notifAbsenceOfTeacherToday, notifAbsenceOfTeacherTomorrow, notifExamTomorrow, notifEventTomorrow,notifAbsenceDueTomorrow, notifGradeChange,userID))
         self.conn.commit()
         return
 
