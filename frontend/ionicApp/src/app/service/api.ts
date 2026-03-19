@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { catchError, Observable, of, switchMap } from 'rxjs';
+import { catchError, Observable, of, switchMap, tap } from 'rxjs';
 import { Router, RouterOutlet } from '@angular/router';
 
 
@@ -35,5 +35,13 @@ export class ApiService {
         })
       );
   }
-  
+  uploadFile(file: any): Observable<any> {
+    const fd = new FormData();
+    fd.append('file', file);
+
+    return this.http.post(this.baseUrl+"file", fd);
+  }
+  downloadFile(fileID:string): Observable<Blob> {
+    return this.http.get(this.baseUrl+"file/" + fileID, {responseType: 'blob'})
+  }
 }

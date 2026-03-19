@@ -107,9 +107,7 @@
                 value="">
               </ion-input>
             </ion-item>
-            <ion-item>
-              upload File
-            </ion-item>
+            <app-file-upload [item]="student" (change)="saveChanges()"></app-file-upload>
           </ion-list>
         </ion-item>
       }

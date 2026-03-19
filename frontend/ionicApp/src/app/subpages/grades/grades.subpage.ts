@@ -5,6 +5,7 @@ import { IonButton, IonItem, IonLabel,  IonList, IonItemGroup} from '@ionic/angu
 
 import { ApiService } from '../../service/api';
 import { DropdownComponent } from "src/app/component/dropdown/dropdown.component";
+import { FileDownloadComponent } from "src/app/component/file-download/file-download.component";
 
 export interface Grade{
   date:string;
@@ -23,7 +24,7 @@ export interface Subject{
   selector: 'app-grades',
   templateUrl: './grades.subpage.html',
   styleUrls: ['./grades.subpage.scss'],
-  imports: [IonButton, IonItem, IonList, CommonModule, IonLabel, DropdownComponent],
+  imports: [IonButton, IonItem, IonList, CommonModule, IonLabel, DropdownComponent, FileDownloadComponent],
 })
 export class GradesSubpage  implements OnInit {
 

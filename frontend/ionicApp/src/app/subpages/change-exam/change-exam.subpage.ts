@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { IonInput, IonDatetime, IonItem, IonButton, IonDatetimeButton, IonModal, IonList, IonHeader, IonContent, IonToolbar } from '@ionic/angular/standalone';
 import { ApiService } from 'src/app/service/api';
+import { FileUploadComponent } from "src/app/component/file-upload/file-upload.component";
 
 
 
@@ -37,7 +38,7 @@ export interface Data{
   selector: 'app-change-exam',
   templateUrl: './change-exam.subpage.html',
   styleUrls: ['./change-exam.subpage.scss'],
-  imports: [FormsModule, IonInput, IonDatetime, IonItem, IonButton, IonDatetimeButton, IonModal, IonList, IonHeader, IonContent, IonToolbar],
+  imports: [FormsModule, IonInput, IonDatetime, IonItem, IonButton, IonDatetimeButton, IonModal, IonList, IonHeader, IonContent, IonToolbar, FileUploadComponent],
 
 })
 export class ChangeExamSubpage  implements OnInit {
@@ -85,6 +86,7 @@ export class ChangeExamSubpage  implements OnInit {
       v.exam.endtime = v.exam.endtime.replace(" ","T");
       console.log(v.exam.endtime.replace(" ","T"));
       this.data=v;
+      console.log(this.data)
       
       this.somethingChanged=true;
     })
@@ -96,6 +98,7 @@ export class ChangeExamSubpage  implements OnInit {
     this.data.exam.starttime = this.data.exam.starttime.replace("T"," ").slice(0,16);
     this.data.exam.endtime = this.data.exam.starttime.slice(0,10)+" "+this.data.exam.endtime.slice(11,16);
     if (this.eventID!=0){
+      console.log(this.data);
       
       this.api.sendRequestPost(this.data,"postAllGradesFromAllStudentsOfTest").subscribe({
         next: res =>{
