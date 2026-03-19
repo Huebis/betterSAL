@@ -908,8 +908,12 @@ def isUserHavePermissionToFileID(db,userID,fileID):
     # user muss in course sein
 
     courseID = db.getCourseIDFromEventWithFileID(fileID)
-    if db.isUserIDinCourse(userID,courseID):
-        return True
+
+    print("courseID")
+    print(courseID)
+    if courseID != None:
+        if db.isUserIDinCourse(userID,courseID):
+            return True
 
 
 
@@ -931,6 +935,9 @@ def isUserHavePermissionToFileID(db,userID,fileID):
     
     if role == 2:
         courseID = db.getCourseIDFromGradeWithFileID(fileID)
+
+        print("courseID")
+        print(courseID)
         if courseID != None:
             if db.isUserIDinCourse(userID,courseID):
                 return True

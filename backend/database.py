@@ -545,7 +545,7 @@ class Grade:
         print(output)
         if output == None:
             return None
-        return output
+        return output[0]
     
 
 
