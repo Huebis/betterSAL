@@ -90,6 +90,10 @@ export class AbsencesSubpage  implements OnInit {
 
   activateMerge(item:any){
     if (item.merge){
+      let data:any={
+        absenceIDList:[]
+      }
+      this.api.sendRequestPost(data,"absence?requestType=merge").subscribe();
       item.merge=false;
     }else{
       item.merge=true;
@@ -104,10 +108,13 @@ export class AbsencesSubpage  implements OnInit {
       item.merge=false;
     }
   }
-  safe(){
-    if (this.headerItems.merge){
-      
-    }
+  safe(item:any){
+    this.api.sendRequestPost(item,"absence?requestType=change").subscribe();
+    item.change=false;
+  }
+  changeExcused(event: CustomEvent, item:any){
+    item.excused = event.detail.value;
+    
   }
 
 

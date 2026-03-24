@@ -1,22 +1,23 @@
 <ng-template let-headerItems #notExcusedHeaderTemplate>
     <div>
         <p> Not Excused </p>
-        <ion-button (click)="$event.stopPropagation(); activateMerge(headerItems)">merge</ion-button>
-        <ion-button (click)="$event.stopPropagation();activateChange(headerItems)">change</ion-button>
-        <ion-button (click)="$event.stopPropagation(); safe()">Safe</ion-button>
-        
-
+        <ion-button (click)="$event.stopPropagation(); activateMerge(headerItems)">
+            @if(headerItems.merge){
+                <p>Safe</p>
+            }@else{
+                <p>Merge</p>
+            }
+        </ion-button>
     </div>
-    
 </ng-template>
 
 <ng-template #notExcusedItemTemplate let-item let-headerItems="headerItems">
-   <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr">
+   <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr">
     <p>
         {{item.events[0].starttime}} - {{item.events[item.events.length-1].endtime}}
     </p>
     <p>
-        @if (headerItems.change){
+        @if (item.change){
             <ion-input
                 (ionChange)="headerItems.somethingChanged=false"
                 type="text"
@@ -35,12 +36,33 @@
     <p> 
         {{item.absenceAmount}} 
     </p>
+    <p>
+        @if (item.change){
+            <ion-picker>
+                <ion-picker-column [value]="item.excused" (ionChange)="changeExcused($event, item)">
+                    <ion-picker-column-option [value]="0">0</ion-picker-column-option>
+
+                    <ion-picker-column-option [value]="1">1</ion-picker-column-option>
+                    <ion-picker-column-option [value]="2">2</ion-picker-column-option>
+                    <ion-picker-column-option [value]="3">3</ion-picker-column-option>
+                    <ion-picker-column-option [value]="4">4</ion-picker-column-option>
+                    <ion-picker-column-option [value]="5">5</ion-picker-column-option>
+                </ion-picker-column>
+              </ion-picker>
+
+        }@else{
+            {{item.excused}}
+        }
+    </p>
     @if (headerItems.merge){
+        <div></div>
         <ion-checkbox [(ngModel)]="item.selected"></ion-checkbox>
-    }@else if (headerItems.change){
+    }@else if (item.change){
         <app-file-upload [item]="item"></app-file-upload>
+        <ion-button (click)="safe(item);">Safe</ion-button>
     }@else {
         <app-file-download [fileID]="item.fileID"></app-file-download>
+        <ion-button (click)="item.change=true">Change</ion-button>
     }
    </div>
 </ng-template>
