@@ -484,8 +484,17 @@ def getSchedule(db,userID,starttime,endtime):
 
 
 
+def getTimeDifferenz(time1,time2):
+    diff = t2 - t1
+    minutes = int(diff.total_seconds() / 60)
+    return minutes
 
 
+
+
+def getNumberofAbsencesWithTimeDifferenz(timeDifferenz):
+    timeDifferenzInLection = int(timeDifferenz / 45)
+    return timeDifferenzInLection 
 
 
 def getAbsenceUser(db,userID):
@@ -496,6 +505,8 @@ def getAbsenceUser(db,userID):
     for absence in arrayFinishAbsence:
         eventDictArray = []
         arrayAbsenceEvent = db.getAllAbsenceEventWithAbsenceID(absence[0],userID)
+
+        timedifferenz = 0
         for event in arrayAbsenceEvent:
             eventDict = {
                 "eventID": event[0],
@@ -506,6 +517,9 @@ def getAbsenceUser(db,userID):
                 "courseName": event[5]
             }
             eventDictArray.append(eventDict)
+            starttime = datetime.strptime(event[2], "%Y-%m-%d %H:%M")
+            endtime = datetime.strptime(event[3], "%Y-%m-%d %H:%M")
+            timedifferenz += getTimeDifferenz(starttime,endtime)
         
         absenceDict = {
             "events": eventDictArray,
@@ -513,7 +527,8 @@ def getAbsenceUser(db,userID):
             "endday": absence[1],
             "fileID": absence[2],
             "description": absence[3],
-            "excused": 2
+            "excused": 2,
+            "absenceAmount": getNumberofAbsencesWithTimeDifferenz(timedifferenz)
         }
         finishAbsenceDictArray.append(absenceDict)
 
@@ -524,6 +539,7 @@ def getAbsenceUser(db,userID):
     for absence in arrayExcusedAbsence:
         eventDictArray = []
         arrayAbsenceEvent = db.getAllAbsenceEventWithAbsenceID(absence[0],userID)
+        timedifferenz = 0
         for event in arrayAbsenceEvent:
             eventDict = {
                 "eventID": event[0],
@@ -534,6 +550,9 @@ def getAbsenceUser(db,userID):
                 "courseName": event[5]
             }
             eventDictArray.append(eventDict)
+            starttime = datetime.strptime(event[2], "%Y-%m-%d %H:%M")
+            endtime = datetime.strptime(event[3], "%Y-%m-%d %H:%M")
+            timedifferenz += getTimeDifferenz(starttime,endtime)
         
         absenceDict = {
             "events": eventDictArray,
@@ -541,7 +560,8 @@ def getAbsenceUser(db,userID):
             "endday": absence[1],
             "fileID": absence[2],
             "description": absence[3],
-            "excused": 1
+            "excused": 1,
+            "absenceAmount": getNumberofAbsencesWithTimeDifferenz(timedifferenz)
         }
         excusedAbsenceDictArray.append(absenceDict)
 
@@ -554,6 +574,7 @@ def getAbsenceUser(db,userID):
     for absence in arrayNotExcusedAbsence:
         eventDictArray = []
         arrayAbsenceEvent = db.getAllAbsenceEventWithAbsenceID(absence[0],userID)
+        timedifferenz = 0
         for event in arrayAbsenceEvent:
             eventDict = {
                 "eventID": event[0],
@@ -564,6 +585,9 @@ def getAbsenceUser(db,userID):
                 "courseName": event[5]
             }
             eventDictArray.append(eventDict)
+            starttime = datetime.strptime(event[2], "%Y-%m-%d %H:%M")
+            endtime = datetime.strptime(event[3], "%Y-%m-%d %H:%M")
+            timedifferenz += getTimeDifferenz(starttime,endtime)
         
         absenceDict = {
             "events": eventDictArray,
@@ -571,7 +595,8 @@ def getAbsenceUser(db,userID):
             "endday": absence[1],
             "fileID": absence[2],
             "description": absence[3],
-            "excused": 0
+            "excused": 0,
+            "absenceAmount": getNumberofAbsencesWithTimeDifferenz(timedifferenz)
         }
         notExcusedAbsenceDictArray.append(absenceDict)
     
