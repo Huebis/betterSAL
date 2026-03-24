@@ -1,1 +1,6 @@
-<button (click)="getFile()">Download</button>
+@if(fileID===""){
+    No file
+}
+@else{
+    <button (click)="getFile()">Download</button>
+}

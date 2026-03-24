@@ -102,7 +102,6 @@ export class TimetableSubpage  implements OnInit {
         
         this.createDate(v.schedule[i].schedule, i + weekday, v.schedule[i].date);
       };
-      console.log()
     });
 
   }
