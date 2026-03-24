@@ -5,6 +5,7 @@ import { IonButton, IonItem, IonLabel,  IonList, IonItemGroup} from '@ionic/angu
 
 import { ApiService } from '../../service/api';
 import { DropdownComponent } from "src/app/component/dropdown/dropdown.component";
+import { FileDownloadComponent } from "src/app/component/file-download/file-download.component";
 
 export interface Grade{
   date:string;
@@ -23,7 +24,7 @@ export interface Subject{
   selector: 'app-grades',
   templateUrl: './grades.subpage.html',
   styleUrls: ['./grades.subpage.scss'],
-  imports: [IonButton, IonItem, IonList, CommonModule, IonLabel, DropdownComponent],
+  imports: [IonButton, IonItem, IonList, CommonModule, IonLabel, DropdownComponent, FileDownloadComponent],
 })
 export class GradesSubpage  implements OnInit {
 
@@ -39,17 +40,15 @@ export class GradesSubpage  implements OnInit {
     loadData(){
       this.api.sendRequestGet({},"getGradesStudent").subscribe(v => {
         this.subjects=v.subjects;
-        console.log(v);
       });
 
     };
     getAverage(grades:Grade[]){
-      console.log(grades);
       let average=0;
       let amount=0;
-      console.log(Array.isArray(grades))
-      grades.forEach(exam => {if (exam.grade!=0){average+=exam.grade*exam.weight; amount+=exam.weight}});
-      return Math.floor(average/amount*100)/100;
+      grades.forEach(exam => { if (exam.grade!=0){average+=exam.grade*exam.weight; amount+=exam.weight}});
+      return (amount===0) ? "No Grades": Math.floor(average/amount*100)/100;
+      
     }
     getFile(fileId:string){
       console.log(fileId);

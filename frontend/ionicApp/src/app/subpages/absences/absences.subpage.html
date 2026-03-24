@@ -1,15 +1,55 @@
-<ng-template #itemTemplate let-item>
+<ng-template let-headerItems #notExcusedHeaderTemplate>
     <div>
-        <h2>{{ item.startdate }}</h2>
-        <p>{{ item.startdate }}</p>
+        <p> Not Excused </p>
+        <ion-button (click)="$event.stopPropagation(); activateMerge(headerItems)">merge</ion-button>
+        <ion-button (click)="$event.stopPropagation();activateChange(headerItems)">change</ion-button>
+        <ion-button (click)="$event.stopPropagation(); safe()">Safe</ion-button>
+        
+
     </div>
-</ng-template>
-<ng-template #headerTemplate>
-<p> Absencen</p>
+    
 </ng-template>
 
+<ng-template #notExcusedItemTemplate let-item let-headerItems="headerItems">
+   <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr">
+    <p>
+        {{item.events[0].starttime}} - {{item.events[item.events.length-1].endtime}}
+    </p>
+    <p>
+        @if (headerItems.change){
+            <ion-input
+                (ionChange)="headerItems.somethingChanged=false"
+                type="text"
+                [(ngModel)]="item.description"
+                name="description"
+                label="Description" 
+                placeholder="Enter description"
+                label-placement="floating" 
+                fill="outline" 
+                value="test">
+            </ion-input>
+        }@else{
+            {{item.description}}
+        }
+    </p>
+    <p> 
+        {{item.absenceAmount}} 
+    </p>
+    @if (headerItems.merge){
+        <ion-checkbox [(ngModel)]="item.selected"></ion-checkbox>
+    }@else if (headerItems.change){
+        <app-file-upload [item]="item"></app-file-upload>
+    }@else {
+        <app-file-download [fileID]="item.fileID"></app-file-download>
+    }
+   </div>
+</ng-template>
+
+
+
 <app-dropdown 
-    [items]="this.absences" 
-    [headerTemplate]="headerTemplate" 
-    [itemTemplate]="itemTemplate">
+    [items]="this.absences.notExcused" 
+    [headerItems]="this.headerItems"
+    [headerTemplate]="notExcusedHeaderTemplate" 
+    [itemTemplate]="notExcusedItemTemplate">
 </app-dropdown>

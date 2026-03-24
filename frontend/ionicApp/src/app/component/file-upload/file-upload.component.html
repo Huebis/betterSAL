@@ -1,3 +1,11 @@
-<p>
-  file-upload works!
-</p>
+@if (item.fileID===""){
+  <label class="fileInput">
+    <!--<img src="assets/images/upload.png" alt="Upload">-->
+    Upload
+    <input type="file" (change)="onFileSelect($event, this.item)"/>
+  </label>
+}@else{
+  <app-file-download [fileID]="item.fileID"> Show file</app-file-download>
+  <button (click)="changeFile()">Delete File</button>
+  
+}
