@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { UserComponent } from './user.subpage';
+import { UserComponent } from './user.component';
 
 describe('UserComponent', () => {
   let component: UserComponent;

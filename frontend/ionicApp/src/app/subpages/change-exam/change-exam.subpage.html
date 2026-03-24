@@ -4,18 +4,20 @@
     <ion-list class="examValues">
       <ion-item>
         <ion-input
-          type="text"
-          [(ngModel)]="data.exam.testName"
-          name="theme"
-          label="Theme" 
-          placeholder="Enter Theme"
-          label-placement="floating" 
-          fill="outline" 
-          value="">
+        (ionChange)="somethingChanged=false"
+        type="text"
+        [(ngModel)]="data.exam.testName"
+        name="theme"
+        label="Theme" 
+        placeholder="Enter Theme"
+        label-placement="floating" 
+        fill="outline" 
+        value="">
         </ion-input>
       </ion-item>
       <ion-item>
         <ion-input
+          (ionChange)="somethingChanged=false"
           type="number"
           [(ngModel)]="data.exam.weight"
           name="weight"
@@ -28,6 +30,7 @@
       </ion-item>
       <ion-item>
         <ion-input
+          (ionChange)="somethingChanged=false"
           type="text"
           [(ngModel)]="data.exam.description"
           name="description"
@@ -40,6 +43,7 @@
       </ion-item>
       <ion-item>
         <ion-input
+          (ionChange)="somethingChanged=false"
           type="text"
           [(ngModel)]="data.exam.location"
           name="location"
@@ -51,24 +55,18 @@
         </ion-input>
       </ion-item>
       <ion-item>
-        Date   
-        <ion-datetime-button slot="end" datetime="date"></ion-datetime-button>
+        <ion-datetime-button (ionChange)="somethingChanged=false" datetime="date"
+        ></ion-datetime-button>
       </ion-item>
-      <ion-item>
-        Starttime   
-        <ion-datetime-button slot="end" datetime="starttime"></ion-datetime-button>
+      <ion-item>   
+        <ion-datetime-button  datetime="starttime"></ion-datetime-button>
       </ion-item>
-      <ion-item>
-        Endtime  
-        <ion-datetime-button slot="end" datetime="endtime"></ion-datetime-button>
+      <ion-item>  
+        <ion-datetime-button (ionChange)="somethingChanged=false" datetime="endtime"></ion-datetime-button>
       </ion-item>
     </ion-list>
     <ion-item>
-      @if (this.data!==this.copyedData){
-        <ion-button (click)="saveChanges()" [disabled]="false">Save Changes</ion-button>
-      }@else{
-        <ion-button (click)="saveChanges()" [disabled]="true">Save Changes</ion-button>
-      }
+      <ion-button (click)="saveChanges()" [disabled]="somethingChanged">Save Changes</ion-button>
       <ion-button slot="end" (click)="deleteTest()" color="danger">Delet Test</ion-button>
     </ion-item>
   </ion-toolbar>
@@ -85,6 +83,7 @@
             </ion-item>
             <ion-item>
               <ion-input
+                (ionChange)="somethingChanged=false"
                 type="text"
                 [(ngModel)]="student.message"
                 name="Message"
@@ -97,6 +96,7 @@
             </ion-item>
             <ion-item>
               <ion-input
+                (ionChange)="somethingChanged=false"
                 type="number"
                 [(ngModel)]="student.grade"
                 name="Grade"
@@ -107,9 +107,7 @@
                 value="">
               </ion-input>
             </ion-item>
-            <ion-item>
-              upload File
-            </ion-item>
+            <app-file-upload [item]="student" (change)="saveChanges()"></app-file-upload>
           </ion-list>
         </ion-item>
       }
@@ -121,10 +119,11 @@
 <ion-modal [keepContentsMounted]="true">
   <ng-template>
     <ion-datetime 
-      displayFormat="YYYY-MM-DD" 
-      pickerFormat="YYYY-MM-DD"
-      [(ngModel)]="this.data.exam.date" 
+      (ionChange)="somethingChanged=false"
       id="date"
+      displayFormat="YYYY-MM-DD HH:MM" 
+      pickerFormat="YYYY-MM-DD HH:MM"
+      [(ngModel)]="this.starttime"
       presentation="date"
     ></ion-datetime>
   </ng-template>
@@ -132,8 +131,9 @@
 <ion-modal [keepContentsMounted]="true">
   <ng-template>
     <ion-datetime 
-      displayFormat="HH:mm" 
-      pickerFormat="HH:mm"
+      (ionChange)="somethingChanged=false"
+      displayFormat="YYYY-MM-DD HH:MM" 
+      pickerFormat="YYYY-MM-DD HH:MM"
       [(ngModel)]="this.data.exam.starttime" 
       id="starttime"
       presentation="time"
@@ -143,8 +143,9 @@
 <ion-modal [keepContentsMounted]="true">
   <ng-template>
     <ion-datetime 
+      (ionChange)="somethingChanged=false"
       displayFormat="HH:mm" 
-      pickerFormat="HH:mm"
+      pickerFormat="HH:MM"
       [(ngModel)]="this.data.exam.endtime" 
       id="endtime"
       presentation="time"

@@ -1,0 +1,46 @@
+ion-toggle{
+    display: block;
+}
+
+.notifications div ion-toggle{
+    text-align: right;
+}
+.notifications {
+    width: 100%;
+}
+
+.content {
+    padding: 10px;
+    width: fit-content;
+    
+    @media (max-width: 500px){
+        width: 100%;
+    }
+}
+.userinformations{
+    div div {
+        display: flex;
+        justify-content: space-between; // Space items evenly in the row
+        margin-bottom: 1rem; // Adds spacing between the rows
+        width: 100%;
+        @media (max-width: 500px){
+            width: 100%;
+        }
+        h4 {
+            margin: 0; // Remove default margin for better control
+            align-self: flex-start; // Align heading at the start
+        }
+
+        p {
+            margin: 0; // Remove default margin
+            align-self: flex-end; // Align paragraph at the end
+        }
+        ion-input {
+            display: block;
+        }
+    }
+}
+.parent{
+    display: flex;
+    justify-content: center;
+}

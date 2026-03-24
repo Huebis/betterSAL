@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { ApiService } from 'src/app/service/api';
 
 @Component({
   selector: 'app-fileinput',
@@ -7,6 +8,13 @@ import { Component, Input } from '@angular/core';
 })
 export class FileInputComponent{
 
-  constructor() { }
-  @Input() link:string="";
+  constructor(private api:ApiService) { }
+  @Input() fileID:string="";
+  
+  getFile(){
+    this.api.sendRequestGet({fileID:this.fileID},"getFileByFileID").subscribe( v => {
+      console.log(v);
+    })
+  }
+
 }

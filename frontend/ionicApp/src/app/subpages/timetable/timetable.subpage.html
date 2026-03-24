@@ -31,7 +31,9 @@
         Type{{number}}
       </ion-button>
       }
-      
+
+      <ion-datetime-button  datetime="selectedDate"></ion-datetime-button>
+
     </div>
   </div>
   <div class="fullSchedule">
@@ -78,8 +80,6 @@
                     {{event.location}}
                   </div>
                 </div>
-                
-
               </div>
             </button>
           }
@@ -88,3 +88,17 @@
     </div>
   </div>
 </div>
+
+
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime 
+      (ionChange)="loadData()"
+      displayFormat="YYYY-MM-DD HH:MM" 
+      pickerFormat="YYYY-MM-DD HH:MM"
+      [(ngModel)]="this.selectedDate" 
+      id="selectedDate"
+      presentation="date"
+    ></ion-datetime>
+  </ng-template>
+</ion-modal>

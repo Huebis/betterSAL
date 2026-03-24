@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { catchError, Observable, of, switchMap } from 'rxjs';
+import { catchError, Observable, of, switchMap, tap } from 'rxjs';
 import { Router, RouterOutlet } from '@angular/router';
 
 
@@ -15,15 +15,14 @@ export class ApiService {
 
 
   sendRequestPost(data: Object,substring: string): Observable<any> {
+    console.log(data);
     return this.http.post<any>(this.baseUrl+substring, data,{ headers: new HttpHeaders({'Content-Type':'application/json'})});
   }
   sendRequestGet(data: any, substring: string): Observable<any> {
     let params = new HttpParams();
     console.log(data);
     for (let key in data){
-      if (data[""+key]){
-        params=params.set(""+key, data[""+key]);
-      }
+      params=params.set(""+key, data[""+key] ? data[""+key] : "nothing");
     }
     return this.http.get<any>(this.baseUrl+substring,{params})
       .pipe(
@@ -36,5 +35,13 @@ export class ApiService {
         })
       );
   }
-  
+  uploadFile(file: any): Observable<any> {
+    const fd = new FormData();
+    fd.append('file', file);
+
+    return this.http.post(this.baseUrl+"file", fd);
+  }
+  downloadFile(fileID:string): Observable<Blob> {
+    return this.http.get(this.baseUrl+"file/" + fileID, {responseType: 'blob'})
+  }
 }

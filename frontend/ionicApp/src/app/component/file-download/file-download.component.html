@@ -1,3 +1,6 @@
-<p>
-  file-download works!
-</p>
+@if(fileID===""){
+    No file
+}
+@else{
+    <button (click)="getFile()">Download</button>
+}
