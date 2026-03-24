@@ -485,7 +485,7 @@ def getSchedule(db,userID,starttime,endtime):
 
 
 def getTimeDifferenz(time1,time2):
-    diff = time1 - time2
+    diff = abs(time1 - time2)
     minutes = int(diff.total_seconds() / 60)
     return minutes
 
