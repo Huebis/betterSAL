@@ -1,11 +1,11 @@
 meta {
-  name: updateAllGradesFromTest
+  name: RS updateAllGradesFromTest
   type: http
-  seq: 9
+  seq: 27
 }
 
 post {
-  url: http://127.0.0.1:5000/postAllGradesFromAllStudentsOfTest
+  url: https://huebis.dev/betterSAL/api/postAllGradesFromAllStudentsOfTest
   body: json
   auth: inherit
 }
@@ -17,10 +17,10 @@ headers {
 body:json {
   {
     "exam": {
-      "courseID": "9715cd5d-ae7e-4cdf-a683-0eeb985b1df3",
+      "courseID": "23f0f93e-defb-4835-a12a-3307ec8ebe9f",
       "description": "Dies ist die Describtion oder Description",
       "endtime": "2026-02-05 12:30",
-      "eventID": "b8b0e650-1320-4a63-9199-3c469ad636eb",
+      "eventID": "7aab90e5-deb7-49f8-8bf5-e1ed5d9a1be7",
       "location": "P001",
       "starttime": "2026-02-05 11:30",
       "testName": "Contrôle de mathématiques",
@@ -28,28 +28,28 @@ body:json {
     },
     "grades": [
       {
-        "fileID": "5c3400a4-8fad-43e0-9793-cad86019e86e",
+        "fileID": "",
         "firstName": "Eliah",
-        "grade": 0,
+        "grade": 6,
         "lastName": "Hueber",
-        "message": "",
-        "userID": "be74d81b-df87-4c58-adbf-c6ffe674fb16"
+        "message": "hfdddhdh",
+        "userID": "d28bbdca-4499-4649-9a24-a871fe0bbd60"
       },
       {
         "fileID": "",
         "firstName": "Emil",
-        "grade": 0,
+        "grade": 3,
         "lastName": "Peterson",
         "message": "",
-        "userID": "ba60f745-dda9-4f89-a109-eac54fa7c46a"
+        "userID": "77869ecb-a70d-4fed-b3c9-72475de07041"
       },
       {
         "fileID": "",
         "firstName": "Nahia",
-        "grade": 0,
+        "grade": 5,
         "lastName": "Weyeneth",
         "message": "",
-        "userID": "05298277-491c-4b1c-8125-60f074f42f30"
+        "userID": "a8db1826-971d-4a38-b93b-ae5b51c87143"
       },
       {
         "fileID": "",
@@ -57,7 +57,7 @@ body:json {
         "grade": 0,
         "lastName": "Konzili",
         "message": "",
-        "userID": "6fe19480-b32e-433a-a2a9-1d81f5e5b1f2"
+        "userID": "51d96a96-494c-4d89-ba38-013bc1341c06"
       },
       {
         "fileID": "",
@@ -65,7 +65,7 @@ body:json {
         "grade": 0,
         "lastName": "Duss",
         "message": "",
-        "userID": "75dc9985-2000-49a7-9ed3-3ab07b9c23f7"
+        "userID": "2c52c373-44ac-47a4-93d7-2de16591e430"
       },
       {
         "fileID": "",
@@ -73,7 +73,7 @@ body:json {
         "grade": 0,
         "lastName": "Brotbeck",
         "message": "",
-        "userID": "e8f80ef2-289c-4ef6-a128-302e4cbd8989"
+        "userID": "7fb058f1-7a24-4410-8dd2-e8e1d2fb6d4c"
       },
       {
         "fileID": "",
@@ -81,7 +81,7 @@ body:json {
         "grade": 0,
         "lastName": "Kron",
         "message": "",
-        "userID": "46a434c9-0bd8-4a40-9e51-1427d2bc9ce0"
+        "userID": "5cdd18c0-faac-45a5-b81e-f590e2db02ef"
       },
       {
         "fileID": "",
@@ -89,7 +89,7 @@ body:json {
         "grade": 0,
         "lastName": "Richterich",
         "message": "",
-        "userID": "528a62df-2c7c-4430-8837-eeec01937ab0"
+        "userID": "937e37e6-cd68-4a56-98e9-4f8fb163501f"
       },
       {
         "fileID": "",
@@ -97,7 +97,7 @@ body:json {
         "grade": 0,
         "lastName": "Eicher",
         "message": "",
-        "userID": "fb66ad69-0b53-4554-aada-85fb26957dde"
+        "userID": "eac23345-1590-487e-bdfd-7e4f1bf57996"
       },
       {
         "fileID": "",
@@ -105,7 +105,7 @@ body:json {
         "grade": 0,
         "lastName": "Kutz",
         "message": "",
-        "userID": "da63a079-4f0b-4e8d-8f41-970f2e9aa2d5"
+        "userID": "9c9d4836-f8cd-48d9-aa7e-f6507b76d0e2"
       },
       {
         "fileID": "",
@@ -113,7 +113,7 @@ body:json {
         "grade": 0,
         "lastName": "Böhm",
         "message": "",
-        "userID": "1bd58ed4-b179-4502-b917-ac93665b8b6e"
+        "userID": "8a63e6e9-08cf-4f01-afe9-a8355ca717a7"
       },
       {
         "fileID": "",
@@ -121,7 +121,7 @@ body:json {
         "grade": 0,
         "lastName": "Auchli",
         "message": "",
-        "userID": "94a91ffb-aef6-4150-b939-103320a1d493"
+        "userID": "0fa7adce-ed1a-44a2-a199-7008f9e1957c"
       },
       {
         "fileID": "",
@@ -129,7 +129,7 @@ body:json {
         "grade": 0,
         "lastName": "Anklin",
         "message": "",
-        "userID": "55315287-d61f-4db5-b25d-2aeff867d1e0"
+        "userID": "629f4f64-96b7-47ad-8c55-06885c8366e1"
       }
     ]
   }
