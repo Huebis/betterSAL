@@ -4,7 +4,7 @@ from database import Database
 import service
 from flask_cors import CORS
 import notification
-from datetime import datetime
+from datetime import datetime, date
 import os
 import uuid
 
@@ -122,7 +122,10 @@ def isEveryDataNameinObject(testedObject,dataValues):
 
 
 def isAdult(birthDate):
+    print(birthDate)
     today = date.today()
+
+    birthDate = datetime.strptime(birthDate, "%Y-%m-%d")
     return (today.year - birthDate.year - 
            ((today.month, today.day) < (birthDate.month, birthDate.day))) >= 18
 #return True,UserID, None, None when everything is fine
@@ -142,21 +145,25 @@ def tokenAndRoleVerfication(db,token, allowedRoles = None,parentLock = False): #
 
     role = db.getRolefromUserWithUserID(userID)
 
-    if parentLock:
-        if role == 0: #Parent
-            childUserID = db.getChildUserIDWithParentUserID(userID)
-            birthDate = db.getBirthdateWithUserID(childUserID)
-            if isAdult(birthDate):
-                return False, None,jsonify({"error": "user do not have the permission to enter the site"}), 403
-            else:
-                userID = childUserID
-        elif role == 1: #Student
+    if parentLock: #etwas darf nur von Eltern oder erwachsenen SuS bearbeitet werden
+        if role == 1: #Student
             birthDate = db.getBirthdateWithUserID(userID)
             if not isAdult(birthDate):
                 return False, None,jsonify({"error": "user do not have the permission to enter the site"}), 403
         
 
+    if role == 0: #Parent
+            childUserID = db.getChildUserIDWithParentUserID(userID)
+            print(childUserID)
+            birthDate = db.getBirthdateWithUserID(childUserID)
+            print(birthDate)
+            if isAdult(birthDate):
+                return False, None,jsonify({"error": "user do not have the permission to enter the site"}), 403
+            else:
+                userID = childUserID
+                role = 1
 
+   
 
 
     if allowedRoles == None:

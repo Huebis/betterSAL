@@ -52,7 +52,7 @@ def insertTestDataTableUserAndCourse(db):
 
     for row in testData:
         row[2] = ph.hash(row[2]) 
-        row[0] = db.addNewUser(row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8])
+        row[0] = db.addNewUser(row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9])
 
         if(row[6] == 1 or row[1] == "Anklin"):
             #print("hello")
