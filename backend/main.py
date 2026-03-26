@@ -618,7 +618,7 @@ def changeAndMergeAbsence():
 
     if requestType == "change":
       
-        if not isEveryDataNameinObject(data,[["absenceID","uuid4"],["excused","int"],["description", "string"],["fileID", "uuid4"]]):
+        if not isEveryDataNameinObject(data,[["absenceID","uuid4"],["excused","int"],["description", "string"],["fileID", "str"]]):
             return jsonify({"error": "Einträge im JSON fehlen"}), 400
         
         if service.changeAbsence(db,userID,db.getRolefromUserWithUserID(userID),data):
