@@ -1,51 +1,67 @@
 <ng-template let-headerItems #notExcusedHeaderTemplate>
     <div>
         <p> Not Excused </p>
-        <ion-button (click)="$event.stopPropagation(); activateMerge(headerItems)">merge</ion-button>
-        <ion-button (click)="$event.stopPropagation();activateChange(headerItems)">change</ion-button>
-        <ion-button (click)="$event.stopPropagation(); safe()">Safe</ion-button>
-        
-
+        <ion-button (click)="$event.stopPropagation(); activateMerge(headerItems)">
+            @if(headerItems.merge){
+                <p>Safe</p>
+            }@else{
+                <p>Merge</p>
+            }
+        </ion-button>
     </div>
-    
 </ng-template>
 
 <ng-template #notExcusedItemTemplate let-item let-headerItems="headerItems">
-   <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr">
-    <p>
-        {{item.events[0].starttime}} - {{item.events[item.events.length-1].endtime}}
-    </p>
-    <p>
-        @if (headerItems.change){
-            <ion-input
-                (ionChange)="headerItems.somethingChanged=false"
-                type="text"
-                [(ngModel)]="item.description"
-                name="description"
-                label="Description" 
-                placeholder="Enter description"
-                label-placement="floating" 
-                fill="outline" 
-                value="test">
-            </ion-input>
-        }@else{
-            {{item.description}}
+    @if (item.absenceAmount>=1){
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr">
+            <p>
+                {{item.events[0].starttime}} - {{item.events[item.events.length-1].endtime}}
+            </p>
+            <p>
+                @if (item.change){
+                    <ion-input
+                        (ionChange)="headerItems.somethingChanged=false"
+                        type="text"
+                        [(ngModel)]="item.description"
+                        name="description"
+                        label="Description" 
+                        placeholder="Enter description"
+                        label-placement="floating" 
+                        fill="outline" 
+                        value="test">
+                    </ion-input>
+                }@else{
+                    {{item.description}}
+                }
+            
+        </p>
+        <p> 
+            {{item.absenceAmount}} 
+        </p>
+        <p>
+            @if (item.change){
+                @if (item.excused){
+                    <ion-button (click)="item.excused=0">De Excuse</ion-button>
+                }@else{
+                    <ion-button (click)="item.excused=1">Excuse</ion-button>
+                }
+            }@else{
+                {{item.excused}}
+            }
+        </p>
+        @if (headerItems.merge){
+            <div></div>
+            <ion-checkbox [(ngModel)]="item.selected"></ion-checkbox>
+        }@else if (item.change){
+            <app-file-upload [item]="item"></app-file-upload>
+            <ion-button (click)="safe(item);">Safe</ion-button>
+        }@else {
+            <app-file-download [fileID]="item.fileID"></app-file-download>
+            <ion-button (click)="item.change=true">Change</ion-button>
         }
-    </p>
-    <p> 
-        {{item.absenceAmount}} 
-    </p>
-    @if (headerItems.merge){
-        <ion-checkbox [(ngModel)]="item.selected"></ion-checkbox>
-    }@else if (headerItems.change){
-        <app-file-upload [item]="item"></app-file-upload>
-    }@else {
-        <app-file-download [fileID]="item.fileID"></app-file-download>
+    </div>
     }
-   </div>
 </ng-template>
-
-
 
 <app-dropdown 
     [items]="this.absences.notExcused" 
@@ -53,3 +69,52 @@
     [headerTemplate]="notExcusedHeaderTemplate" 
     [itemTemplate]="notExcusedItemTemplate">
 </app-dropdown>
+
+
+
+<ng-template let-headerItems #excusedHeaderTemplate>
+    <div>
+        <p> Excused </p>
+    </div>
+</ng-template>
+
+<ng-template #excusedItemTemplate let-item let-headerItems="headerItems">
+    @if (item.absenceAmount>=1){
+
+        <app-time-display 
+            [starttime]="item.events[0].starttime",
+            [endtime]="item.events[item.events.length-1].endtime">
+        </app-time-display>
+        <p>{{item.description}}</p>
+        <p> 
+            {{item.absenceAmount}} 
+        </p>
+        <p>
+            @if (item.change){
+                @if (item.excused){
+                    <ion-button (click)="item.excused=0">De Excuse</ion-button>
+                }@else{
+                    <ion-button (click)="item.excused=2">Excuse</ion-button>
+                }
+            }@else{
+                {{item.excused}}
+            }
+        </p>
+        @if (item.change){
+            <app-file-download [fileID]="item"></app-file-download>
+            <ion-button (click)="safe(item);">Safe</ion-button>
+        }@else {
+            <app-file-download [fileID]="item.fileID"></app-file-download>
+            <ion-button (click)="item.change=true">Change</ion-button>
+        }
+    }
+
+</ng-template>
+
+<app-dropdown 
+    [items]="this.absences.excused" 
+    [headerItems]="this.headerItems"
+    [headerTemplate]="excusedHeaderTemplate" 
+    [itemTemplate]="excusedItemTemplate">
+</app-dropdown>
+
