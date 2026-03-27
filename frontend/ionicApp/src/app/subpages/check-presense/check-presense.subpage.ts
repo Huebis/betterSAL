@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/app/service/api';
-import { IonicModule } from "@ionic/angular";
 import { FormsModule } from '@angular/forms';
+import { IonItem, IonButton } from "@ionic/angular/standalone";
+import { IonicModule } from "@ionic/angular";
 
 
 export interface User{
@@ -17,7 +18,7 @@ export interface User{
   selector: 'app-check-presense',
   templateUrl: './check-presense.subpage.html',
   styleUrls: ['./check-presense.subpage.scss'],
-  imports: [IonicModule, FormsModule],
+  imports: [FormsModule, IonItem, IonButton, IonicModule],
 })
 export class CheckPresenseSubpage  implements OnInit {
   students:Array<User>=[
