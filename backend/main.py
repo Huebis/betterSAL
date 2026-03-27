@@ -649,7 +649,7 @@ def changeAndMergeAbsence():
 
     if requestType == "change":
       
-        if not isEveryDataNameinObject(data,[["absenceID","uuid4"],["excused","int"],["description", "string"],["fileID", "uuid4"]]):
+        if not isEveryDataNameinObject(data,[["absenceID","uuid4"],["excused","int"],["description", "string"],["fileID", "string"]]):
             return jsonify({"error": "Einträge im JSON fehlen"}), 400
         
         if service.changeAbsence(db,userID,db.getRolefromUserWithUserID(userID),data):
@@ -980,6 +980,32 @@ def addEvent():
         #if 450, dann Schüler informieren ASAP
 
     return jsonify({}), 200
+    
+
+@app.route("/getCourses", methods=["Get"])
+def getCourses():
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
+
+    if not boolien:
+        return json,errorNumber
+
+
+    courses = db.getALLCourseWithUserID(userID)
+
+    output = []
+    for course in courses:
+        courseDict = {
+            "courseID": course[0],
+            "subject": course[1],
+            "courseName":course[2]
+        }
+        output.append(courseDict)
+
+    
+    return jsonify({"courses": output}), 200
+
     
 
 

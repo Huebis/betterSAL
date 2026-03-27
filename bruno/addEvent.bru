@@ -1,0 +1,32 @@
+meta {
+  name: addEvent
+  type: http
+  seq: 28
+}
+
+post {
+  url: http://127.0.0.1:5000/addEvent
+  body: json
+  auth: inherit
+}
+
+headers {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "courseID":"9b7f951b-2d76-45e8-8c9f-4940e999787a",
+    "type": 450,
+    "description": "I'm sick",
+    "starttime": "2026-02-03 08:00",
+    "endtime":"2026-02-03 08:45",
+    "location": "home",
+    "fileID": ""
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

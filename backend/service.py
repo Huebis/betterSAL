@@ -522,6 +522,11 @@ def getAbsenceUser(db,userID):
         eventDictArray = []
         arrayAbsenceEvent = db.getAllAbsenceEventWithAbsenceID(absence[0],userID)
 
+        #wenn Absence mit 0 events, dann soll es nicht angezeigt werden
+
+        if arrayAbsenceEvent == []:
+            continue
+
         timedifferenz = 0
         for event in arrayAbsenceEvent:
             eventDict = {
@@ -556,6 +561,12 @@ def getAbsenceUser(db,userID):
         eventDictArray = []
         arrayAbsenceEvent = db.getAllAbsenceEventWithAbsenceID(absence[0],userID)
         timedifferenz = 0
+
+        #wenn Absence mit 0 events, dann soll es nicht angezeigt werden
+
+        if arrayAbsenceEvent == []:
+            continue
+        
         for event in arrayAbsenceEvent:
             eventDict = {
                 "eventID": event[0],
@@ -591,6 +602,13 @@ def getAbsenceUser(db,userID):
         eventDictArray = []
         arrayAbsenceEvent = db.getAllAbsenceEventWithAbsenceID(absence[0],userID)
         timedifferenz = 0
+
+        #wenn Absence mit 0 events, dann soll es nicht angezeigt werden
+
+        if arrayAbsenceEvent == []:
+            continue
+
+
         for event in arrayAbsenceEvent:
             eventDict = {
                 "eventID": event[0],
