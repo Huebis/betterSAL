@@ -22,7 +22,7 @@
         (click)="selectPeriod('month')">
         Month
       </ion-button>
-      @for (number of [0,1,2]; track $index) {
+      @for (number of [0,1,2]; track $index) {   
         <ion-button
         [ngClass]="{'selected':elementsShownByType[number],
             'unselected':!elementsShownByType[number],
@@ -31,9 +31,10 @@
         Type{{number}}
       </ion-button>
       }
-
-      <ion-datetime-button  datetime="selectedDate"></ion-datetime-button>
-
+      <p>
+         
+        <ion-datetime-button  datetime="selectedDate"></ion-datetime-button>
+      </p>
     </div>
   </div>
   <div class="fullSchedule">

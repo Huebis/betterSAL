@@ -11,6 +11,7 @@ import { AbsencesSubpage } from './subpages/absences/absences.subpage';
 import { TimetableSubpage } from './subpages/timetable/timetable.subpage';
 import { CheckPresenseSubpage } from './subpages/check-presense/check-presense.subpage';
 import { UserComponent } from './subpages/user/user.component';
+import { TeacherAbsencesSubpage } from './subpages/teacher-absences/teacher-absences.subpage';
 
 
 export const routes: Routes = [
@@ -21,7 +22,9 @@ export const routes: Routes = [
       {path:'grades',component:GradesSubpage},
       {path:'changeExam/:courseID/:eventID',component:ChangeExamSubpage},
 
+      {path:'absences',component:TeacherAbsencesSubpage, canMatch: [CanMatchGuard],data:{allowedRoles:[false,false,true,false,false]}},
       {path:'absences',component:AbsencesSubpage},
+      
       
       {path:'timetable',component:TimetableSubpage},
 
