@@ -324,20 +324,30 @@ def getScheduleOfOneDay(db,userID,date,starttime=None,endtime=None):
 
         for event in events:
             if event[6] == 301:
-                for lection in schedule:
+                for a, lection in enumerate(schedule):
                     if lection[3] == event[3]:
                         if lection[0] == event[0] and lection[1] == event[1]:
-                            lection = event
+                            schedule[a] = event
 
 
 
-        #Lektionen absagen
+        #Lektionen absagen (da irgendetwas anderst ist zb. Mautapräsentationen)
         for event in events:
             if event[6] == 400:
-                for lection in schedule:
+                for a, lection in enumerate(schedule):
                     if lection[3] == event[3]:
                         if lection[0] == event[0] and lection[1] == event[1]:
-                            lection = event
+                            schedule[a] = event
+
+    
+        #Lektionen absagen (da Lehrperson krank)
+        for event in events:
+            if event[6] == 450:
+                for a, lection in enumerate(schedule):
+                    if lection[3] == event[3]:
+                        if lection[0] == event[0] and lection[1] == event[1]:
+                            print("hellouuuuu")
+                            schedule[a] = event
 
 
         #Overwrite schedule with examens
@@ -366,6 +376,12 @@ def getScheduleOfOneDay(db,userID,date,starttime=None,endtime=None):
                 
                 output.append(event)
                 print("djdjdjdj")
+        
+
+        # New Events (Maturapräsentation)
+        for event in events:
+            if event[6]== 200:
+                output.append(event)
         
 
 

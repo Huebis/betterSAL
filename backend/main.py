@@ -940,6 +940,54 @@ def download_file(fileID):
 
 
 
+@app.route("/addEvent", methods=["Post"])
+def addEvent():
+    
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
+
+    if not boolien:
+        return json,errorNumber
+
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+    
+    if not isEveryDataNameinObject(data,[["courseID","uuid4"],["type","int"],["description", "string"],["starttime", "dateMinute"],["endtime", "dateMinute"],["fileID", "string"],["location", "string"]]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+        
+    courseID = data["courseID"]
+    kind = data["type"]
+    description = data["description"]
+    starttime = data["starttime"]
+    endtime = data["endtime"]
+    location = data["location"]
+
+
+    if not db.isUserIDinCourse(userID,courseID):
+        return jsonify({"error": "This type in not allowed"}), 400
+
+    eventID = str(uuid.uuid4())
+
+
+    if kind in [400,450,200]:
+        db.addNewEvent(eventID,location,starttime,endtime,description,kind,courseID)
+
+        #if 450, dann Schüler informieren ASAP
+
+    return jsonify({}), 200
+    
+
+
+
+    
+    
+
+
 
 #Nicht anfassen!!!
 
