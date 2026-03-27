@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { FileinputComponent } from './fileinput.component';
+import { TimeDisplayComponent } from './time-display.component';
 
-describe('FileinputComponent', () => {
-  let component: FileinputComponent;
-  let fixture: ComponentFixture<FileinputComponent>;
+describe('TimeDisplayComponent', () => {
+  let component: TimeDisplayComponent;
+  let fixture: ComponentFixture<TimeDisplayComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FileinputComponent ],
+      declarations: [ TimeDisplayComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FileinputComponent);
+    fixture = TestBed.createComponent(TimeDisplayComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

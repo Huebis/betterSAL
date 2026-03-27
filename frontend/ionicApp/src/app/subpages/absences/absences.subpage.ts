@@ -7,6 +7,7 @@ import { FileUploadComponent } from "src/app/component/file-upload/file-upload.c
 import { FileDownloadComponent } from "src/app/component/file-download/file-download.component";
 import { IonicModule } from "@ionic/angular";
 import { Head } from 'rxjs';
+import { TimeDisplayComponent } from "src/app/component/time-display/time-display.component";
 
 
 export interface Event{
@@ -45,7 +46,7 @@ export interface HeaderItems{
   selector: 'app-absences',
   templateUrl: './absences.subpage.html',
   styleUrls: ['./absences.subpage.scss'],
-  imports: [DropdownComponent, FormsModule, FileUploadComponent, FileDownloadComponent, IonicModule],
+  imports: [DropdownComponent, FormsModule, FileUploadComponent, FileDownloadComponent, IonicModule, TimeDisplayComponent],
 })
 export class AbsencesSubpage  implements OnInit {
   data:any;
@@ -68,6 +69,7 @@ export class AbsencesSubpage  implements OnInit {
     merge: false,
     somethingChanged : true
   }
+  
 
   constructor(private api:ApiService) {}
 
@@ -81,7 +83,10 @@ export class AbsencesSubpage  implements OnInit {
   }
 
   ngOnInit() {
-
+    this.loadData();
+    
+  }
+  loadData(){
     this.api.sendRequestGet({},"absence").subscribe(v => {
       console.log(v);
       this.absences=v.absence[0];
@@ -90,7 +95,18 @@ export class AbsencesSubpage  implements OnInit {
 
   activateMerge(item:any){
     if (item.merge){
+      let data:any={
+        absenceIDList:[]
+      }
+      console.log(this.absences)
+      this.absences.notExcused.forEach((v:any) => {
+        if (v.selected){
+          data.absenceIDList.push(v.absenceID)
+        }
+      });
+      this.api.sendRequestPost(data,"absence?requestType=merge").subscribe();
       item.merge=false;
+      this.loadData();
     }else{
       item.merge=true;
       item.change=false;
@@ -104,12 +120,26 @@ export class AbsencesSubpage  implements OnInit {
       item.merge=false;
     }
   }
-  safe(){
-    if (this.headerItems.merge){
-      
-    }
+  safe(item:any){
+    this.api.sendRequestPost(item,"absence?requestType=change").subscribe();
+    item.change=false;
+    this.loadData();
+  }
+  changeExcused(event: CustomEvent, item:any){
+    item.excused = event.detail.value;
+    
   }
 
 
+  log(item:any){
+    console.log(item);
+  }
+
+  compareDate(date:string){
+    const utcDayStart = (dt: Date) => Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate());
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const diffMs = Math.abs(utcDayStart(new Date(date)) - utcDayStart(new Date()));
+    return Math.round(diffMs / msPerDay);
+    }
 
 }
