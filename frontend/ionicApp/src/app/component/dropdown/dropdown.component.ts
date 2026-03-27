@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import {Component, Input } from '@angular/core';
 
+import { TimeDisplayComponent } from '../time-display/time-display.component';
+
 
 @Component({
   selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
   styleUrls: ['./dropdown.component.scss'],
-  imports: [CommonModule],
+  imports: [CommonModule, TimeDisplayComponent],
 })
 export class DropdownComponent {
   @Input() headerItems:any={}

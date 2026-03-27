@@ -12,7 +12,7 @@ import { UserSmallComponent } from "src/app/component/user-small/user-small.comp
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [IonList, IonHeader, IonToolbar, IonContent, IonItem, RouterOutlet, IonButton, FileUploadComponent, FileDownloadComponent, UserSmallComponent],
+  imports: [IonHeader, IonToolbar, IonContent, IonItem, RouterOutlet, IonButton, FileUploadComponent, FileDownloadComponent, UserSmallComponent],
 })
 export class HomePage{
   constructor(private router: Router, private pushNotification: PushNotification) {}
