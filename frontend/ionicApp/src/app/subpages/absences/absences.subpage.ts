@@ -46,7 +46,7 @@ export interface HeaderItems{
   selector: 'app-absences',
   templateUrl: './absences.subpage.html',
   styleUrls: ['./absences.subpage.scss'],
-  imports: [DropdownComponent, FormsModule, FileUploadComponent, FileDownloadComponent, TimeDisplayComponent, IonButton],
+  imports: [DropdownComponent, FormsModule, FileUploadComponent, FileDownloadComponent, TimeDisplayComponent, IonButton,IonCheckbox,IonicModule],
 })
 export class AbsencesSubpage  implements OnInit {
   data:any;

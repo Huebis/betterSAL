@@ -30,7 +30,7 @@ export interface Day{
   selector: 'app-timetable',
   templateUrl: './timetable.subpage.html',
   styleUrls: ['./timetable.subpage.scss'],
-  imports: [CommonModule, FormsModule, IonModal, IonDatetimeButton],
+  imports: [CommonModule, FormsModule, IonModal, IonDatetimeButton,IonItem, IonList, IonButton,IonicModule],
   providers: [ModalController]
 })
 export class TimetableSubpage  implements OnInit {
