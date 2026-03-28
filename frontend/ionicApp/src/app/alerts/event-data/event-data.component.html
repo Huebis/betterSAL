@@ -1,3 +1,5 @@
+<!--
+
 <button (click)="close()">
 <ion-header>
   <ion-toolbar>
@@ -16,3 +18,67 @@
     <p>location: {{event.location}}</p>
 </ion-content>
 </button>
+
+-->
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Details</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        Fertig
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list lines="full">
+    
+    <ion-item>
+      <ion-label>
+        <p>Fach</p>
+        <h2 style="font-weight: bold;">{{ event.subject }}</h2>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <p>Kurs / Klasse</p>
+        <h2>{{ event.courseName }}</h2>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <p>Raum / Ort</p>
+        <h2>{{ event.location }}</h2>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <p>Startzeit</p>
+        <h2>{{ event.starttime.slice(11, 16) }} Uhr</h2>
+        <ion-note>{{ event.starttime | date:'dd.MM.yyyy' }}</ion-note>
+      </ion-label>
+    </ion-item>
+
+      <ion-item>
+      <ion-label>
+        <p>Endzeit</p>
+        <h2>{{ event.endtime.slice(11, 16) }} Uhr</h2>
+        <ion-note>{{ event.endtime | date:'dd.MM.yyyy' }}</ion-note>
+      </ion-label>
+    </ion-item>
+
+  </ion-list>
+
+
+@if (role>1){     
+    <ion-button (click)="presence()" color="success" shape="round">
+      Anwesenheitskontrolle
+    </ion-button>
+}
+
+</ion-content>

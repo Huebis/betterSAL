@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'; // Import CommonModule
 import { Component, OnInit } from '@angular/core';
-import { IonItem, IonList, IonButton, IonModal, IonDatetimeButton } from "@ionic/angular/standalone";
+import { IonItem, IonList, IonButton, IonModal, IonDatetimeButton,IonDatetime,IonIcon } from "@ionic/angular/standalone";
 import { ApiService } from '../../service/api';
 import { AlertController } from '@ionic/angular';
 
@@ -8,6 +8,11 @@ import { EventDataComponent } from '../../alerts/event-data/event-data.component
 import { ModalController } from '@ionic/angular';
 import { AuthService } from 'src/app/service/auth';
 import { FormsModule } from '@angular/forms';
+
+
+import { addIcons } from 'ionicons';
+import { chevronBack, chevronForward } from 'ionicons/icons';
+import { DatePipe } from '@angular/common'; // Für die Datumsanzeige im Button
 
 export interface Event{
   starttime:string
@@ -26,14 +31,31 @@ export interface Day{
   date:string
   schedule:Array<Event>
 }
+
+
 @Component({
   selector: 'app-timetable',
   templateUrl: './timetable.subpage.html',
   styleUrls: ['./timetable.subpage.scss'],
-  imports: [CommonModule, FormsModule, IonModal, IonDatetimeButton, IonButton],
+  imports: [CommonModule, FormsModule, IonModal, IonDatetimeButton, IonButton,IonDatetime,IonIcon,DatePipe],
   providers: [ModalController]
 })
 export class TimetableSubpage  implements OnInit {
+  changeDate(offset: number) {
+  const date = new Date(this.selectedDate);
+  if (this.selectedPeriod === 'day') {
+    date.setDate(date.getDate() + offset);
+  } else if (this.selectedPeriod === 'week') {
+    date.setDate(date.getDate() + (offset * 7));
+  } else {
+    date.setMonth(date.getMonth() + offset);
+  }
+  this.selectedDate = date.toISOString();
+  this.loadData();
+  }
+
+
+
   days:Array<Day>=[];
   selectedDate:string= new Date().toISOString().slice();
   starttime:string="2026-02-16 08:00";
@@ -48,7 +70,12 @@ export class TimetableSubpage  implements OnInit {
   constructor(private api: ApiService,
     private auth: AuthService,
     private alertController: AlertController,
-    private modalController: ModalController) { }
+    private modalController: ModalController) { 
+      addIcons({ chevronBack, chevronForward }); // for Timeswitch
+    }
+
+
+    
   
   ngOnInit() {
     this.loadData();

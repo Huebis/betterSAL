@@ -10,6 +10,7 @@
     height: 100%;
     width: 100%;
     flex-direction: column;
+
 };
 .selectors{
     width: 100%;
@@ -31,6 +32,7 @@
     position: relative;
     width: 100%;
     flex: 1;
+    
 }
 .event{
     position: absolute;
@@ -94,3 +96,38 @@ ion-button.unselected{
     background-color: yellow;
     display: var(--type2Display);
 }
+
+
+
+// new
+
+.selctors {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  gap: 20px; // Abstand zwischen Datums-Zeile und Button-Zeile
+
+  .date-navigation-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+  }
+
+  .switch {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    .type-divider {
+      width: 1px;
+      height: 24px;
+      margin: 0 8px;
+    }
+  }
+}
+

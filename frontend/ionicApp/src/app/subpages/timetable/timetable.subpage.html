@@ -24,6 +24,8 @@
         (click)="selectPeriod('month')">
         Month
       </ion-button>
+
+   
       @for (number of [0,1,2]; track $index) {   
         <ion-button
         [ngClass]="{'selected':elementsShownByType[number],
@@ -34,9 +36,24 @@
       </ion-button>  
       
       } 
-      <p> 
-        <ion-datetime-button  datetime="selectedDateID"></ion-datetime-button>
-      </p> 
+      
+        <!--<ion-datetime-button  datetime="selectedDateID"></ion-datetime-button> 
+        <ion-button (click)="open = true">
+          Datum wählen
+        </ion-button>
+        -->
+        <div class="date-navigation-row">
+          <ion-button (click)="changeDate(-1)">
+            <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear">
+            Datum wechsel
+          </ion-button>
+          <ion-button (click)="changeDate(1)">
+            <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
+          </ion-button>
+        </div>
+       
     </div>
   </div> 
   <div class="fullSchedule">
@@ -92,14 +109,39 @@
   </div>
 </div> 
 
-
+<!--
 <ion-modal [keepContentsMounted]="true">
   <ion-datetime 
+    id="selectedDateID"
     (ionChange)="loadData()"
     displayFormat="YYYY-MM-DD HH:MM" 
     pickerFormat="YYYY-MM-DD HH:MM"
     [(ngModel)]="selectedDate" 
-    id="selectedDateID"
     presentation="date"
   ></ion-datetime>
 </ion-modal>
+
+open = false;
+
+<ion-datetime
+  id="selectedDateID"
+  [(ngModel)]="selectedDate"
+  presentation="date"
+  (ngModelChange)="loadData()">
+</ion-datetime>
+
+
+
+
+<ion-modal [isOpen]="open">
+  <ion-datetime
+    id="selectedDateID"
+    (ionChange)="loadData()"
+    displayFormat="YYYY-MM-DD HH:MM" 
+    pickerFormat="YYYY-MM-DD HH:MM"
+    [(ngModel)]="selectedDate" 
+    presentation="date"
+  ></ion-datetime>
+</ion-modal>
+
+-->
