@@ -24,7 +24,7 @@ export interface Subject{
   selector: 'app-grades',
   templateUrl: './grades.subpage.html',
   styleUrls: ['./grades.subpage.scss'],
-  imports: [CommonModule, DropdownComponent, FileDownloadComponent,IonButton, IonItem, IonLabel,  IonList, IonItemGroup],
+  imports: [CommonModule, DropdownComponent, FileDownloadComponent],
 })
 export class GradesSubpage  implements OnInit {
 

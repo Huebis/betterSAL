@@ -8,7 +8,7 @@ import { TimeDisplayComponent } from '../time-display/time-display.component';
   selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
   styleUrls: ['./dropdown.component.scss'],
-  imports: [CommonModule, TimeDisplayComponent],
+  imports: [CommonModule],
 })
 export class DropdownComponent {
   @Input() headerItems:any={}

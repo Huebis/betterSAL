@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/app/service/api';
 import { FormsModule } from '@angular/forms';
-import { IonItem, IonButton } from "@ionic/angular/standalone";
-import { IonicModule } from "@ionic/angular";
+import { IonItem, IonButton, IonList, IonToggle } from "@ionic/angular/standalone";
+
 
 
 export interface User{
@@ -18,7 +18,7 @@ export interface User{
   selector: 'app-check-presense',
   templateUrl: './check-presense.subpage.html',
   styleUrls: ['./check-presense.subpage.scss'],
-  imports: [FormsModule, IonItem, IonButton, IonicModule],
+  imports: [FormsModule, IonItem, IonButton,IonList,IonToggle],
 })
 export class CheckPresenseSubpage  implements OnInit {
   students:Array<User>=[
@@ -106,9 +106,12 @@ export class CheckPresenseSubpage  implements OnInit {
       endtime: this.endtime,
       eventID: this.eventID
     }, "presenceList").subscribe(v => {
+      console.log("API RESPONSE:", v);
+      console.log("LENGTH:", v.anwesenheitsliste.length);
       this.students = v.anwesenheitsliste.map((v:any) => {
         v.isPresent = (v.absence==0); return v
       })
+      console.log("students", this.students);
       this.checkChanged();
     })
   }

@@ -38,7 +38,7 @@ export interface Data{
   selector: 'app-change-exam',
   templateUrl: './change-exam.subpage.html',
   styleUrls: ['./change-exam.subpage.scss'],
-  imports: [FormsModule, IonInput, IonDatetime, IonItem, IonButton, IonDatetimeButton, IonModal, IonList, IonContent, IonToolbar, FileUploadComponent,IonHeader],
+  imports: [FormsModule, IonInput, IonDatetime, IonItem, IonButton, IonDatetimeButton, IonModal, IonList, IonContent, IonToolbar, FileUploadComponent],
 
 })
 export class ChangeExamSubpage  implements OnInit {

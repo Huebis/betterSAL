@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'; // Import CommonModule
 import { Component, OnInit } from '@angular/core';
 import { IonItem, IonList, IonButton, IonModal, IonDatetimeButton } from "@ionic/angular/standalone";
 import { ApiService } from '../../service/api';
-import { AlertController, IonicModule } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 import { EventDataComponent } from '../../alerts/event-data/event-data.component'
 import { ModalController } from '@ionic/angular';
@@ -30,7 +30,7 @@ export interface Day{
   selector: 'app-timetable',
   templateUrl: './timetable.subpage.html',
   styleUrls: ['./timetable.subpage.scss'],
-  imports: [CommonModule, FormsModule, IonModal, IonDatetimeButton,IonItem, IonList, IonButton,IonicModule],
+  imports: [CommonModule, FormsModule, IonModal, IonDatetimeButton, IonButton],
   providers: [ModalController]
 })
 export class TimetableSubpage  implements OnInit {
