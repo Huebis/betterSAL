@@ -1,3 +1,5 @@
+
+
 <div class="content">
   <div class="selctors">
     <div class="switch">
@@ -29,14 +31,14 @@
           }"
         (click)="changeShown(number)">
         Type{{number}}
-      </ion-button>
-      }
-      <p>
-         
-        <ion-datetime-button  datetime="selectedDate"></ion-datetime-button>
-      </p>
+      </ion-button>  
+      
+      } 
+      <p> 
+        <ion-datetime-button  datetime="selectedDateID"></ion-datetime-button>
+      </p> 
     </div>
-  </div>
+  </div> 
   <div class="fullSchedule">
     <div class="labels">
       <div class="dayLabels grid">
@@ -88,18 +90,16 @@
       }
     </div>
   </div>
-</div>
+</div> 
 
 
 <ion-modal [keepContentsMounted]="true">
-  <ng-template>
-    <ion-datetime 
-      (ionChange)="loadData()"
-      displayFormat="YYYY-MM-DD HH:MM" 
-      pickerFormat="YYYY-MM-DD HH:MM"
-      [(ngModel)]="this.selectedDate" 
-      id="selectedDate"
-      presentation="date"
-    ></ion-datetime>
-  </ng-template>
+  <ion-datetime 
+    (ionChange)="loadData()"
+    displayFormat="YYYY-MM-DD HH:MM" 
+    pickerFormat="YYYY-MM-DD HH:MM"
+    [(ngModel)]="selectedDate" 
+    id="selectedDateID"
+    presentation="date"
+  ></ion-datetime>
 </ion-modal>

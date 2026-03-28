@@ -10,7 +10,6 @@
         </ion-button>
     </div>
 </ng-template>
-
 <ng-template #notExcusedItemTemplate let-item let-headerItems="headerItems">
     @if (item.absenceAmount>=1){
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr">
@@ -70,19 +69,16 @@
     [itemTemplate]="notExcusedItemTemplate">
 </app-dropdown>
 
-
-
 <ng-template let-headerItems #excusedHeaderTemplate>
     <div>
         <p> Excused </p>
     </div>
 </ng-template>
-
 <ng-template #excusedItemTemplate let-item let-headerItems="headerItems">
     @if (item.absenceAmount>=1){
-
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr">
         <app-time-display 
-            [starttime]="item.events[0].starttime",
+            [starttime]="item.events[0].starttime"
             [endtime]="item.events[item.events.length-1].endtime">
         </app-time-display>
         <p>{{item.description}}</p>
@@ -101,12 +97,13 @@
             }
         </p>
         @if (item.change){
-            <app-file-download [fileID]="item"></app-file-download>
+            <app-file-download [fileID]="item.fileID"></app-file-download>
             <ion-button (click)="safe(item);">Safe</ion-button>
         }@else {
             <app-file-download [fileID]="item.fileID"></app-file-download>
             <ion-button (click)="item.change=true">Change</ion-button>
         }
+        </div>
     }
 
 </ng-template>
@@ -118,3 +115,35 @@
     [itemTemplate]="excusedItemTemplate">
 </app-dropdown>
 
+
+<ng-template let-headerItems #finishedHeaderTemplate>
+    <div>
+        <p> Finished </p>
+    </div>
+</ng-template>
+<ng-template #finishedItemTemplate let-item let-headerItems="headerItems">
+    @if (item.absenceAmount>=1){
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr">
+        <app-time-display 
+            [starttime]="item.events[0].starttime"
+            [endtime]="item.events[item.events.length-1].endtime">
+        </app-time-display>
+        <p>{{item.description}}</p>
+        <p> 
+            {{item.absenceAmount}} 
+        </p>
+        <p>
+            {{item.excused}}
+        </p>
+        <app-file-download [fileID]="item.fileID"></app-file-download>
+        </div>
+    }
+
+</ng-template>
+
+<app-dropdown 
+    [items]="this.absences.finished" 
+    [headerItems]="this.headerItems"
+    [headerTemplate]="finishedHeaderTemplate" 
+    [itemTemplate]="finishedItemTemplate">
+</app-dropdown>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'; // Import CommonModule
 import { Component, OnInit } from '@angular/core';
-import { IonItem, IonList, IonButton } from "@ionic/angular/standalone";
+import { IonItem, IonList, IonButton, IonModal, IonDatetimeButton } from "@ionic/angular/standalone";
 import { ApiService } from '../../service/api';
 import { AlertController, IonicModule } from '@ionic/angular';
 
@@ -30,12 +30,12 @@ export interface Day{
   selector: 'app-timetable',
   templateUrl: './timetable.subpage.html',
   styleUrls: ['./timetable.subpage.scss'],
-  imports: [CommonModule, IonicModule, FormsModule],
+  imports: [CommonModule, FormsModule, IonModal, IonDatetimeButton],
   providers: [ModalController]
 })
 export class TimetableSubpage  implements OnInit {
   days:Array<Day>=[];
-  selectedDate:string="2026-01-13"
+  selectedDate:string= new Date().toISOString().slice();
   starttime:string="2026-02-16 08:00";
   endtime:string="2026-02-22 19:00";
 

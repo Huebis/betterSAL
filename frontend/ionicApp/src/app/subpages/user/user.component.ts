@@ -24,7 +24,7 @@ export interface User{
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
-  imports: [IonicModule, IonButton, IonToggle, FormsModule],
+  imports: [FormsModule, IonButton],
 })
 export class UserComponent  implements OnInit {
   user:User={
@@ -42,21 +42,7 @@ export class UserComponent  implements OnInit {
     role:0,
     userName:"",
   };
-  copyOfUser:User={
-    className:"",
-    email:"",
-    firstName:"",
-    lastName:"",
-    major:"",
-    notifAbsenceDueTomorrow:false,
-    notifAbsenceOfTeacherToday:false, 
-    notifAbsenceOfTeacherTomorrow:false,
-    notifEventTomorrow:false,
-    notifExamTomorrow:false,
-    notifGradeChange:false,
-    role:0,
-    userName:"",
-  };
+
   somethingChanged = true;
   editUserInformations=false;
   test:string="blabla";
@@ -71,23 +57,17 @@ export class UserComponent  implements OnInit {
     this.api.sendRequestGet({},"getUserData").subscribe(v => {
       console.log(v);
       this.user=v;
-      this.copyOfUser=this.user;
     });
 
-  }
-  checkIfChanged(){
-    this.somethingChanged = (this.user !== this.copyOfUser);
   }
   safe(){
     console.log(this.somethingChanged);
     this.api.sendRequestPost(this.user,"postUserData").subscribe();
-    this.copyOfUser = this.user;
     this.somethingChanged = true;
   }
   editUserInformation(){
     this.editUserInformations = (this.editUserInformations==false);
     console.log(this.editUserInformations);
-    this.checkIfChanged();
   }
 
 }

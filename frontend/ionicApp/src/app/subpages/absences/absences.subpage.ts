@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/service/api';
 import { DropdownComponent } from "../../component/dropdown/dropdown.component";
-import { IonCheckbox } from "@ionic/angular/standalone";
+import { IonCheckbox, IonButton } from "@ionic/angular/standalone";
 import { FormsModule } from '@angular/forms';
 import { FileUploadComponent } from "src/app/component/file-upload/file-upload.component";
 import { FileDownloadComponent } from "src/app/component/file-download/file-download.component";
@@ -46,7 +46,7 @@ export interface HeaderItems{
   selector: 'app-absences',
   templateUrl: './absences.subpage.html',
   styleUrls: ['./absences.subpage.scss'],
-  imports: [DropdownComponent, FormsModule, FileUploadComponent, FileDownloadComponent, IonicModule, TimeDisplayComponent],
+  imports: [DropdownComponent, FormsModule, FileUploadComponent, FileDownloadComponent, TimeDisplayComponent, IonButton],
 })
 export class AbsencesSubpage  implements OnInit {
   data:any;
