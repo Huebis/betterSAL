@@ -24,7 +24,7 @@ export interface User{
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
-  imports: [FormsModule, IonButton],
+  imports: [IonicModule, IonButton, IonToggle, FormsModule],
 })
 export class UserComponent  implements OnInit {
   user:User={
