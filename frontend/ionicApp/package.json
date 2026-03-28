@@ -10,7 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "deploy": "ng build --configuration production --base-href /betterSAL/ && rsync -avz www/ huebis@huebis.dev:/var/www/huebis.dev/public_html/betterSAL/"
+    "deploy": "ionic build --prod -- --base-href /betterSAL/ && rsync -avz www/ huebis@huebis.dev:/var/www/huebis.dev/public_html/betterSAL/"
   },
   "private": true,
   "dependencies": {
