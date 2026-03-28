@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/service/api';
-import { IonToggle, IonButton } from "@ionic/angular/standalone";
+import { IonToggle, IonButton,IonInput,IonHeader } from "@ionic/angular/standalone";
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
@@ -24,7 +24,7 @@ export interface User{
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
-  imports: [IonButton, IonToggle, FormsModule],
+  imports: [IonButton, IonToggle, FormsModule,IonInput,IonHeader],
 })
 export class UserComponent  implements OnInit {
   user:User={
@@ -61,6 +61,7 @@ export class UserComponent  implements OnInit {
 
   }
   safe(){
+    console.log("Änderungen werden abgeschickt");
     console.log(this.somethingChanged);
     this.api.sendRequestPost(this.user,"postUserData").subscribe();
     this.somethingChanged = true;

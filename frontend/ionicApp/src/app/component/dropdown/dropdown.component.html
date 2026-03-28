@@ -1,3 +1,5 @@
+
+<!--
 <div class="dropdown">
   <button (click)="toggleDropdown()" 
     class="dropdown-button">
@@ -15,6 +17,32 @@
           context: {$implicit: item,
             headerItems:this.headerItems
           }"></ng-content>
+      }
+    </div>
+  }
+</div>
+
+-->
+
+<div class="dropdown-container" [class.is-open]="isOpen">
+  <button (click)="toggleDropdown()" class="dropdown-header">
+    <div class="header-wrapper">
+      <ng-container 
+        *ngTemplateOutlet="this.headerTemplate; context: {$implicit: headerItems}">
+      </ng-container>
+    </div>
+    
+    <ion-icon name="chevron-down-outline" class="toggle-icon"></ion-icon>
+  </button>
+
+  @if (isOpen) {
+    <div class="dropdown-content">
+      @for (item of items; track $index) {
+        <div class="dropdown-item">
+          <ng-container 
+            *ngTemplateOutlet="this.itemTemplate; context: {$implicit: item, headerItems: this.headerItems}">
+          </ng-container>
+        </div>
       }
     </div>
   }
