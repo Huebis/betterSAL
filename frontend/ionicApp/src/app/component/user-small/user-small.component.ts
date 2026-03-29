@@ -18,31 +18,21 @@ export class UserSmallComponent  implements OnInit {
 
   ngOnInit() {}
   logout(){
-    this.api.sendRequestPost({},"endSession").subscribe({
+    this.api.sendRequestGet({},"endSession").subscribe({
       next: res => {
         this.authService.clearUuid();
         console.log("loged out")
-        this.menu.close("user");
+        this.router.navigate(["login"]);
+        
       },
       error: err => {console.error('HTTP Error:', err)}
     }); 
   };
   navigateTo(substing:string){
     this.router.navigate([substing]);
-    this.menu.close("user");
   }
   isLoggedIn(){
     return this.authService.isLoggedIn();
-  }
-  openMenu(){
-    this.menu.open("user").then(()=>{
-      console.log("opend");
-    }).catch((error) => {
-      console.error('Error opening menu: ', error);
-    });
-  }
-  closeMenu(){
-    this.menu.close("user");
   }
 
 }

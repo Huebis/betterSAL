@@ -2,7 +2,7 @@
 
 <div class="content">
   <div class="selctors">
-    <div class="switch">
+    <div class="switch selectorItems">
       <ion-button
       [ngClass]="{'selected':selectedPeriod==='day',
           'unselected':selectedPeriod!=='day',
@@ -23,21 +23,36 @@
         }"
         (click)="selectPeriod('month')">
         Month
-      </ion-button>
-      @for (number of [0,1,2]; track $index) {   
-        <ion-button
-        [ngClass]="{'selected':elementsShownByType[number],
-            'unselected':!elementsShownByType[number],
-          }"
-        (click)="changeShown(number)">
-        Type{{number}}
       </ion-button>  
-      
-      } 
-      <p> 
-        <ion-datetime-button  datetime="selectedDateID"></ion-datetime-button>
-      </p> 
     </div>
+    <div></div>
+    <div class="selectorItems">
+      <ion-item style="background-color: rgba(0, 0, 0, 0);">
+        <ion-datetime-button  datetime="selectedDateModal">{{"test"}}</ion-datetime-button>
+      </ion-item>
+    </div>
+
+  <div></div>
+  <div class="selectorItems" slot="end">
+    <ion-button
+
+      [ngClass]="{'selected':elementsShownByType[0],
+          'unselected':!elementsShownByType[0],
+        }"
+      (click)="changeShown(0)">
+      Lessons
+    </ion-button>  
+    <ion-button
+      [ngClass]="{'selected':elementsShownByType[1],
+          'unselected':!elementsShownByType[1],
+        }"
+      (click)="changeShown(1)">
+      Tests
+    </ion-button>  
+  </div>
+
+
+    
   </div> 
   <div class="fullSchedule">
     <div class="labels">
@@ -76,12 +91,14 @@
                 [ngStyle]="{'top':event.top+'%', 'left':event.left+'%', 'width':event.width + '%', 'height':event.height+ '%'}"
                 >
                 <div class="eventData">
+                  @if (event.height>25 || selectedPeriod!="month") {
                   <div slot="start" class="subject">
                     {{event.subject}}
                   </div>
                   <div slot="end" class="location">
                     {{event.location}}
                   </div>
+                }
                 </div>
               </div>
             </button>
@@ -92,14 +109,16 @@
   </div>
 </div> 
 
-
 <ion-modal [keepContentsMounted]="true">
+  <ng-template>
   <ion-datetime 
-    (ionChange)="loadData()"
+    style="position: relative; display: inline; height: 50px;"
+    (ionChange)="selectDate($event)"
     displayFormat="YYYY-MM-DD HH:MM" 
     pickerFormat="YYYY-MM-DD HH:MM"
     [(ngModel)]="selectedDate" 
-    id="selectedDateID"
+    id="selectedDateModal"
     presentation="date"
   ></ion-datetime>
+</ng-template>
 </ion-modal>

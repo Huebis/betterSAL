@@ -1,3 +1,59 @@
-<p>
-  teacher-absences works!
-</p>
+<ng-template let-headerItems #absenceHeaderTemplate>
+    <div style="height: 25px">
+        {{headerItems}}
+    </div>
+</ng-template>
+<ng-template #absenceTemplate let-item let-headerItems="headerItems">
+    @if (item.absenceAmount>=1){
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr">
+        <app-time-display 
+            [starttime]="item.events[0].starttime"
+            [endtime]="item.events[item.events.length-1].endtime">
+        </app-time-display>
+        <p> {{item.description}} </p>
+        <p> 
+            {{item.absenceAmount}} 
+        </p>
+        <p>
+          @if (item.excused === 1){
+            <ion-button (click)="item.excused=3; sendData(item); ">excuse</ion-button>
+          }@else {
+            {{item.excused}}
+          }
+        </p>
+        <app-file-download [fileID]="item.fileID"></app-file-download>
+        </div>
+    }
+</ng-template>
+
+
+<ng-template let-headerItems #headerTemplate>
+  <div style="height: 30px;">
+      {{headerItems.firstName}}  {{headerItems.lastName}} 
+  </div>
+</ng-template>
+
+<ng-template #itemTemplate let-item let-headerItems="headerItems">
+  <div style="margin-left: 20px; margin-right: 20px;">
+    <app-dropdown 
+      [items]="item.list" 
+      [headerItems]="item.type"
+      [headerTemplate]="absenceHeaderTemplate" 
+      [itemTemplate]="absenceTemplate">
+  </app-dropdown>
+</div>
+</ng-template>
+
+
+
+@for (student of this.absences; track student.userID){
+  <app-dropdown 
+    [items]="[
+      {type:'notExcused', list:student.notExcused},
+      {type:'excused', list:student.excused},
+      {type:'finished', list:student.finished}]" 
+    [headerItems]="student"
+    [headerTemplate]="headerTemplate" 
+    [itemTemplate]="itemTemplate">
+</app-dropdown>
+}
