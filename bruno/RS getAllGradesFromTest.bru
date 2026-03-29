@@ -1,0 +1,25 @@
+meta {
+  name: RS getAllGradesFromTest
+  type: http
+  seq: 28
+}
+
+get {
+  url: https://huebis.dev/betterSAL/api/getAllGradesFromTest?courseID=23f0f93e-defb-4835-a12a-3307ec8ebe9f&eventID=7aab90e5-deb7-49f8-8bf5-e1ed5d9a1be7
+  body: none
+  auth: inherit
+}
+
+params:query {
+  courseID: 23f0f93e-defb-4835-a12a-3307ec8ebe9f
+  eventID: 7aab90e5-deb7-49f8-8bf5-e1ed5d9a1be7
+}
+
+headers {
+  token: {{token}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

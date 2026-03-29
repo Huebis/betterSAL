@@ -95,11 +95,11 @@
 
       <ion-col size="2">
         @if (item.change){
-                @if (item.excused){
-                    <ion-button (click)="item.excused=0">lassen</ion-button>
-                }@else{
-                    <ion-button (click)="item.excused=2">abschliessen</ion-button>
-                }
+            @if (item.excused==0){
+                <ion-button (click)="item.excused=2">abschliessen</ion-button>
+            }@else {
+              <ion-button (click)="item.excused=0">lassen</ion-button>
+            }
             }@else{
                 @if (item.excused == 0)
                 {Offen}
@@ -175,10 +175,10 @@
 
       <ion-col size="2">
         @if (item.change){
-                @if (item.excused){
-                    <ion-button (click)="item.excused=1">lassen</ion-button>
-                }@else{
+                @if (item.excused==1){
                     <ion-button (click)="item.excused=2">abschliessen</ion-button>
+                }@else{
+                    <ion-button (click)="item.excused=1">lassen</ion-button>
                 }
             }@else{
                 @if (item.excused == 0)

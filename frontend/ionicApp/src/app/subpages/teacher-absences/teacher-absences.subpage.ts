@@ -99,6 +99,11 @@ export class TeacherAbsencesSubpage implements OnInit {
       this.students = v.absence || []; 
     });
   }
+  sendData(item:any){
+    this.api.sendRequestPost(item,"absence?requestType=change").subscribe();
+    item.change=false;
+    this.loadData();
+  }
 
   activateMerge(headerItems: any, student: User) {
     if (headerItems.merge) {
@@ -132,4 +137,5 @@ export class TeacherAbsencesSubpage implements OnInit {
   parseDate(date: string) {
     return date.slice(8, 10) + "." + date.slice(5, 7) + "." + date.slice(0, 4);
   }
+
 }

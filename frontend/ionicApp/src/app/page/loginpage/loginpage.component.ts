@@ -1,3 +1,5 @@
+//kümmert sich um den login 
+
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,9 +17,12 @@ import { PushNotification } from 'src/app/service/push-notification';
   imports: [FormsModule, IonInput, IonButton, IonInputPasswordToggle, IonContent]
 })
 export class LoginPage  implements OnInit {
-  ngOnInit() {}
+  ngOnInit() {
+    this.message="";
+  }
   username="";
   password="";
+  message="";
 
   constructor(
     private authService: AuthService, 
@@ -26,6 +31,7 @@ export class LoginPage  implements OnInit {
     private notifications: PushNotification) {}
 
   login(){
+    this.message="loading";
     console.log(this.username)
     let data={
       username:this.username,
@@ -41,7 +47,17 @@ export class LoginPage  implements OnInit {
         this.notifications.initPushNotifications();
 
       },
-      error: err => console.error('HTTP Error:', JSON.stringify(err))
+      error: err => {
+        console.log(err.error.error);
+        if (err.error.error==="username and password are wrong"){
+          this.message="username or password is wrong";
+        }else{
+          this.message="networking error";
+        }
+        console.error('HTTP Error:', JSON.stringify(err));
+
+      }
+      
     }); 
 
   }

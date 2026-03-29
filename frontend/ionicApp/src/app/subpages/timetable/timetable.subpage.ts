@@ -37,7 +37,7 @@ export interface Day{
   selector: 'app-timetable',
   templateUrl: './timetable.subpage.html',
   styleUrls: ['./timetable.subpage.scss'],
-  imports: [CommonModule, FormsModule, IonModal, IonDatetimeButton, IonButton,IonDatetime,IonIcon,DatePipe],
+  imports: [CommonModule, FormsModule, IonModal, IonDatetimeButton, IonButton, IonDatetime, IonIcon, DatePipe, IonItem],
   providers: [ModalController]
 })
 export class TimetableSubpage  implements OnInit {
@@ -64,6 +64,14 @@ export class TimetableSubpage  implements OnInit {
   selectedPeriod:string='week';
 
   elementsShownByType:Array<boolean>=[true,true,true,true];
+
+  dictEventTypes:any={
+    0:0,
+    400:1,
+    450:2,
+    666:3
+
+  }
 
 
   scale:number = 6.60; //11h*60min*0.95
@@ -109,6 +117,10 @@ export class TimetableSubpage  implements OnInit {
       return firstDayOfWeek.toISOString().slice(0,16).replace('T',' ');
     }
   }
+  selectDate(event:any){
+    this.selectedDate = event.detail.value;
+    this.loadData();
+  }
   loadData(){
     this.days=[]
     this.api.sendRequestGet({},"getSchedule?starttime="+this.getDate(1)+"&endtime="+this.getDate(7)).subscribe(v => {
@@ -143,6 +155,7 @@ export class TimetableSubpage  implements OnInit {
         event.height = this.calculateTimePos(event.endtime) - event.top;
         event.left = 0;
         event.width = 100;
+        event.type = event.type
         console.log(this.days[date])
         this.days[date].schedule.push(event);
         let ammount=0;
@@ -219,7 +232,7 @@ export class TimetableSubpage  implements OnInit {
 
   changeShown(type:number){
 
-    this.elementsShownByType[type]=!this.elementsShownByType[type];
+    this.elementsShownByType[this.dictEventTypes[type]]=!this.elementsShownByType[this.dictEventTypes[type]];
     if (this.elementsShownByType[type]){
       document.documentElement.style.setProperty('--type'+type+'Display', "absolute");
     }else{

@@ -1,0 +1,73 @@
+<ng-template let-headerItems #headerTemplate>
+  <div style="width: fit-content; height: 25px;">
+      {{headerItems}}
+  </div>
+</ng-template>
+<ng-template #itemTemplate let-item let-headerItems="headerItems">
+  <div>
+    <ion-button (click)="this.selectCourse(item)">{{item.courseName}}</ion-button>
+  </div>
+</ng-template>
+
+
+<div>
+  <ion-button (click)="addType('event')">Event</ion-button>
+  <ion-button (click)="addType('sick')">Sick</ion-button>
+
+  <ion-input
+    (ionChange)="checkIfAllExists()"
+    type="text"
+    [(ngModel)]="eventDetails.description"
+    name="description"
+    label="Description" 
+    placeholder="Enter Description"
+    label-placement="floating" 
+    fill="outline">
+  </ion-input>
+
+  <div>
+    <ion-item>
+      Start
+      <ion-datetime-button slot="end" datetime="starttime"></ion-datetime-button>
+    </ion-item>
+  </div>
+  <div>
+    <ion-item>  
+      End 
+      <ion-datetime-button slot="end" datetime="endtime"></ion-datetime-button>
+    </ion-item>
+  </div>
+
+  <app-dropdown 
+    [items]="this.courses" 
+    [headerItems]="this.eventDetails.courseName"
+    [headerTemplate]="headerTemplate" 
+    [itemTemplate]="itemTemplate">
+  </app-dropdown>
+  <app-file-upload></app-file-upload>
+
+  <ion-button (click)="saveEvent()" [disabled]="!allExists">{{message}}</ion-button>
+</div>
+
+
+
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime 
+      (ionChange)="saveStarttime($event)"
+      id="starttime"
+      displayFormat="YYYY-MM-DD HH:MM" 
+      pickerFormat="YYYY-MM-DD HH:MM"
+    ></ion-datetime>
+  </ng-template>
+</ion-modal>
+
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime 
+      (ionChange)="saveEndtime($event)"
+      id="endtime"
+      displayFormat="YYYY-MM-DD HH:MM" 
+      pickerFormat="YYYY-MM-DD HH:MM"></ion-datetime>
+  </ng-template>
+</ion-modal>

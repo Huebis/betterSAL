@@ -1,3 +1,5 @@
+//registriert und empfängt push nachrichten, anzeige über toast
+
 import { Injectable } from '@angular/core';
 import { PushNotifications, Token} from '@capacitor/push-notifications';
 import { ApiService } from './api';

@@ -1,11 +1,20 @@
 # betterSAL
+Frontend is running on https://www.huebis.dev/betterSAL
+
+Backend is running on https://huebis.dev/betterSAL/api
+
 
 ## Setup
-### Python
-#### python modules
+### Backend (Python)
+#### python modules:
 flask
-selenium
+
 argon2-cffi
+
+firebase_admin
+
+flask_cors
+
 #### setup venv
 Create a venv (Virtual environement)
 ```
@@ -18,18 +27,34 @@ Install Modules```pip install modulename```
 
 Befor running Python programs connect to venv. ```source venv/bin/acitvate```
 
-Then run using ```python *.py```
-### Angular
-Create a new App
-```cd frontend
-ng new my-app
-CSS
-No
-None
-```
-The code is in the scr folder 
+Then run using ```python main.py```
+### Frontend (Angular and Ionic)
+Install Angular and Ionic
 
-To run go in the ```my-app``` folder and use ```npm run start```.
+Install Dependencies: 
+
+Ionicons
+
+@capacitor/android
+
+@capacitor/push-notifications
+
+@capacitor/local-notifications
+
+@capacitor/camera
+
+@capacitor/assets
+
+@capacitor/haptics
+
+@capacitor/keyboard
+
+@capacitor/status-bar
+
+@capacitor/toast
+
+@capacitor/keyboard
+
 
 
 

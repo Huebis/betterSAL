@@ -1,6 +1,6 @@
 <ng-template let-headerItems #notExcusedHeaderTemplate>
     <div>
-        <p> Not Excused </p>
+        <p> Offen </p>
         <ion-button (click)="$event.stopPropagation(); activateMerge(headerItems)">
             @if(headerItems.merge){
                 <p>Save</p>
@@ -54,9 +54,9 @@
                 }
             }@else{
                 @if (item.excused == 0)
-                {Not Excused}
+                {Offen}
                 @if (item.excused == 1)
-                {Excused}
+                {Hängig}
             }
       </ion-col>
 
@@ -100,24 +100,23 @@
             <p>
                 {{item.events[0].starttime}} - {{item.events[item.events.length-1].endtime}}
             </p>
-            <p>
+            <div>
                 @if (item.change){
                     <ion-input
+                        [(ngModel)]="item.description"
                         (ionChange)="headerItems.somethingChanged=false"
                         type="text"
-                        [(ngModel)]="item.description"
                         name="description"
                         label="Description" 
                         placeholder="Enter description"
                         label-placement="floating" 
-                        fill="outline" 
-                        value="test">
+                        fill="outline">
                     </ion-input>
                 }@else{
                     {{item.description}}
                 }
             
-        </p>
+            </div>
         <p> 
             {{item.absenceAmount}} 
         </p>
@@ -159,7 +158,7 @@
 
 <ng-template let-headerItems #excusedHeaderTemplate>
     <div>
-        <p> Excused </p>
+        <p> Hängig </p>
     </div>
 </ng-template>
 
@@ -201,9 +200,9 @@
                 }
             }@else{
                 @if (item.excused == 0)
-                {Not Excused}
+                {Offen}
                 @if (item.excused == 1)
-                {Excused}
+                {Hängig}
             }
       </ion-col>
 
@@ -283,7 +282,7 @@
 
 <ng-template let-headerItems #finishedHeaderTemplate>
     <div>
-        <p> Finished </p>
+        <p> Abgeschlossen </p>
     </div>
 </ng-template>
 
@@ -326,11 +325,11 @@
                 }
             }@else{
                 @if (item.excused == 0)
-                {Not Excused}
+                {Offen}
                 @if (item.excused == 1)
-                {Excused}
+                {Hängig}
                 @if (item.excused == 1)
-                {Finish}
+                {Abgeschlossen}
             }
       </ion-col>
 

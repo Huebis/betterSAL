@@ -1,3 +1,6 @@
+//Getter und setter für lokal storage (UUID und role)
+
+
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -6,7 +9,6 @@ import { Injectable } from '@angular/core';
 export class AuthService {
   private readonly UUID_KEY = 'uuid';
   private readonly ROLE_KEY = 'role';
-  private readonly HARDWAREID_KEY = 'role';
 
   setUuid(uuid: string) {
     localStorage.setItem(this.UUID_KEY, uuid);

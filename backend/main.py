@@ -4,13 +4,20 @@ from database import Database
 import service
 from flask_cors import CORS
 import notification
-from datetime import datetime
+from datetime import datetime, date, timedelta
 import os
 import uuid
 
+#####################################################################
+### Dies ist das main file, immer python main.py machen um das Programm zu starten
+### Hier sind alle API-Schnittstelle und die grundlegendsten Funktionen
+
+### Falls die Datenbank neu aufgesetzt werden muss, dann mit python setupDatabse.py
 
 
-#source venv/bin/activate 
+
+
+#überprüft ob der Parameter den richtigen Datentype besitzt, sonst return False
 def verificationDatatype(parameter, datatype):
 
 
@@ -58,6 +65,9 @@ def verificationDatatype(parameter, datatype):
         return isinstance(integer, int)
     def isList(liste):
         return isinstance(liste,list)
+    def isDict(dicte):
+        return isinstance(dicte, dict)
+    
     
 
 
@@ -74,13 +84,15 @@ def verificationDatatype(parameter, datatype):
             return isValidUuid(parameter)
         case "list":
             return isList(parameter)
+        case "dict":
+            return isDict(parameter)
         case _:
             raise Exception("Mistake in Datatype verifikation")
             return False
 
 
 
-
+# Wird gebraucht, damit es einen Datenbankzugriff gibt und nicht jedesmal neu erstellt werden muss, muss immer mitgegeben werden
 def get_db():
     db = getattr(g, '_database', None)
     print("1")
@@ -90,7 +102,7 @@ def get_db():
     return db
  
 
-
+#überprüft ob der richtige Input im JSON enthalten sind und auch im richtigen Datentype (wird verificationDatatype aufgerufen)
 def isEveryDataNameinObject(testedObject,dataValues):
     #dataValue list [0] stringname / [1] typ in string
     for value in dataValues:
@@ -102,6 +114,9 @@ def isEveryDataNameinObject(testedObject,dataValues):
         print("hello")
         print(value)
         if not verificationDatatype(parameter,value[1]):
+            print("FEHLER BEI DER EINGABE DER PARAMETER")
+            print(parameter)
+            print(value)
             return False
 
 
@@ -112,11 +127,17 @@ def isEveryDataNameinObject(testedObject,dataValues):
     return True
 
 
-
+#wird geschaut ob jemand 18 Jahre ist anhand des Geburtsdatums
 def isAdult(birthDate):
+    print(birthDate)
     today = date.today()
+
+    birthDate = datetime.strptime(birthDate, "%Y-%m-%d")
     return (today.year - birthDate.year - 
            ((today.month, today.day) < (birthDate.month, birthDate.day))) >= 18
+
+
+#Wickelt ganze Tokenkontrolle ab und return je nach dem eine Fehlermeldung oder UserID          
 #return True,UserID, None, None when everything is fine
 #return False,None, error, Fehlernummer when something is wrong
 def tokenAndRoleVerfication(db,token, allowedRoles = None,parentLock = False): # Bei None sind einfach alle Rollen zugelassen
@@ -134,21 +155,25 @@ def tokenAndRoleVerfication(db,token, allowedRoles = None,parentLock = False): #
 
     role = db.getRolefromUserWithUserID(userID)
 
-    if parentLock:
-        if role == 0: #Parent
-            childUserID = db.getChildUserIDWithParentUserID(userID)
-            birthDate = db.getBirthdateWithUserID(childUserID)
-            if isAdult(birthDate):
-                return False, None,jsonify({"error": "user do not have the permission to enter the site"}), 403
-            else:
-                userID = childUserID
-        elif role == 1: #Student
+    if parentLock: #etwas darf nur von Eltern oder erwachsenen SuS bearbeitet werden
+        if role == 1: #Student
             birthDate = db.getBirthdateWithUserID(userID)
             if not isAdult(birthDate):
                 return False, None,jsonify({"error": "user do not have the permission to enter the site"}), 403
         
 
+    if role == 0: #Parent
+            childUserID = db.getChildUserIDWithParentUserID(userID)
+            print(childUserID)
+            birthDate = db.getBirthdateWithUserID(childUserID)
+            print(birthDate)
+            if isAdult(birthDate):
+                return False, None,jsonify({"error": "user do not have the permission to enter the site"}), 403
+            else:
+                userID = childUserID
+                role = 1
 
+   
 
 
     if allowedRoles == None:
@@ -177,11 +202,9 @@ os.makedirs(uploadFolder, exist_ok=True)
 
 
 
-#ERRORS:
-#450: token is invalid
 
 
-#route musste angepasst werden wegen dem Server
+#Schnittstelle um Passwort zu wechseln
 @app.route('/changePassword', methods=["POST"])
 def requestChangePassword():
 
@@ -213,6 +236,8 @@ def requestChangePassword():
     return jsonify({"error": "password ist nicht valid"}), 403
 
 
+
+#Generelle Login-Schnittstelle, Benutzernamen + Passwort -> Token (15 min gültig)
 @app.route('/login', methods=["POST"])
 def loginUser():
     data = request.get_json()
@@ -239,6 +264,9 @@ def loginUser():
 
     return jsonify({"token": token, "role": role}), 200
 
+
+
+#Token wird gelöscht um Sitzung frühzeitig beenden zu können
 @app.route('/endSession', methods=["Get"])
 def deletToken():
 
@@ -255,6 +283,9 @@ def deletToken():
 
     return jsonify({}), 200
 
+
+#Nur für Schüler
+#Schüler bekommt alle Tests und Fächer
 @app.route('/getGradesStudent', methods=["Get"])
 def postAllGradesFromUser():
 
@@ -272,6 +303,9 @@ def postAllGradesFromUser():
 
     return jsonify({"subjects": output}), 200
 
+
+#Nur für Lehrer
+#Lehrer können einen neuen Test eintragen
 @app.route('/addNewTest', methods=["Post"])
 def addNewTest():
 
@@ -300,7 +334,6 @@ def addNewTest():
     testName = data["testName"]
     weight = data["weight"]
     location = data["location"]
-    date = data["date"]
     starttime = data["starttime"]
     endtime = data["endtime"]
     describtion = data["description"]
@@ -308,11 +341,12 @@ def addNewTest():
     if not db.isUserIDinCourse(userID,courseID):
         return jsonify({"error": "user do not have the permission to change that"}), 403
 
-    service.addNewExamenForCourseWithEventAndDefaultGrades(db,courseID,testName,weight,location,date,starttime,endtime,describtion)
+    service.addNewExamenForCourseWithEventAndDefaultGrades(db,courseID,testName,weight,location,starttime,endtime,describtion)
 
     return jsonify({}), 200
 
-#Teacher only
+#Nur für Lehrer
+#Lehrer können einen Test wieder löschen
 @app.route('/deleteTest', methods=["Post"])
 def deleteTest():
 
@@ -352,7 +386,8 @@ def deleteTest():
     return jsonify({}), 200
 
 
-#Teacher only
+#Nur für Lehrer
+#Lehrer bekommt alle Tests von allen Klassen (ohne Noten von den Schüler)
 @app.route('/getAllTests', methods=["get"])
 def getAllTests():
 
@@ -370,7 +405,8 @@ def getAllTests():
     return jsonify({"courses": output}), 200
 
 
-#Teacher only
+#Nur für Lehrer
+#Lehrer bekommt detaillierte Informationen über einen Test, alle Schüler mit allen Noten usw.
 @app.route('/getAllGradesFromTest', methods=["get"])
 def getAllGradesFromAllStudentsOfTest():
 
@@ -406,6 +442,8 @@ def getAllGradesFromAllStudentsOfTest():
     return jsonify({"grades": grades,"exam":exam}), 200
 
 
+
+# wird eigentlich nicht mehr gebraucht, nur noch Testzwecke
 @app.route('/testFcmToken', methods=["Post"])
 def testFcmToken():
 
@@ -429,7 +467,9 @@ def testFcmToken():
     return jsonify({}), 200
 
 
-#Only for teacher
+#Nur für Lehrer
+#Inverse Funktion von getAllGradesFromTest, User kann alles genau so (verändert) wieder zurückschicken
+#danach werden die Daten in der DB angepasst
 @app.route('/postAllGradesFromAllStudentsOfTest', methods=["Post"])
 def postAllGradesFromAllStudentsOfTest():
 
@@ -449,14 +489,14 @@ def postAllGradesFromAllStudentsOfTest():
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if not isEveryDataNameinObject(data, ["grades", "exam"]):
+    if not isEveryDataNameinObject(data, [["grades", "list"], ["exam", "dict"]]):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
 
     exam = data["exam"]
     grades = data["grades"]
 
-    if not isEveryDataNameinObject(exam, ["courseID", "eventID"]):
+    if not isEveryDataNameinObject(exam, [["courseID", "uuid4"], ["eventID", "uuid4"]]):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
     courseID = exam["courseID"]
@@ -469,9 +509,12 @@ def postAllGradesFromAllStudentsOfTest():
     if not db.isUserIDinEvent(userID,eventID):
         return jsonify({"error": "user do not have the permission to change that"}), 403
 
+    print("test 0")
+
 
 
     response = service.updateAllExamAndEventDataWithEventIDAndCourseID(db,exam)
+    print("test 0.5")
     if not response:
         return jsonify({"error": "Objekt war falsch"}), 400
 
@@ -479,6 +522,8 @@ def postAllGradesFromAllStudentsOfTest():
 
     return jsonify({}), 200
 
+
+#User postet den FCM-Token und dieser wird in DB gespeichert
 @app.route('/postFcmToken', methods=["Post"])
 def postFcmToken():
 
@@ -487,6 +532,7 @@ def postFcmToken():
     boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
 
     if not boolien:
+        print("Probleme mit der Token verifikation")
         return json,errorNumber
 
 
@@ -496,22 +542,35 @@ def postFcmToken():
     data = request.get_json()
 
     if not data:
+        print("DATA wird nicht mitgeschickt")
         return jsonify({"error": "kein JSON gesendet"}), 400
 
     #neuerung, wenn nicht uuid bei hardwareID, dann neuzuweisen und prüfen ob fcmToken stimmt
-    if not isEveryDataNameinObject(data, [["fcmToken", "string"], ["hardwareID", "string"]]):
+    if not isEveryDataNameinObject(data, [["fcmToken", "string"]]):
+        print("FCM Token wird nicht gesendet")
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
     
     
     fcmToken = data["fcmToken"]
-    hardwareID = data["hardwareID"]
-    hardwareID = service.postFcmToken(db,userID,fcmToken,hardwareID)
-
-    return jsonify({"hardwareID": hardwareID}), 200
+    print(fcmToken)
 
 
+    service.postFcmToken(db,userID,fcmToken)
+    print("alles hat funktioniert mit dem Token")
+
+    
+    notification.sentNotificationToUserID(db,userID,"ANGEMOLDEN","Sie haben sich erfolgreich angemolden",5)
 
 
+
+
+
+
+    return jsonify({}), 200
+
+
+
+#User erhält alle wichtigen Informationen über sich
 @app.route('/getUserData', methods=["Get"])
 def getAllUserData():
 
@@ -528,6 +587,9 @@ def getAllUserData():
 
     return jsonify(output), 200
 
+
+#Inverse Funktion von getUserData, User kann alles genau gleich (veränderten Werten) wieder zurück schicken
+#Änderungen werden in DB gespeichert
 @app.route('/postUserData', methods=["post"])
 def postAllUserInformation():
 
@@ -561,6 +623,7 @@ def postAllUserInformation():
     return jsonify({"error": "Einträge im JSON sind falsch"}), 400
 
 
+#User erhält alle Unterrichtslektionen in einem Zeitabschnitt
 @app.route('/getSchedule', methods=["Get"])
 def getSchedule():
 
@@ -592,7 +655,8 @@ def getSchedule():
 
     return jsonify({"schedule": output}), 200
 
-
+#Api-Schnittstelle falls Lehrer oder Schüler Absencen ändern oder zusammenfügen möchten.
+#Je ob Lehrer oder Schüler gibt es unterschiedliche Rechte
 @app.route('/absence', methods=["post"])
 def changeAndMergeAbsence():
 
@@ -618,7 +682,7 @@ def changeAndMergeAbsence():
 
     if requestType == "change":
       
-        if not isEveryDataNameinObject(data,[["absenceID","uuid4"],["excused","int"],["description", "string"],["fileID", "str"]]):
+        if not isEveryDataNameinObject(data,[["absenceID","uuid4"],["excused","int"],["description", "string"],["fileID", "string"]]):
             return jsonify({"error": "Einträge im JSON fehlen"}), 400
         
         if service.changeAbsence(db,userID,db.getRolefromUserWithUserID(userID),data):
@@ -637,7 +701,9 @@ def changeAndMergeAbsence():
 
     return jsonify({"error": "Ein Fehler ist aufgetreten"}), 400
 
-
+# Lehrer wie auch SuS bekommen bekommen alle Absencen
+#SuS bekommen ihre eigene
+#Lehrer bekommen eine Liste von SuS mit ihren Absencen, aber nur bei Klassenlehrer, anonst gibt es gar nichts
 @app.route('/absence', methods=["get"])
 def getAbsence():
     token = request.headers.get("token")
@@ -663,7 +729,9 @@ def getAbsence():
 
     return jsonify({"absence": output}), 200
 
-    
+
+#Nur für Lehrer
+#Absenzen-Events können hier gelöscht werden   
 @app.route('/absence', methods=["delete"])
 def deleteAbsenceEvent():
 
@@ -695,7 +763,8 @@ def deleteAbsenceEvent():
     return jsonify({}), 200
 
 
-
+#Nur für Lehrer
+#Lehrer bekommt eine Präsenzliste für eine Lektion
 @app.route('/presenceList', methods=["get"])
 def getAnwesenheitsliste():
     token = request.headers.get("token")
@@ -711,13 +780,22 @@ def getAnwesenheitsliste():
     eventID = request.args.get("eventID")
     courseID = request.args.get("courseID")
 
+    print(eventID)
+    print(endtime)
+    print(starttime)
+    print(courseID)
+
 
     if starttime == None or endtime == None or eventID == None or courseID == None :
         return jsonify({"error": "Fehlender Parameter"}), 400
     if not verificationDatatype(starttime,"dateMinute"):
+        print("starttime is false")
+        print(starttime)
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
     
     if not verificationDatatype(endtime,"dateMinute"):
+        print("endtime is false")
+        print(endtime)
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
     print("hdhdhdh")
     if not verificationDatatype(eventID,"string"):
@@ -737,12 +815,23 @@ def getAnwesenheitsliste():
 
     if output == False:
         return jsonify({"error": "Fehler bei der Verarbeitung"}), 400
+
+
+
+    lesson = {
+        "eventID": eventID,
+        "courseID": courseID,
+        "starttime": starttime,
+        "endtime": endtime
+    }
     
 
-    return jsonify({"anwesenheitsliste": output}), 200
+    return jsonify({"anwesenheitsliste": output, "lesson": lesson}), 200
 
 
-
+#Nur für Lehrer
+#Inverse von Präsenzliste
+#Lehrer schicken genau die gleiche Liste von presenceList (get) wieder zurück (angepasst), Änderungen werden in DB übernommen
 @app.route('/presenceList', methods=["post"])
 def postAnwesenheitsliste():
     token = request.headers.get("token")
@@ -759,6 +848,7 @@ def postAnwesenheitsliste():
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
     
+    """
 
     starttime = request.args.get("starttime")
     endtime = request.args.get("endtime")
@@ -775,11 +865,23 @@ def postAnwesenheitsliste():
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
     if not verificationDatatype(courseID,"uuid4"):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    """
     
-    if not isEveryDataNameinObject(data,[["anwesenheitsliste","list"]]):
+    if not isEveryDataNameinObject(data,[["anwesenheitsliste","list"],["lesson","dict"]]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    
+    if not isEveryDataNameinObject(data["lesson"],[["eventID","string"],["courseID","uuid4"], ["starttime","dateMinute"],["endtime","dateMinute"]]):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
     anwesenheitsliste = data["anwesenheitsliste"]
+
+    lesson = data["lesson"]
+
+    courseID = lesson["courseID"]
+    eventID = lesson["eventID"]
+    starttime = lesson["starttime"]
+    endtime = lesson["endtime"]
+
     
 
 
@@ -795,7 +897,8 @@ def postAnwesenheitsliste():
 
     
 
-
+# User kann file auf den Server laden
+# bekommt File-ID zurück und muss die bei Grade, Absence usw. einfügen
 @app.route("/file", methods=["POST"])
 def uploadFile():
 
@@ -832,6 +935,7 @@ def uploadFile():
     return jsonify({"fileID": fileID}), 200
 
 
+#Inversion von /file (post), User bekommt File zurück, falls er Rechte darauf hat
 @app.route("/file/<fileID>", methods=["GET"])
 def download_file(fileID):
     
@@ -875,11 +979,102 @@ def download_file(fileID):
     )
 
 
+#Nur für Lehrer
+#Lehrer könen Krankmeldungen, Lektionsabsagen und Mutationen eintragen
+@app.route("/addEvent", methods=["Post"])
+def addEvent():
+    
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
+
+    if not boolien:
+        return json,errorNumber
+
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+    
+    if not isEveryDataNameinObject(data,[["courseID","uuid4"],["type","int"],["description", "string"],["starttime", "dateMinute"],["endtime", "dateMinute"],["fileID", "string"],["location", "string"]]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+        
+    courseID = data["courseID"]
+    kind = data["type"]
+    description = data["description"]
+    starttime = data["starttime"]
+    endtime = data["endtime"]
+    location = data["location"]
+
+
+    if not db.isUserIDinCourse(userID,courseID):
+        return jsonify({"error": "This type in not allowed"}), 400
+
+    eventID = str(uuid.uuid4())
+
+
+    if kind in [400,450,200]:
+        db.addNewEvent(eventID,location,starttime,endtime,description,kind,courseID)
+        print("Nachricht wird vorbereitet")
+        #if 450, dann Schüler informieren ASAP
+        if kind == 450:
+            print("Nachricht wird vorbereitet")
+            day = datetime.strptime(starttime, "%Y-%m-%d %H:%M")
+            if day.date() == date.today():
+                persons = db.getAllStudentsFromCourse(courseID)[0]
+                for person in persons:
+                    notification.sentNotificationToUserID(db,person,"Krankmeldung","Eine Lehrperson hat sich für heute krank gemeldet",0)
+            
+            day -= timedelta(days=1)
+
+            print(day.date())
+            if day.date() == date.today(): #morgen
+                persons = db.getAllStudentsFromCourse(courseID)[0]
+                for person in persons:
+                    notification.sentNotificationToUserID(db,person,"Krankmeldung","Eine Lehrperson hat sich für morgen krank gemeldet",1)
+
+    return jsonify({}), 200
+    
+#User bekommt alle Course in denen er sich befindet
+@app.route("/getCourses", methods=["Get"])
+def getCourses():
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
+
+    if not boolien:
+        return json,errorNumber
+
+
+    courses = db.getALLCourseWithUserID(userID)
+
+    output = []
+    for course in courses:
+        courseDict = {
+            "courseID": course[0],
+            "subject": course[1],
+            "courseName":course[2]
+        }
+        output.append(courseDict)
+
+    
+    return jsonify({"courses": output}), 200
+
+    
+
+
+
+    
+    
 
 
 
 #Nicht anfassen!!!
+#Start vom Programm
+#threaded=False, gab probleme wegen gleichzeitigen DB zugriffen, so hat es funktioniert
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=True, threaded=False)
