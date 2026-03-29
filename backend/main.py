@@ -420,6 +420,8 @@ def getAllGradesFromAllStudentsOfTest():
     return jsonify({"grades": grades,"exam":exam}), 200
 
 
+
+# wird eigentlich nicht mehr gebraucht, nur noch Testzwecke
 @app.route('/testFcmToken', methods=["Post"])
 def testFcmToken():
 

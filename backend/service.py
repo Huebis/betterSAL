@@ -214,7 +214,7 @@ def postFcmToken(db,userID,fcmToken):
 
 def getAllUserData(db,userID):
     userData = db.getAllUserDataWithUserID(userID)
-    for a in range(7,12,1):
+    for a in range(7,13,1):
         if userData[a] == None:
             userData[a] = 0
 
