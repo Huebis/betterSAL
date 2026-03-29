@@ -25,14 +25,12 @@
         Month
       </ion-button>  
     </div>
-    <div></div>
     <div class="selectorItems">
       <ion-item style="background-color: rgba(0, 0, 0, 0);">
-        <ion-datetime-button  datetime="selectedDateModal">{{"test"}}</ion-datetime-button>
+        <ion-datetime-button  datetime="selectedDateID">{{"test"}}</ion-datetime-button>
       </ion-item>
     </div>
 
-  <div></div>
   <div class="selectorItems" slot="end">
     <ion-button
 
@@ -40,15 +38,29 @@
           'unselected':!elementsShownByType[0],
         }"
       (click)="changeShown(0)">
-      Lessons
+      Normal
+    </ion-button>  
+    <ion-button
+      [ngClass]="{'selected':elementsShownByType[2],
+          'unselected':!elementsShownByType[2],
+        }"
+      (click)="changeShown(450)">
+      Ausfall
     </ion-button>  
     <ion-button
       [ngClass]="{'selected':elementsShownByType[1],
           'unselected':!elementsShownByType[1],
         }"
-      (click)="changeShown(1)">
-      Tests
-    </ion-button>  
+      (click)="changeShown(400)">
+      Absage
+    </ion-button> 
+    <ion-button
+      [ngClass]="{'selected':elementsShownByType[3],
+          'unselected':!elementsShownByType[3],
+        }"
+      (click)="changeShown(666)">
+      Prüfung
+    </ion-button> 
   </div>
 
 
@@ -85,11 +97,12 @@
         <div  class="day">
           
           @for (event of day.schedule;track $index){
+            @if (elementsShownByType[dictEventTypes[event.type]]){
             <button (click)="showEventDetail(event)" >
               <div
                 [ngClass]="'type'+event.type"
                 class="event"
-                [ngStyle]="{'top':event.top+'%', 'left':event.left+'%', 'width':event.width + '%', 'height':event.height+ '%'}"
+                [ngStyle]="{'top':event.top+'%', 'left':event.left+'%', 'width':event.width + '%', 'height':event.height+ '%' }"
                 >
                 <div class="eventData">
                   @if (event.height>25 || selectedPeriod!="month") {
@@ -103,6 +116,7 @@
                 </div>
               </div>
             </button>
+          }
           }
         </div>
       }

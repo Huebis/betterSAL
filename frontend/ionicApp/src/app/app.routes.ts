@@ -32,8 +32,6 @@ export const routes: Routes = [
       {path:'presense/:courseID/:starttime/:endtime/:eventID',component:CheckPresenseSubpage},
 
       {path:'user',component:UserComponent},
-
-      {path:'event',component:EventComponent, canMatch: [CanMatchGuard], data:{allowedRoles:[false,false,true,false,false]}},
     ]
   },
   { path: 'login', component:LoginPage},

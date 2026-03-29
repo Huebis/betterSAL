@@ -67,7 +67,9 @@ export class TimetableSubpage  implements OnInit {
 
   dictEventTypes:any={
     0:0,
-    666:1
+    400:1,
+    450:2,
+    666:3
 
   }
 
@@ -153,7 +155,7 @@ export class TimetableSubpage  implements OnInit {
         event.height = this.calculateTimePos(event.endtime) - event.top;
         event.left = 0;
         event.width = 100;
-        event.type = this.dictEventTypes[event.type]
+        event.type = event.type
         console.log(this.days[date])
         this.days[date].schedule.push(event);
         let ammount=0;
@@ -230,7 +232,7 @@ export class TimetableSubpage  implements OnInit {
 
   changeShown(type:number){
 
-    this.elementsShownByType[type]=!this.elementsShownByType[type];
+    this.elementsShownByType[this.dictEventTypes[type]]=!this.elementsShownByType[this.dictEventTypes[type]];
     if (this.elementsShownByType[type]){
       document.documentElement.style.setProperty('--type'+type+'Display', "absolute");
     }else{
