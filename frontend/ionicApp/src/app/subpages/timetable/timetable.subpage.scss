@@ -141,4 +141,60 @@ ion-button.unselected{
 }
 
 
+// Style von KI  
 
+.custom-ion-style-button {
+  // Farben & Background (nutzt Ionic Standards)
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+  
+  // Maße & Spacing
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;      // Etwas breiter
+  height: 44px;          // Standard-Buttonhöhe in Ionic
+  padding: 0 16px;
+  
+  // Abrundung & Schatten
+  border-radius: 8px;    // Leicht abgerundet (Modern Style)
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  // Schrift & Interaktion
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+  user-select: none;
+
+  // Hover/Tap Effekt
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+
+
+.datetime-modal-custom {
+  --width: 350px;
+  --height: 440px;
+  --border-radius: 16px;
+
+  &::part(content) {
+    // Erzwingt die Zentrierung des Modals auf dem Screen
+    border-radius: 16px;
+  }
+}
+
+.center-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; // Wichtig, damit Flexbox vertikal zentrieren kann
+  background-color: var(--ion-background-color);
+
+  ion-datetime {
+    width: 100%;
+    border-radius: 0; // Der Radius kommt schon vom Modal
+  }
+}

@@ -1,3 +1,20 @@
+<ion-modal #datetimeModal [keepContentsMounted]="true" class="full-screen-datetime">
+  <ng-template>
+    <ion-content class="ion-padding">
+      <div class="datetime-container">
+        <ion-datetime 
+          presentation="date"
+          [(ngModel)]="selectedDate" 
+          (ionChange)="loadData(); datetimeModal.dismiss()"
+          size="cover" 
+        ></ion-datetime>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+
+
 
 
 <div class="content">
@@ -25,11 +42,13 @@
         Month
       </ion-button>  
     </div>
-    <div class="selectorItems">
-      <ion-item style="background-color: rgba(0, 0, 0, 0);">
-        <ion-datetime-button  datetime="selectedDateID">{{"test"}}</ion-datetime-button>
-      </ion-item>
-    </div>
+      <div class="selectorItems">
+        <ion-item lines="none" style="--background: transparent; cursor: pointer;" (click)="datetimeModal.present()">
+          <div class="custom-ion-style-button">
+            {{ selectedDate | date: 'dd.MM.yyyy' }}
+          </div>
+        </ion-item>
+      </div>
 
   <div class="selectorItems" slot="end">
     <ion-button
@@ -125,15 +144,4 @@
 </div> 
 
 
-<ion-modal [keepContentsMounted]="true">
-  <ng-template>
-  <ion-datetime 
-    (ionChange)="loadData()"
-    displayFormat="YYYY-MM-DD HH:MM" 
-    pickerFormat="YYYY-MM-DD HH:MM"
-    [(ngModel)]="selectedDate" 
-    id="selectedDateID"
-    presentation="date"
-  ></ion-datetime>
-</ng-template>
-</ion-modal>
+
