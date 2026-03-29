@@ -34,7 +34,7 @@ export class EventComponent  implements OnInit {
 
   eventDetails:EventDetails={
     courseID: "",
-    courseName:"None",
+    courseName:"Select Course",
     type: 1,
     description: "",
     starttime: "",
