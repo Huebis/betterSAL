@@ -44,8 +44,14 @@ def sentNotificationToUserID(db,userID,title,body,notificationType):
 
     
     if notificationType != 6: # 5 ist für Sudo
+
+        if permission[notificationType] == None:
+            return
         if permissions[notificationType] != 1:
             return 
+    
+
+    print("Nachricht ist im Gange")
 
     
 

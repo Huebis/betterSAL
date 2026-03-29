@@ -4,7 +4,7 @@ from database import Database
 import service
 from flask_cors import CORS
 import notification
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 import os
 import uuid
 
@@ -978,8 +978,23 @@ def addEvent():
 
     if kind in [400,450,200]:
         db.addNewEvent(eventID,location,starttime,endtime,description,kind,courseID)
-
+        print("Nachricht wird vorbereitet")
         #if 450, dann Schüler informieren ASAP
+        if kind == 450:
+            print("Nachricht wird vorbereitet")
+            day = datetime.strptime(starttime, "%Y-%m-%d %H:%M")
+            if day.date() == date.today():
+                persons = db.getAllStudentsFromCourse(courseID)[0]
+                for person in persons:
+                    notification.sentNotificationToUserID(db,person,"Krankmeldung","Eine Lehrperson hat sich für heute krank gemeldet",0)
+            
+            day -= timedelta(days=1)
+
+            print(day.date())
+            if day.date() == date.today(): #morgen
+                persons = db.getAllStudentsFromCourse(courseID)[0]
+                for person in persons:
+                    notification.sentNotificationToUserID(db,person,"Krankmeldung","Eine Lehrperson hat sich für morgen krank gemeldet",1)
 
     return jsonify({}), 200
     
