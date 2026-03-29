@@ -1,0 +1,24 @@
+meta {
+  name: downloadFile
+  type: http
+  seq: 25
+}
+
+get {
+  url: http://127.0.0.1:5000/file/{{fileID}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  token: {{token}}
+}
+
+vars:pre-request {
+  fileID: 7c5d210e-fea8-4974-89c0-6ea29bddf7c2
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

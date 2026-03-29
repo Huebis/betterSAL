@@ -1,11 +1,83 @@
 import json
-from flask import Flask, request, Response, render_template, g, jsonify
+from flask import Flask, request, Response, render_template, g, jsonify,send_from_directory
 from database import Database
 import service
 from flask_cors import CORS
+import notification
+from datetime import datetime
+import os
+import uuid
+
 
 
 #source venv/bin/activate 
+def verificationDatatype(parameter, datatype):
+
+
+
+    def isValidUuid(uuid4):
+    
+        if not isinstance(uuid4, str):
+            return False
+
+        try:
+            u = uuid.UUID(uuid4)
+        except ValueError:
+            return False
+        
+        return u.version == 4 and str(u) == uuid4.lower()
+
+
+    def isDateTimeDay(date):
+        if not isinstance(date, str):
+            return False
+
+        try:
+            dt = datetime.strptime(date, "%Y-%m-%d")
+        except ValueError:
+            return False
+
+        return dt.strftime("%Y-%m-%d") == date
+
+    def isDateTimeMinute(date):
+        if not isinstance(date, str):
+            return False
+
+        try:
+            dt = datetime.strptime(date, "%Y-%m-%d %H:%M")
+        except ValueError:
+            return False
+
+        return dt.strftime("%Y-%m-%d %H:%M") == date
+
+    def isString(string):
+        return isinstance(string,str)
+
+
+    def isInt(integer):
+        return isinstance(integer, int)
+    def isList(liste):
+        return isinstance(liste,list)
+    
+
+
+    match datatype:
+        case "dateMinute":
+            return isDateTimeMinute(parameter)
+        case "dateDay":
+            return isDateTimeDay(parameter)
+        case "string":
+            return isString(parameter)
+        case "int":
+            return isInt(parameter)
+        case "uuid4":
+            return isValidUuid(parameter)
+        case "list":
+            return isList(parameter)
+        case _:
+            raise Exception("Mistake in Datatype verifikation")
+            return False
+
 
 
 
@@ -19,46 +91,117 @@ def get_db():
  
 
 
+def isEveryDataNameinObject(testedObject,dataValues):
+    #dataValue list [0] stringname / [1] typ in string
+    for value in dataValues:
+        if value[0] not in testedObject:
+            return False
+        
+        parameter = testedObject[value[0]]
+        
+        print("hello")
+        print(value)
+        if not verificationDatatype(parameter,value[1]):
+            return False
+
+
+
+
+
+
+    return True
+
+
+
+def isAdult(birthDate):
+    today = date.today()
+    return (today.year - birthDate.year - 
+           ((today.month, today.day) < (birthDate.month, birthDate.day))) >= 18
+#return True,UserID, None, None when everything is fine
+#return False,None, error, Fehlernummer when something is wrong
+def tokenAndRoleVerfication(db,token, allowedRoles = None,parentLock = False): # Bei None sind einfach alle Rollen zugelassen
+    if not token:
+        return False, None, jsonify({"error": "Token wurden nicht übermittelt"}), 400
+    if not verificationDatatype(token,"uuid4"):
+        return False, None, jsonify({"error": "Token wurden falsch übermittelt"}), 400
+
+
+    userID = db.getUseridFromToken(token)
+
+    if userID == False:
+        return False, None, jsonify({"error": "token ist nicht valid"}), 450
+
+
+    role = db.getRolefromUserWithUserID(userID)
+
+    if parentLock:
+        if role == 0: #Parent
+            childUserID = db.getChildUserIDWithParentUserID(userID)
+            birthDate = db.getBirthdateWithUserID(childUserID)
+            if isAdult(birthDate):
+                return False, None,jsonify({"error": "user do not have the permission to enter the site"}), 403
+            else:
+                userID = childUserID
+        elif role == 1: #Student
+            birthDate = db.getBirthdateWithUserID(userID)
+            if not isAdult(birthDate):
+                return False, None,jsonify({"error": "user do not have the permission to enter the site"}), 403
+        
+
+
+
+
+    if allowedRoles == None:
+        return True,userID,None,None
+
+
+    
+
+    if role not in allowedRoles:
+        return False, None,jsonify({"error": "user do not have the permission to enter the site"}), 403
+    
+    return True,userID,None,None
+
+    
+
+
 
 
 app = Flask(__name__)
 CORS(app)
 
 
+#Macht Upload Folder ready und speichert Pfad für später, siehe file
+uploadFolder = "userDocuments"
+os.makedirs(uploadFolder, exist_ok=True)
+
+
 
 #ERRORS:
-#0:No error
-#1:User already exists
-#2:
+#450: token is invalid
 
 
 #route musste angepasst werden wegen dem Server
 @app.route('/changePassword', methods=["POST"])
 def requestChangePassword():
 
-
-    token = request.headers.get("token")
-
-
-    if not token:
-        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
-
     data = request.get_json()
 
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if "password" not in data or "newpassword" not in data:
-        return jsonify({"error": "password oder/und neues password wurden nicht übermittelt"}), 400
+    if not isEveryDataNameinObject(data, [["password","string"], ["newpassword","string"]]):
+        return jsonify({"error": "username und password wurden nicht übermittelt"}), 400
 
 
 
+    token = request.headers.get("token")
     db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
 
-    userID = db.getUseridFromToken(token)
+    if not boolien:
+        return json,errorNumber
 
-    if userID == False:
-        return jsonify({"error": "token ist nicht valid"}), 403
 
     password = data["password"]
     newPassword = data["newpassword"]
@@ -70,9 +213,6 @@ def requestChangePassword():
     return jsonify({"error": "password ist nicht valid"}), 403
 
 
-
-
-
 @app.route('/login', methods=["POST"])
 def loginUser():
     data = request.get_json()
@@ -80,8 +220,10 @@ def loginUser():
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if "username" not in data or "password" not in data:
+    if not isEveryDataNameinObject(data, [["username","string"],["password","string"]]):
         return jsonify({"error": "username und password wurden nicht übermittelt"}), 400
+
+      
 
     db = get_db()
     username = data["username"]
@@ -89,9 +231,6 @@ def loginUser():
 
     userID = db.isUserValid_getUserID(username,password)
     
-
-
-
     if userID == False:
         return jsonify({"error": "username and password are wrong"}), 400
 
@@ -99,8 +238,6 @@ def loginUser():
     role = db.getRolefromUserWithUserID(userID)
 
     return jsonify({"token": token, "role": role}), 200
-
-
 
 @app.route('/endSession', methods=["Get"])
 def deletToken():
@@ -118,87 +255,32 @@ def deletToken():
 
     return jsonify({}), 200
 
-
-@app.route('/userData', methods=["Get"])
-def postAllUserInformation():
-
-    token = request.headers.get("token")
-
-
-    if not token:
-        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
-
-
-    db = get_db()
-
-    userID = db.getUseridFromToken(token)
-
-    if userID == False:
-        return jsonify({"error": "token ist nicht valid"}), 403
-
-    userData = db.getAllUserDataWithUserID(userID)
-
-
-    return jsonify({"data": userData}), 200
-
-
-
 @app.route('/getGradesStudent', methods=["Get"])
 def postAllGradesFromUser():
 
     token = request.headers.get("token")
-
-
-    if not token:
-        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
-
-
-
-
-
     db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,[1])
 
-    userID = db.getUseridFromToken(token)
-
-    if userID == False:
-        return jsonify({"error": "token ist nicht valid"}), 403
+    if not boolien:
+        return json,errorNumber
 
 
-    role = db.getRolefromUserWithUserID(userID)
-    if role != 1:#überprüft ob es wirklich ein Schüler*in ist
-        return jsonify({"error": "user do not have the permission to enter the site"}), 403
 
     output = service.getAllGradesforStudents(db,userID)
 
 
     return jsonify({"subjects": output}), 200
 
-
-
 @app.route('/addNewTest', methods=["Post"])
 def addNewTest():
 
     token = request.headers.get("token")
-
-
-    if not token:
-        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
-
-
     db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,[2])
 
-    userID = db.getUseridFromToken(token)
-
-    if userID == False:
-        return jsonify({"error": "token ist nicht valid"}), 403
-
-
-    role = db.getRolefromUserWithUserID(userID)
-    if role != 2:#überprüft ob es wirklich ein Lehrer*in ist
-        return jsonify({"error": "user do not have the permission to change that"}), 403
-
-
-
+    if not boolien:
+        return json,errorNumber
 
     #User ist nun Lehrer und hat gültigen Token
 
@@ -209,26 +291,10 @@ def addNewTest():
     if not data:
         return jsonify({"error": "kein JSON gesendet"}), 400
 
-    if "courseID" not in data:
+
+    if not isEveryDataNameinObject(data,[["courseID","uuid4"],["testName","string"],["weight","int"],["location","string"],["starttime","dateMinute"],["endtime","dateMinute"],["description","string"]]):
         return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
-    if "testName" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
-
-    if "weight" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
-
-    if "location" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
-
-    if "date" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
-    if "starttime" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
-    if "endtime" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
-    if "description" not in data:
-        return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
     courseID = data["courseID"]
     testName = data["testName"]
@@ -246,16 +312,44 @@ def addNewTest():
 
     return jsonify({}), 200
 
+#Teacher only
+@app.route('/deleteTest', methods=["Post"])
+def deleteTest():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,[2])
+
+    if not boolien:
+        return json,errorNumber
+
+    #User ist nun Lehrer und hat gültigen Token
 
 
 
+    data = request.get_json()
 
-    
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
 
-    output = service.getAllGradesforStudents(db,userID)
+
+    if not isEveryDataNameinObject(data,[["eventID","uuid4"]]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
 
 
-    return jsonify({"grades": output}), 200
+    eventID = data["eventID"]
+
+
+    if not db.isUserIDinEvent(userID,eventID):
+        return jsonify({"error": "user do not have the permission to change that"}), 403
+
+
+    db.deleteAllGradesWithEventID(eventID)
+    db.deleteEventWithEventID(eventID)
+    db.deleteExamWithEventID(eventID)
+
+
+    return jsonify({}), 200
 
 
 #Teacher only
@@ -263,97 +357,529 @@ def addNewTest():
 def getAllTests():
 
     token = request.headers.get("token")
-
-
-    if not token:
-        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
-
-
     db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,[2])
 
-    userID = db.getUseridFromToken(token)
-
-    if userID == False:
-        return jsonify({"error": "token ist nicht valid"}), 403
+    if not boolien:
+        return json,errorNumber
 
 
-    role = db.getRolefromUserWithUserID(userID)
-    if role != 2:#überprüft ob es wirklich ein Lehrer*in ist
-        return jsonify({"error": "user do not have the permission to change that"}), 403
 
     output = service.getAllCoursesWithAllExamsFromUserID(db,userID)
 
     return jsonify({"courses": output}), 200
 
 
-
-
-###########Nicht fertig #####################################
 #Teacher only
 @app.route('/getAllGradesFromTest', methods=["get"])
-def getAllGradesFromTest():
+def getAllGradesFromAllStudentsOfTest():
 
     token = request.headers.get("token")
-
-
-    if not token:
-        return jsonify({"error": "Token wurden nicht übermittelt"}), 400
-
-
     db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,[2])
 
-    userID = db.getUseridFromToken(token)
+    if not boolien:
+        return json,errorNumber
 
-    if userID == False:
-        return jsonify({"error": "token ist nicht valid"}), 403
-
-
-    role = db.getRolefromUserWithUserID(userID)
-    if role != 2:#überprüft ob es wirklich ein Lehrer*in ist
-        return jsonify({"error": "user do not have the permission to change that"}), 403
 
     eventID = request.args.get("eventID")
     courseID = request.args.get("courseID")
 
+    if eventID == None or courseID == None:
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+    if not verificationDatatype(eventID,"uuid4"):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    
+    if not verificationDatatype(courseID,"uuid4"):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+
+
+
     if not db.isUserIDinCourse(userID,courseID):
+        return jsonify({"error": "user do not have the permission to change that"}), 403
+
+    grades = service.getAllGradesFromAllStudentsOfTest(db,eventID)
+    exam = service.getAllExamAndEventDataWithEventID(db,eventID)
+
+    return jsonify({"grades": grades,"exam":exam}), 200
+
+
+@app.route('/testFcmToken', methods=["Post"])
+def testFcmToken():
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+    if not isEveryDataNameinObject(data,[["fcmToken","string"]]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+
+    fcmToken = data["fcmToken"]
+
+    print(fcmToken)
+    print("wurde ausgeführt")
+
+    notification.sendNotification(fcmToken,"Test","Der Token funktioniert!!!")
+
+
+    return jsonify({}), 200
+
+
+#Only for teacher
+@app.route('/postAllGradesFromAllStudentsOfTest', methods=["Post"])
+def postAllGradesFromAllStudentsOfTest():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,[2])
+
+    if not boolien:
+        return json,errorNumber
+
+
+
+
+   
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+    if not isEveryDataNameinObject(data, ["grades", "exam"]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+
+    exam = data["exam"]
+    grades = data["grades"]
+
+    if not isEveryDataNameinObject(exam, ["courseID", "eventID"]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+    courseID = exam["courseID"]
+    
+    eventID = exam["eventID"]
+
+    if not db.isUserIDinCourse(userID,courseID):
+        return jsonify({"error": "user do not have the permission to change that"}), 403
+    
+    if not db.isUserIDinEvent(userID,eventID):
         return jsonify({"error": "user do not have the permission to change that"}), 403
 
 
 
+    response = service.updateAllExamAndEventDataWithEventIDAndCourseID(db,exam)
+    if not response:
+        return jsonify({"error": "Objekt war falsch"}), 400
 
-###########################################################
-#Tests#
-########################################
+    service.updateAllGradesFromAllStudentsOfTest(db,grades,eventID)
+
+    return jsonify({}), 200
+
+@app.route('/postFcmToken', methods=["Post"])
+def postFcmToken():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
 
 
 
 
-#Testversuch, ob Dateien Hochgeladen werden können und abgespeichert werden
-@app.route("/upload", methods=["GET","POST"])
-def upload_file():
-    if request.method == "GET":
-        return render_template("upload.html", message="")
+   
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+    #neuerung, wenn nicht uuid bei hardwareID, dann neuzuweisen und prüfen ob fcmToken stimmt
+    if not isEveryDataNameinObject(data, [["fcmToken", "string"], ["hardwareID", "string"]]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    
+    
+    fcmToken = data["fcmToken"]
+    hardwareID = data["hardwareID"]
+    hardwareID = service.postFcmToken(db,userID,fcmToken,hardwareID)
+
+    return jsonify({"hardwareID": hardwareID}), 200
+
+
+
+
+@app.route('/getUserData', methods=["Get"])
+def getAllUserData():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+
+
+    output = service.getAllUserData(db,userID)
+
+
+    return jsonify(output), 200
+
+@app.route('/postUserData', methods=["post"])
+def postAllUserInformation():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+
+    
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+
+    if not isEveryDataNameinObject(data,[["userName", "string"],["email", "string"],["notifAbsenceOfTeacherToday","int"],["notifAbsenceOfTeacherTomorrow","int"],["notifExamTomorrow","int"],["notifEventTomorrow","int"],["notifAbsenceDueTomorrow","int"]]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+
+    
+
+
+    boolien = service.postAllUserInformation(db,data,userID)
+
+    if boolien:
+        return jsonify({}), 200
+
+
+    return jsonify({"error": "Einträge im JSON sind falsch"}), 400
+
+
+@app.route('/getSchedule', methods=["Get"])
+def getSchedule():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+
+
+    starttime = request.args.get("starttime")
+    endtime = request.args.get("endtime")
+
+
+
+    if starttime == None or endtime == None:
+        return jsonify({"error": "Fehlender Parameter"}), 400
+
+    if not verificationDatatype(starttime,"dateMinute"):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    
+    if not verificationDatatype(endtime,"dateMinute"):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+
+    output = service.getSchedule(db,userID,starttime,endtime)
+
+
+    return jsonify({"schedule": output}), 200
+
+
+@app.route('/absence', methods=["post"])
+def changeAndMergeAbsence():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+
+    requestType = request.args.get("requestType")
+    
+    if requestType == None:
+        jsonify({"error": "Fehlender Parameter"}), 400
+
+
+    if requestType == "change":
+      
+        if not isEveryDataNameinObject(data,[["absenceID","uuid4"],["excused","int"],["description", "string"],["fileID", "uuid4"]]):
+            return jsonify({"error": "Einträge im JSON fehlen"}), 400
+        
+        if service.changeAbsence(db,userID,db.getRolefromUserWithUserID(userID),data):
+            return jsonify({}), 200
+    
+    if requestType == "merge":
+        if not isEveryDataNameinObject(data,[["absenceIDList","list"]]):
+            return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+            
+        
+        if service.mergeAbsence(db,userID,db.getRolefromUserWithUserID(userID),data["absenceIDList"]):
+            return jsonify({}), 200
+
+
+
+    return jsonify({"error": "Ein Fehler ist aufgetreten"}), 400
+
+
+@app.route('/absence', methods=["get"])
+def getAbsence():
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+    
+
+    output = []
+
+    role = db.getRolefromUserWithUserID(userID)
+
+    if role == 2:
+        output = service.getAbsenceTeacher(db,userID)
+
+
+    if role < 2:
+        output = []
+        output.append(service.getAbsenceUser(db,userID))
+    
+
+    return jsonify({"absence": output}), 200
+
+    
+@app.route('/absence', methods=["delete"])
+def deleteAbsenceEvent():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
+
+    if not boolien:
+        return json,errorNumber
+
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+
+
+    
+    if not isEveryDataNameinObject(data,[["userID","uuid4"],["eventID","uuid4"],["absenceID","uuid4"]]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+        
+
+    #EventID mit CourseID austauschen::::
+    db.deleteAbsenceEventInEvent(userID,data["userID"],data["eventID"],data["absenceID"])
+
+
+
+
+    return jsonify({}), 200
+
+
+
+@app.route('/presenceList', methods=["get"])
+def getAnwesenheitsliste():
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
+
+    if not boolien:
+        return json,errorNumber
+    
+
+    starttime = request.args.get("starttime")
+    endtime = request.args.get("endtime")
+    eventID = request.args.get("eventID")
+    courseID = request.args.get("courseID")
+
+
+    if starttime == None or endtime == None or eventID == None or courseID == None :
+        return jsonify({"error": "Fehlender Parameter"}), 400
+    if not verificationDatatype(starttime,"dateMinute"):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    
+    if not verificationDatatype(endtime,"dateMinute"):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    print("hdhdhdh")
+    if not verificationDatatype(eventID,"string"):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    print("Hello")
+    if not verificationDatatype(courseID,"uuid4"):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+ 
+
+    
+    print(eventID)
+    
+
+
+
+    output = service.getAnwesenheitsliste(db,userID,courseID,eventID,starttime,endtime)
+
+    if output == False:
+        return jsonify({"error": "Fehler bei der Verarbeitung"}), 400
+    
+
+    return jsonify({"anwesenheitsliste": output}), 200
+
+
+
+@app.route('/presenceList', methods=["post"])
+def postAnwesenheitsliste():
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token,allowedRoles = [2])
+
+    if not boolien:
+        return json,errorNumber
+    
+
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "kein JSON gesendet"}), 400
+    
+
+    starttime = request.args.get("starttime")
+    endtime = request.args.get("endtime")
+    eventID = request.args.get("eventID")
+    courseID = request.args.get("courseID")
+
+    if starttime == None or endtime == None or eventID == None or courseID == None :
+        return jsonify({"error": "Fehlender Parameter"}), 400
+    if not verificationDatatype(starttime,"dateMinute"):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    if not verificationDatatype(endtime,"dateMinute"):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    if not verificationDatatype(eventID,"string"):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    if not verificationDatatype(courseID,"uuid4"):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    
+    if not isEveryDataNameinObject(data,[["anwesenheitsliste","list"]]):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+
+    anwesenheitsliste = data["anwesenheitsliste"]
+    
+
+
+
+    output = service.postAnwesenheitsliste(db,userID,courseID,eventID,starttime,endtime,anwesenheitsliste)
+
+    if output == False:
+        return jsonify({"error": "Fehler bei der Verarbeitung"}), 400
+    
+
+    return jsonify({}), 200
+    
+
+    
+
+
+@app.route("/file", methods=["POST"])
+def uploadFile():
+
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+
 
 
 
     if "file" not in request.files:
-        return render_template("upload.html", message="Keine Datei ausgewählt")
+        return jsonify({"error": "No file was sent"}), 400
 
     file = request.files["file"]
+    
 
     if file.filename == "":
-        return render_template("upload.html", message="Keine Datei ausgewählt")
+        return jsonify({"error": "No selected file"}), 400
 
 
+
+    #Permission muss zuerst noch abgefragt werden!!!!!!
+    #Fehlt noch!!!!!
+
+
+
+    oldFileName = file.filename
+    fileID, newFileName = db.addNewFile(oldFileName)
+    file.save(os.path.join(uploadFolder, newFileName))
+
+    return jsonify({"fileID": fileID}), 200
+
+
+@app.route("/file/<fileID>", methods=["GET"])
+def download_file(fileID):
     
-    fileId = service.saveNewFile(file)
-    return render_template("upload.html", message=f"Datei erfolgreich gespeichert: {fileId}")
+    token = request.headers.get("token")
+    db = get_db()
+    boolien,userID,json,errorNumber = tokenAndRoleVerfication(db,token)
+
+    if not boolien:
+        return json,errorNumber
+
+
+    if fileID == "" or fileID == None:
+        return jsonify({"error": "User do not have permission"}), 400
+    if not verificationDatatype(fileID, "uuid4"):
+        return jsonify({"error": "Einträge im JSON fehlen"}), 400
+    
+    if not service.isUserHavePermissionToFileID(db,userID,fileID):
+        return jsonify({"error": "User do not have permission"}), 400
+
+
+
+
+    #get File
+
+
+    nameBefor,nameAfter = db.getNamesOfFile(fileID)
+
+    print(nameBefor)
+    print(nameAfter)
+
+    path = os.path.join(uploadFolder, nameAfter)
+    if not os.path.exists(path):
+         return jsonify({"error": "fileID don't exist"}), 400
+    
+
+    return send_from_directory(
+        uploadFolder,
+        nameAfter,
+        as_attachment=True,
+        download_name=nameBefor
+    )
 
 
 
 
 
+#Nicht anfassen!!!
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0", debug=True)

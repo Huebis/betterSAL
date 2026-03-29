@@ -1,0 +1,25 @@
+meta {
+  name: getAllGradesFromTest
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://127.0.0.1:5000/getAllGradesFromTest?courseID=204deaa4-13c5-4e4d-9b28-9abfceb29d45&eventID=eda047ec-c97c-4c22-b5a3-c9b2b5a0d442
+  body: none
+  auth: inherit
+}
+
+params:query {
+  courseID: 204deaa4-13c5-4e4d-9b28-9abfceb29d45
+  eventID: eda047ec-c97c-4c22-b5a3-c9b2b5a0d442
+}
+
+headers {
+  token: {{token}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

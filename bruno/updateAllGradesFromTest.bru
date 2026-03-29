@@ -1,0 +1,141 @@
+meta {
+  name: updateAllGradesFromTest
+  type: http
+  seq: 9
+}
+
+post {
+  url: http://127.0.0.1:5000/postAllGradesFromAllStudentsOfTest
+  body: json
+  auth: inherit
+}
+
+headers {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "exam": {
+      "courseID": "204deaa4-13c5-4e4d-9b28-9abfceb29d45",
+      "description": "Dies ist die Describtion oder Description",
+      "endtime": "2026-02-05 12:30",
+      "eventID": "eda047ec-c97c-4c22-b5a3-c9b2b5a0d442",
+      "location": "P001",
+      "starttime": "2026-02-05 11:30",
+      "testName": "Contrôle de mathématiques",
+      "weight": 0.3
+    },
+    "grades": [
+      {
+        "fileID": "",
+        "firstName": "Eliah",
+        "grade": 0,
+        "lastName": "Hueber",
+        "message": "",
+        "userID": "3f871dc4-415a-46bf-8b91-1532e125e9e4"
+      },
+      {
+        "fileID": "",
+        "firstName": "Emil",
+        "grade": 0,
+        "lastName": "Peterson",
+        "message": "",
+        "userID": "a0790307-ca71-45b2-9fbe-637ba4cb1409"
+      },
+      {
+        "fileID": "",
+        "firstName": "Nahia",
+        "grade": 0,
+        "lastName": "Weyeneth",
+        "message": "",
+        "userID": "308b9c31-b0bf-420e-8cd4-e681ad99a18b"
+      },
+      {
+        "fileID": "",
+        "firstName": "Paul",
+        "grade": 0,
+        "lastName": "Konzili",
+        "message": "",
+        "userID": "77453326-04f2-4c5d-9d39-a15dd2d39130"
+      },
+      {
+        "fileID": "",
+        "firstName": "Esben",
+        "grade": 0,
+        "lastName": "Duss",
+        "message": "",
+        "userID": "1cb1e092-14fc-4b8a-aaf7-3f91f0d94052"
+      },
+      {
+        "fileID": "",
+        "firstName": "Moritz",
+        "grade": 0,
+        "lastName": "Brotbeck",
+        "message": "",
+        "userID": "66a5eb25-9fea-42b8-9050-5c88314dafdd"
+      },
+      {
+        "fileID": "",
+        "firstName": "Manuel",
+        "grade": 0,
+        "lastName": "Kron",
+        "message": "",
+        "userID": "11da832f-3539-4e9c-a0ee-8df0fa333ecf"
+      },
+      {
+        "fileID": "",
+        "firstName": "Aurel",
+        "grade": 0,
+        "lastName": "Richterich",
+        "message": "",
+        "userID": "7305ad43-5899-42c4-bbeb-3ef106c3fda2"
+      },
+      {
+        "fileID": "",
+        "firstName": "Loic",
+        "grade": 0,
+        "lastName": "Eicher",
+        "message": "",
+        "userID": "4c47d398-db13-4d5a-a9c9-0a10c54a0c76"
+      },
+      {
+        "fileID": "",
+        "firstName": "Walter",
+        "grade": 0,
+        "lastName": "Kutz",
+        "message": "",
+        "userID": "75882e20-a200-475d-a3b5-18e61a7da00b"
+      },
+      {
+        "fileID": "",
+        "firstName": "Theo",
+        "grade": 0,
+        "lastName": "Böhm",
+        "message": "",
+        "userID": "ee2ef9a2-537e-40fb-81d9-bec82d866769"
+      },
+      {
+        "fileID": "",
+        "firstName": "Marlon",
+        "grade": 0,
+        "lastName": "Auchli",
+        "message": "",
+        "userID": "7160ef16-ec01-474e-be2c-0bd11955422a"
+      },
+      {
+        "fileID": "",
+        "firstName": "Melanie",
+        "grade": 0,
+        "lastName": "Anklin",
+        "message": "",
+        "userID": "586ae703-f428-4245-bcd3-fba76c32ea57"
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

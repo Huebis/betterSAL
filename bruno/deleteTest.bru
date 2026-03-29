@@ -1,0 +1,26 @@
+meta {
+  name: deleteTest
+  type: http
+  seq: 10
+}
+
+post {
+  url: http://127.0.0.1:5000/deleteTest
+  body: json
+  auth: inherit
+}
+
+headers {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "eventID": "f7802569-3c9c-4144-bf06-fb36f9571911"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

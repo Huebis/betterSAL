@@ -1,0 +1,24 @@
+meta {
+  name: uploadFile
+  type: http
+  seq: 24
+}
+
+post {
+  url: http://127.0.0.1:5000/file
+  body: multipartForm
+  auth: inherit
+}
+
+headers {
+  token: {{token}}
+}
+
+body:multipart-form {
+  file: @file(/home/eliahh/Downloads/otp.txt) @contentType(file)
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

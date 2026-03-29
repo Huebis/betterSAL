@@ -1,0 +1,28 @@
+meta {
+  name: deleteAbsence
+  type: http
+  seq: 21
+}
+
+delete {
+  url: http://127.0.0.1:5000/absence
+  body: json
+  auth: inherit
+}
+
+headers {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "userID": "11fa9804-fb93-4449-a1c8-5de0fe776edb",
+    "eventID": "a50e5714-f82e-4aee-a100-c18272294674",
+    "absenceID": "5af271e8-cef1-48da-bc9b-34200c0501b8"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

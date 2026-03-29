@@ -1,0 +1,37 @@
+meta {
+  name: postUserData
+  type: http
+  seq: 17
+}
+
+post {
+  url: http://127.0.0.1:5000/postUserData
+  body: json
+  auth: inherit
+}
+
+headers {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "className": "M4G",
+    "email": "test@testtest.ch",
+    "firstName": "Eliah",
+    "lastName": "Hueber",
+    "major": "A",
+    "notifAbsenceDueTomorrow": 1,
+    "notifAbsenceOfTeacherToday": 0,
+    "notifAbsenceOfTeacherTomorrow": 0,
+    "notifEventTomorrow": 0,
+    "notifExamTomorrow": 0,
+    "role": 1,
+    "userName": "Eliah"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
