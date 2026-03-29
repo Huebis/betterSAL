@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { IonButton} from '@ionic/angular/standalone';
 import { ApiService } from '../../service/api';
 import { Router } from '@angular/router';
 import { DropdownComponent } from "src/app/component/dropdown/dropdown.component";
@@ -19,7 +19,7 @@ export interface Course{
   selector: 'app-teacher-grades',
   templateUrl: './teacher-grades.subpage.html',
   styleUrls: ['./teacher-grades.subpage.scss'],
-  imports: [CommonModule, DropdownComponent],
+  imports: [CommonModule, DropdownComponent,IonButton],
 
 })
 export class TeacherGradesSubpage  implements OnInit {

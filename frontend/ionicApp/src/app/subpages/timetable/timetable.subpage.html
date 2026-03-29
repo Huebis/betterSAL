@@ -36,13 +36,13 @@
           Normaler Unterricht
         } 
         @else if (number == 1) {
-          Unterrichtsausfall
+          Lehrer Krank
         } 
         @else if (number == 2) {
-          Lehrer Krank
+         Unterrichtsausfall
         }
         @else if (number == 3) {
-          Prüfungen
+         Prüfungen
         }
       </ion-button>  
       
@@ -96,6 +96,7 @@
     <div class="schedule grid">
       @for (day of this.days;track day){
         <div  class="day">
+          
           @for (event of day.schedule;track $index){
             <button (click)="showEventDetail(event)" >
               <div

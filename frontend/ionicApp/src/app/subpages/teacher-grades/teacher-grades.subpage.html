@@ -5,15 +5,14 @@
       <div>{{ item.date }}</div>
       <div>{{ item.weight }}</div>
       <div>
-        <button (click)="editGrade(headerItems.courseID,item.eventID)">
-          Change Exam
-        </button>
+        <ion-button color="primary" (click)="editGrade(headerItems.courseID,item.eventID)">Prüfung ändern</ion-button>
+
       </div>
   </div>
 </ng-template>
 <ng-template #headerTemplate let-item>
   <p> {{item.courseName}}</p>
-  <button (click)="editGrade(''+item.courseID,'0')"> Add Exam</button>
+  <ion-button color="primary" (click)="editGrade(''+item.courseID,'0')">Neue Prüfung erstellen</ion-button>
 </ng-template>
 
 
