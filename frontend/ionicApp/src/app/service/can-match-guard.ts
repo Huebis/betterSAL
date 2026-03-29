@@ -1,3 +1,6 @@
+//Gard um zu entscheiden wer die seite sehen darf/soll (Lehrer und schüler manchmal unterschiedlich)
+
+
 import { Injectable } from '@angular/core';
 import { CanMatch, Route, UrlSegment } from '@angular/router';
 import { AuthService } from './auth';

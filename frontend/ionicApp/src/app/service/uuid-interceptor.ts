@@ -1,3 +1,5 @@
+//fügt bei jeder anfrage UUID hinzu (falls forhanden ansonst example UUID)
+
 import { Injectable } from '@angular/core';
 import {
   HttpEvent,

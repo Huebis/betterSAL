@@ -1,3 +1,8 @@
+//Service um alle anfragen zu senden (Post, Get, uploadFile, downloadfile)
+//fügt informationen hinzu und sendet and die BaseURL+ subpage
+
+
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, Observable, of, switchMap, tap } from 'rxjs';
