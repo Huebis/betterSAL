@@ -1,0 +1,29 @@
+<ng-template #itemTemplate let-item>
+  <div style="display: grid;
+    grid-template-columns: 1fr 1fr 1fr;">
+      <div>{{ item.testName }}</div>
+      <div>{{ item.date | date:'dd.MM.yyyy'}}</div>
+      <div>{{ item.date}}</div>
+      
+      <app-file-download item.fileID></app-file-download>
+      @if (item.grade){
+        <div>{{ item.grade }}</div>
+      }
+      
+  </div>
+</ng-template>
+<ng-template #headerTemplate let-item>
+  <p> {{item.name}}</p>
+  <p> {{this.getAverage(item.grades)}}</p>
+</ng-template>
+
+
+
+@for (subject of subjects; track $index){
+  <app-dropdown 
+    [headerItems]="subject" 
+    [items]="subject.grades" 
+    [headerTemplate]="headerTemplate" 
+    [itemTemplate]="itemTemplate">
+  </app-dropdown>
+}

@@ -1,0 +1,290 @@
+
+
+
+
+
+@for (student of students; track $index) {
+  <app-dropdown [items]="[student]" [headerTemplate]="studentHeader">
+    <ng-template #studentHeader>
+      <div>
+        <h2>{{ student.firstName }} {{ student.lastName }}</h2>
+        <ion-badge color="primary">{{ student.notExcused.length }} Offen</ion-badge>
+        <ion-badge> </ion-badge>
+        <ion-badge color="primary" style="margin-left: 10px;" >{{ student.excused.length }} Hängig</ion-badge>
+      </div>
+    </ng-template>
+
+    <div class="student-content">
+    
+      <app-dropdown 
+          [items]="student.notExcused" 
+          [headerItems]="headerItems"
+          [headerTemplate]="notExcusedHeaderTemplate" 
+          [itemTemplate]="notExcusedItemTemplate"
+        > </app-dropdown>
+
+      <app-dropdown 
+          [items]="student.excused" 
+          [headerItems]="headerItems"
+          [headerTemplate]="excusedHeaderTemplate" 
+          [itemTemplate]="excusedItemTemplate"
+        > 
+      </app-dropdown>
+
+      <app-dropdown 
+          [items]="student.finished" 
+          [headerItems]="headerItems"
+          [headerTemplate]="finishedHeaderTemplate" 
+          [itemTemplate]="finishedItemTemplate"
+          >
+      </app-dropdown>
+    </div>
+  </app-dropdown>
+
+
+
+
+<!-- temlates-->
+
+<ng-template let-headerItems #notExcusedHeaderTemplate let-student="student">
+    <div>
+        <p> Offen </p>
+        <ion-button (click)="$event.stopPropagation(); activateMerge(headerItems, student)">
+            @if(headerItems.merge){
+                <p>Save</p>
+            }@else{
+                <p>Merge</p>
+            }
+        </ion-button>
+    </div>
+</ng-template>
+
+
+
+
+<ng-template #notExcusedItemTemplate let-item let-headerItems="headerItems">
+    <ion-grid>
+  <ion-row>
+    <ion-col size="2">Zeit</ion-col>
+    <ion-col size="3">Beschreibung</ion-col>
+    <ion-col size="1">Anzahl Lektionen</ion-col>
+    <ion-col size="2">Status</ion-col>
+    <ion-col size="2">File</ion-col>
+    <ion-col size="2">Aktion</ion-col>
+  </ion-row>
+</ion-grid>
+  <ion-grid>
+    <ion-row class="ion-align-items-center">
+      
+      <ion-col size="2">
+        {{ item.events[0].starttime | date:'dd.MM.yyyy HH:mm' }} - 
+        {{ item.events[item.events.length - 1].endtime | date:'dd.MM.yyyy HH:mm' }}
+      </ion-col>
+
+      <ion-col size="3">
+        @if (item.change) {
+          <ion-input [(ngModel)]="item.description" fill="outline" aria-label="Description"></ion-input>
+        } @else {
+          {{item.description}}
+        }
+      </ion-col>
+
+      <ion-col size="1">
+        {{item.absenceAmount}}
+      </ion-col>
+
+      <ion-col size="2">
+        @if (item.change){
+                @if (item.excused){
+                    <ion-button (click)="item.excused=0">lassen</ion-button>
+                }@else{
+                    <ion-button (click)="item.excused=2">abschliessen</ion-button>
+                }
+            }@else{
+                @if (item.excused == 0)
+                {Offen}
+                @if (item.excused == 1)
+                {Abgeschlossen}
+            }
+      </ion-col>
+
+      <ion-col size="2">
+
+
+        @if (item.change){
+            <app-file-upload [item]="item"></app-file-upload>
+        }@else {
+            <app-file-download [fileID]="item.fileID"></app-file-download>
+        }
+        </ion-col>
+
+      <ion-col size="2">
+        <div>
+            @if (headerItems.merge){
+            <div></div>
+            <ion-checkbox [(ngModel)]="item.selected"></ion-checkbox>
+            }
+           @else if (item.change) {
+             <ion-button size="small" (click)="safe(item)">Save</ion-button>
+           } @else {
+             <ion-button size="small" fill="outline" (click)="item.change=true">Edit</ion-button>
+           }
+        </div>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+</ng-template>
+
+
+
+<ng-template let-headerItems #excusedHeaderTemplate let-student="student">
+    <div>
+        <p> Hängig </p>
+    </div>
+</ng-template>
+
+
+<ng-template #excusedItemTemplate let-item let-headerItems="headerItems">
+    <ion-grid>
+  <ion-row>
+    <ion-col size="2">Zeit</ion-col>
+    <ion-col size="3">Beschreibung</ion-col>
+    <ion-col size="1">Anzahl Lektionen</ion-col>
+    <ion-col size="2">Status</ion-col>
+    <ion-col size="2">File</ion-col>
+    <ion-col size="2">Aktion</ion-col>
+  </ion-row>
+</ion-grid>
+  <ion-grid>
+    <ion-row class="ion-align-items-center">
+      
+      <ion-col size="2">
+        {{ item.events[0].starttime | date:'dd.MM.yyyy HH:mm' }} - 
+        {{ item.events[item.events.length - 1].endtime | date:'dd.MM.yyyy HH:mm' }}
+      </ion-col>
+
+      <ion-col size="3">
+          {{item.description}}
+
+      </ion-col>
+
+      <ion-col size="1">
+        {{item.absenceAmount}}
+      </ion-col>
+
+      <ion-col size="2">
+        @if (item.change){
+                @if (item.excused){
+                    <ion-button (click)="item.excused=1">lassen</ion-button>
+                }@else{
+                    <ion-button (click)="item.excused=2">abschliessen</ion-button>
+                }
+            }@else{
+                @if (item.excused == 0)
+                {Offen}
+                @if (item.excused == 1)
+                {Hängig}
+            }
+      </ion-col>
+
+      <ion-col size="2">
+
+
+
+            <app-file-download [fileID]="item.fileID"></app-file-download>
+
+        </ion-col>
+
+      <ion-col size="2">
+        <div>
+
+           @if (item.change) {
+             <ion-button size="small" (click)="safe(item)">Save</ion-button>
+           } @else {
+             <ion-button size="small" fill="outline" (click)="item.change=true">Edit</ion-button>
+           }
+        </div>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+</ng-template>
+
+<ng-template let-headerItems #finishedHeaderTemplate>
+    <div>
+        <p> Abgeschlossen </p>
+    </div>
+</ng-template>
+
+
+
+<ng-template #finishedItemTemplate let-item let-headerItems="headerItems" let-student="student">
+    <ion-grid>
+  <ion-row>
+    <ion-col size="2">Zeit</ion-col>
+    <ion-col size="3">Beschreibung</ion-col>
+    <ion-col size="1">Anzahl Lektionen</ion-col>
+    <ion-col size="2">Status</ion-col>
+    <ion-col size="2">File</ion-col>
+    <ion-col size="2">Aktion</ion-col>
+  </ion-row>
+</ion-grid>
+  <ion-grid>
+    <ion-row class="ion-align-items-center">
+      
+      <ion-col size="2">
+        {{ item.events[0].starttime | date:'dd.MM.yyyy HH:mm' }} - 
+        {{ item.events[item.events.length - 1].endtime | date:'dd.MM.yyyy HH:mm' }}
+      </ion-col>
+
+      <ion-col size="3">
+          {{item.description}}
+
+      </ion-col>
+
+      <ion-col size="1">
+        {{item.absenceAmount}}
+      </ion-col>
+
+      <ion-col size="2">
+        @if (item.change){
+                @if (item.excused == 2){
+                    <ion-button (click)="item.excused=0">Offen</ion-button>
+                }@else{
+                    <ion-button (click)="item.excused=2">Lassen</ion-button>
+                }
+            }@else{
+                @if (item.excused == 0)
+                {Offen}
+                @if (item.excused == 1)
+                {Hängig}
+                @if (item.excused == 2)
+                {Abgeschlossen}
+            }
+      </ion-col>
+
+      <ion-col size="2">
+
+            <app-file-download [fileID]="item.fileID"></app-file-download>
+
+        </ion-col>
+
+      <ion-col size="2">
+        <div>
+          @if (item.change) {
+             <ion-button size="small" (click)="safe(item)">Save</ion-button>
+           } @else {
+             <ion-button size="small" fill="outline" (click)="item.change=true">Edit</ion-button>
+           }
+
+        </div>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+</ng-template>
+
+
+
+}

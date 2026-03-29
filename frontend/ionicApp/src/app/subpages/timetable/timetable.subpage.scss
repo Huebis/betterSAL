@@ -1,0 +1,139 @@
+:root{
+    --type0Display:abolute;
+    --type1Display:abolute;
+    --type2Display:abolute;
+}
+
+
+.content{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+
+};
+.selectors{
+    width: 100%;
+    height: 100px;
+}
+.fullSchedule{
+    flex: 1;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+
+}
+.labels{
+    width: 100%;
+    height: 25px;
+}
+.schedule{
+    position: relative;
+    width: 100%;
+    flex: 1;
+    
+}
+.event{
+    position: absolute;
+    padding: 0 2px;
+}
+.grid{
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    display: grid;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+.day{
+    position: relative;
+
+}
+.eventData{
+    border-radius: 5px;
+    //background-color: green;
+    height: 100%;
+    position:relative;
+}
+.subject{
+    position:absolute;
+    left: 2px;
+    top: 0;
+}
+.location{
+    position:absolute;
+    right: 2px;
+    top: 0;
+}
+.schedule{
+    position: relative;
+
+}
+.weekday{
+    display: inline;
+}
+.date{
+    display: inline;
+}
+ion-button.selected{
+    opacity: 100%;
+}
+ion-button.unselected{
+    opacity: 50%;
+}
+
+.type0{
+    background-color: green;
+    display: var(--type0Display);
+}
+.type450{
+    background-color:var(--ion-color-danger) ;
+    display: var(--type1Display);
+}
+.type400{
+    background-color:var(--ion-color-warning);
+    display: var(--type2Display);
+}
+.type666{
+    background-color:var(--ion-color-primary);
+    display: var(--type3Display);
+}
+
+
+
+// new
+
+.selctors {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  gap: 20px; // Abstand zwischen Datums-Zeile und Button-Zeile
+
+  .date-navigation-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+  }
+
+  .switch {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    .type-divider {
+      width: 1px;
+      height: 24px;
+      margin: 0 8px;
+    }
+  }
+}
+
+
+

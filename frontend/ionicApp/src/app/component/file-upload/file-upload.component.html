@@ -1,0 +1,17 @@
+@if (item.fileID===""){
+  <ion-button (click)="fileInput.click()" color="primary">
+  Upload
+</ion-button>
+
+<input 
+  #fileInput 
+  type="file" 
+  (change)="onFileSelect($event, this.item)" 
+  style="display: none;" 
+/>
+}@else{
+  <app-file-download [fileID]="item.fileID"> Show file</app-file-download>
+  <ion-button color="primary" (click)="changeFile()">Delete File</ion-button>
+  
+  
+}

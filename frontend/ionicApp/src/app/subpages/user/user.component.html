@@ -1,0 +1,79 @@
+<div class="parent">
+  <div class="content">
+    <h2>Settings</h2>
+    <div class="userinformations">
+      <h3>User Information</h3>
+      <div>
+        <div>
+          <h4>Name</h4>
+          <p>{{user.firstName}} {{user.lastName}}</p>
+        </div>
+        <div>
+          <h4>Username</h4>
+          @if (editUserInformations) {
+            <ion-input
+              (ionChange)="somethingChanged=false"
+              type="text"
+              [(ngModel)]="user.userName"
+              name="userName"
+              label="userName" 
+              placeholder="Enter userName"
+              label-placement="floating" 
+              fill="outline">
+            </ion-input>
+          }@else{
+            <p>{{user.userName}}</p>
+          }
+        </div>
+        <div>
+          <h4>Email</h4>
+          @if (editUserInformations) {
+            <ion-input
+              (ionChange)="somethingChanged=false"
+              type="email"
+              [(ngModel)]="user.email"
+              name="email"
+              label="email" 
+              placeholder="Enter email"
+              label-placement="floating" 
+              fill="outline">
+            </ion-input>
+          }@else{
+            <p>{{user.email}}</p>
+          }
+        </div>
+      </div>
+      <ion-button (click)="editUserInformation()">
+        Edit
+      </ion-button>
+
+    </div>
+    <div class="notifications">
+      <h3>Notifications</h3>
+      <div>
+        <h4>Absence</h4>
+        <ion-toggle [(ngModel)]="user.notifAbsenceDueTomorrow" (ngModelChange)="somethingChanged=false">Absence Due to Tomorrow</ion-toggle>
+      </div>
+      <div>
+        <h4>Ommited Lesson</h4>
+        <ion-toggle [(ngModel)]="user.notifAbsenceOfTeacherToday" (ngModelChange)="somethingChanged=false">Absence of Teacher Today</ion-toggle>
+        <ion-toggle [(ngModel)]="user.notifAbsenceOfTeacherTomorrow" (ngModelChange)="somethingChanged=false">Absence of Teacher Tomorrow</ion-toggle>
+      </div>
+      <div>
+        <h4>Events</h4>
+        <ion-toggle [(ngModel)]="user.notifEventTomorrow" (ngModelChange)="somethingChanged=false">Event Tomorrow</ion-toggle>
+      </div>
+      <div>
+        <h4>Exams</h4>
+        <ion-toggle [(ngModel)]="user.notifExamTomorrow" (ngModelChange)="somethingChanged=false">Exam Tomorrow</ion-toggle>
+
+        <ion-toggle [(ngModel)]="user.notifGradeChange" (ngModelChange)="somethingChanged=false">Exam Changed</ion-toggle>
+
+      </div>    
+    </div>
+    <ion-button [disabled] = "somethingChanged" (click)="safe()">
+      Save
+    </ion-button>
+    
+  </div>
+</div>

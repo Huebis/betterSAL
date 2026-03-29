@@ -1,0 +1,20 @@
+meta {
+  name: RS addEvent
+  type: http
+  seq: 27
+}
+
+post {
+  url: https://huebis.dev/betterSAL/api/testFcmToken
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {"fcmToken":"3b328022-ff8b-4900-803e-3ff0cdd406ed"}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

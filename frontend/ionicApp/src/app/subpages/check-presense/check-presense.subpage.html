@@ -1,0 +1,14 @@
+<div class="header">
+    <ion-item> Time: {{this.starttime}} - {{this.endtime}} </ion-item>
+    <ion-button [disabled]="somethingChanged" [slot]="'end'" (click)="safePresenseList()">Safe {{this.sumOfPresentStudents}}</ion-button>
+    <ion-list class="list">
+        @for (student  of students; track $index){
+            <ion-item>
+               <ion-item> {{student.firstName}}</ion-item>
+               <ion-item> {{student.lastName}}</ion-item>
+    
+                <ion-toggle [(ngModel)]="student.isPresent" (ngModelChange)="checkChanged()"></ion-toggle>
+            </ion-item>
+        }
+    </ion-list>
+</div>

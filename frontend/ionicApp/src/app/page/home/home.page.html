@@ -1,18 +1,35 @@
 <ion-header [translucent]="true">
   <ion-toolbar class="navbar">
-    <ion-item>
       <ion-button (click)="navigateTo('/home/grades')">
         Grades
       </ion-button>
-    </ion-item>
-    <ion-item>
       <ion-button (click)="navigateTo('/home/absences')">
         Absences
       </ion-button>
-    </ion-item>
+      <ion-button (click)="navigateTo('/home/timetable')">
+        Timetable
+      </ion-button>
+      <!--
+      <ion-button (click)="navigateTo('/home/presense/1/1/1/1')">
+        presense
+      </ion-button>
+      -->
+      <ion-button (click)="navigateTo('/home/user')">
+        user
+      </ion-button>
     <ion-item slot="end">
       <app-user-small></app-user-small>
     </ion-item>
+    <!-- (nur zum testen nicht mehr in gebrauch, muss noch gelöscht werden)
+      <ion-button (click)="sendNoti()">
+        showLocalNotification
+      </ion-button>
+      -->
+
+    <!-- (nur zum testen, nicht mehr in gebrauch, muss noch gelöscht werden)
+    <app-file-upload></app-file-upload>
+    <app-file-download></app-file-download>
+    -->
   </ion-toolbar>
 </ion-header>
 

@@ -8,9 +8,16 @@ from datetime import datetime, date, timedelta
 import os
 import uuid
 
+#####################################################################
+### Dies ist das main file, immer python main.py machen um das Programm zu starten
+### Hier sind alle API-Schnittstelle und die grundlegendsten Funktionen
+
+### Falls die Datenbank neu aufgesetzt werden muss, dann mit python setupDatabse.py
 
 
-#source venv/bin/activate 
+
+
+#überprüft ob der Parameter den richtigen Datentype besitzt, sonst return False
 def verificationDatatype(parameter, datatype):
 
 
@@ -85,7 +92,7 @@ def verificationDatatype(parameter, datatype):
 
 
 
-
+# Wird gebraucht, damit es einen Datenbankzugriff gibt und nicht jedesmal neu erstellt werden muss, muss immer mitgegeben werden
 def get_db():
     db = getattr(g, '_database', None)
     print("1")
@@ -95,7 +102,7 @@ def get_db():
     return db
  
 
-
+#überprüft ob der richtige Input im JSON enthalten sind und auch im richtigen Datentype (wird verificationDatatype aufgerufen)
 def isEveryDataNameinObject(testedObject,dataValues):
     #dataValue list [0] stringname / [1] typ in string
     for value in dataValues:
@@ -120,7 +127,7 @@ def isEveryDataNameinObject(testedObject,dataValues):
     return True
 
 
-
+#wird geschaut ob jemand 18 Jahre ist anhand des Geburtsdatums
 def isAdult(birthDate):
     print(birthDate)
     today = date.today()
@@ -128,6 +135,9 @@ def isAdult(birthDate):
     birthDate = datetime.strptime(birthDate, "%Y-%m-%d")
     return (today.year - birthDate.year - 
            ((today.month, today.day) < (birthDate.month, birthDate.day))) >= 18
+
+
+#Wickelt ganze Tokenkontrolle ab und return je nach dem eine Fehlermeldung oder UserID          
 #return True,UserID, None, None when everything is fine
 #return False,None, error, Fehlernummer when something is wrong
 def tokenAndRoleVerfication(db,token, allowedRoles = None,parentLock = False): # Bei None sind einfach alle Rollen zugelassen
@@ -192,11 +202,9 @@ os.makedirs(uploadFolder, exist_ok=True)
 
 
 
-#ERRORS:
-#450: token is invalid
 
 
-#route musste angepasst werden wegen dem Server
+#Schnittstelle um Passwort zu wechseln
 @app.route('/changePassword', methods=["POST"])
 def requestChangePassword():
 
@@ -228,6 +236,8 @@ def requestChangePassword():
     return jsonify({"error": "password ist nicht valid"}), 403
 
 
+
+#Generelle Login-Schnittstelle, Benutzernamen + Passwort -> Token (15 min gültig)
 @app.route('/login', methods=["POST"])
 def loginUser():
     data = request.get_json()
@@ -254,6 +264,9 @@ def loginUser():
 
     return jsonify({"token": token, "role": role}), 200
 
+
+
+#Token wird gelöscht um Sitzung frühzeitig beenden zu können
 @app.route('/endSession', methods=["Get"])
 def deletToken():
 
@@ -270,6 +283,9 @@ def deletToken():
 
     return jsonify({}), 200
 
+
+#Nur für Schüler
+#Schüler bekommt alle Tests und Fächer
 @app.route('/getGradesStudent', methods=["Get"])
 def postAllGradesFromUser():
 
@@ -287,6 +303,9 @@ def postAllGradesFromUser():
 
     return jsonify({"subjects": output}), 200
 
+
+#Nur für Lehrer
+#Lehrer können einen neuen Test eintragen
 @app.route('/addNewTest', methods=["Post"])
 def addNewTest():
 
@@ -326,7 +345,8 @@ def addNewTest():
 
     return jsonify({}), 200
 
-#Teacher only
+#Nur für Lehrer
+#Lehrer können einen Test wieder löschen
 @app.route('/deleteTest', methods=["Post"])
 def deleteTest():
 
@@ -366,7 +386,8 @@ def deleteTest():
     return jsonify({}), 200
 
 
-#Teacher only
+#Nur für Lehrer
+#Lehrer bekommt alle Tests von allen Klassen (ohne Noten von den Schüler)
 @app.route('/getAllTests', methods=["get"])
 def getAllTests():
 
@@ -384,7 +405,8 @@ def getAllTests():
     return jsonify({"courses": output}), 200
 
 
-#Teacher only
+#Nur für Lehrer
+#Lehrer bekommt detaillierte Informationen über einen Test, alle Schüler mit allen Noten usw.
 @app.route('/getAllGradesFromTest', methods=["get"])
 def getAllGradesFromAllStudentsOfTest():
 
@@ -726,7 +748,6 @@ def deleteAbsenceEvent():
 
 
     return jsonify({}), 200
-
 
 
 

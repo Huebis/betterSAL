@@ -1,0 +1,35 @@
+
+.examValues{
+    --ion-item-background: transparent;
+    --ion-item-background-focused: transparent;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr; 
+    gap: 10px; 
+    margin-top: 10px;
+}
+.gradesValues{
+    --ion-item-background: transparent;
+    --ion-item-background-focused: transparent;
+    display: grid;
+    grid-template-columns: 2fr 5fr 1fr 1fr; 
+    gap: 10px; 
+}
+
+ion-content{
+    ion-content {
+    /* Erzwingt den Abstand nach oben, basierend auf der Geräte-Statusbar */
+    --padding-top: var(--ion-safe-area-top);
+}
+}
+
+
+.subheader {
+  /* Berücksichtigt die Notch/Statusbar oben */
+  padding-top: var(--ion-safe-area-top);
+  background: var(--ion-toolbar-background, var(--ion-color-step-50, #fff));
+}
+
+
+ion-input{
+    margin-top: 5px;
+}

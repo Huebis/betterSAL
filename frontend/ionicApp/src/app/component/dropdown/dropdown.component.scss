@@ -1,0 +1,97 @@
+.dropdown{
+    width: 100%;
+}
+.dropdown-button{
+    width: 100%;
+}
+
+
+// neu
+
+ 
+
+.dropdown-container {
+  margin: 12px 8px;
+  border-radius: 12px;
+  // Nutzt den Standard-Hintergrund für Items (weiß in Light, dunkel in Dark)
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  // Dezente Border, die sich der Textfarbe anpasst
+  border: 1px solid var(--ion-color-step-150, rgba(0,0,0,0.1));
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+
+  &.is-open {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.dropdown-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+  
+  // Die Textfarbe folgt dem System-Theme
+  color: var(--ion-text-color, #000);
+
+  .header-wrapper {
+    flex: 1;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .toggle-icon {
+    font-size: 1.4rem;
+    // Nutzt die primäre App-Farbe (meist blau)
+    color: var(--ion-color-primary);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+.is-open .toggle-icon {
+  transform: rotate(180deg);
+}
+
+.dropdown-content {
+  border-top: 1px solid var(--ion-color-step-100, rgba(0,0,0,0.05));
+  
+  .dropdown-item {
+    padding: 14px 16px;
+    color: var(--ion-text-color, #333);
+    border-bottom: 1px solid var(--ion-color-step-100, rgba(0,0,0,0.05));
+    animation: fadeIn 0.4s ease-out forwards;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    // Hover-Effekt angepasst an Ionic Steps
+    &:hover {
+      background: var(--ion-color-step-100, rgba(0,0,0,0.05));
+    }
+    
+    &:active {
+      background: var(--ion-color-step-200, rgba(0,0,0,0.1));
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(-8px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+
+

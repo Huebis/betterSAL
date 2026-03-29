@@ -1,0 +1,159 @@
+
+
+<div class="content">
+  <div class="selctors">
+    <div class="switch">
+      <ion-button
+      [ngClass]="{'selected':selectedPeriod==='day',
+          'unselected':selectedPeriod!=='day',
+        }"
+        (click)="selectPeriod('day')">
+        Day
+      </ion-button>
+      <ion-button
+      [ngClass]="{'selected':selectedPeriod==='week',
+          'unselected':selectedPeriod!=='week',
+        }"
+        (click)="selectPeriod('week')">
+        Week
+      </ion-button>
+      <ion-button
+        [ngClass]="{'selected':selectedPeriod==='month',
+          'unselected':selectedPeriod!=='month',
+        }"
+        (click)="selectPeriod('month')">
+        Month
+      </ion-button>
+
+   
+      @for (number of [0,1,2,3]; track $index) {   
+        <ion-button
+        [ngClass]="{'selected':elementsShownByType[number],
+            'unselected':!elementsShownByType[number],
+          }"
+        (click)="changeShown(number)">
+        @if (number == 0) {
+          Normaler Unterricht
+        } 
+        @else if (number == 1) {
+          Lehrer Krank
+        } 
+        @else if (number == 2) {
+         Unterrichtsausfall
+        }
+        @else if (number == 3) {
+         Prüfungen
+        }
+      </ion-button>  
+      
+      } 
+      
+        <!--<ion-datetime-button  datetime="selectedDateID"></ion-datetime-button> 
+        <ion-button (click)="open = true">
+          Datum wählen
+        </ion-button>
+        -->
+        <div class="date-navigation-row">
+          <ion-button (click)="changeDate(-1)">
+            <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear">
+            Datum wechsel
+          </ion-button>
+          <ion-button (click)="changeDate(1)">
+            <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
+          </ion-button>
+        </div>
+       
+    </div>
+  </div> 
+  <div class="fullSchedule">
+    <div class="labels">
+      <div class="dayLabels grid">
+        @if (this.selectedPeriod==='month') {
+          @for (weekday of ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]; track weekday){
+            <div>
+              <p class="weekday">
+                {{weekday}}
+              </p>
+            </div>
+          }
+        }@else{
+          @for (day of this.days;track day){
+            
+            <div> 
+              <p class="weekday">
+                {{calculateWeekdayLabel(day.date)}}
+              </p>
+              <p class="date">
+                {{calculateDayMonthLabel(day.date)}}
+              </p>
+            </div>
+          }
+        }
+      </div>
+    </div>
+    <div class="schedule grid">
+      @for (day of this.days;track day){
+        <div  class="day">
+          
+          @for (event of day.schedule;track $index){
+            <button (click)="showEventDetail(event)" >
+              <div
+                [ngClass]="'type'+event.type"
+                class="event"
+                [ngStyle]="{'top':event.top+'%', 'left':event.left+'%', 'width':event.width + '%', 'height':event.height+ '%'}"
+                >
+                <div class="eventData">
+                  <div slot="start" class="subject">
+                    {{event.subject}}
+                  </div>
+                  <div slot="end" class="location">
+                    {{event.location}}
+                  </div>
+                </div>
+              </div>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div> 
+
+<!--
+<ion-modal [keepContentsMounted]="true">
+  <ion-datetime 
+    id="selectedDateID"
+    (ionChange)="loadData()"
+    displayFormat="YYYY-MM-DD HH:MM" 
+    pickerFormat="YYYY-MM-DD HH:MM"
+    [(ngModel)]="selectedDate" 
+    presentation="date"
+  ></ion-datetime>
+</ion-modal>
+
+open = false;
+
+<ion-datetime
+  id="selectedDateID"
+  [(ngModel)]="selectedDate"
+  presentation="date"
+  (ngModelChange)="loadData()">
+</ion-datetime>
+
+
+
+
+<ion-modal [isOpen]="open">
+  <ion-datetime
+    id="selectedDateID"
+    (ionChange)="loadData()"
+    displayFormat="YYYY-MM-DD HH:MM" 
+    pickerFormat="YYYY-MM-DD HH:MM"
+    [(ngModel)]="selectedDate" 
+    presentation="date"
+  ></ion-datetime>
+</ion-modal>
+
+-->
