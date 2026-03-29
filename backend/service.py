@@ -5,12 +5,17 @@ from datetime import datetime,timedelta
 import time
 import notification
 
+########################################################
+### service.py ist dafür da um den Code auszulagern von main.py
+### Bei main.py sind die Schnittstellen und werden die Inputs engegengenommen
+### Falls es aufwenige bzw. lange Schritte sind, wird diese im service.py gemacht und danach wieder zu main.py returned
+
 
 
 
 uploadFolder = "user_documents"
 
-
+#weiterführung von mai.py
 def getAllGradesforStudents(db, userID):
     
     courses = db.getALLCourseWithUserID(userID)
@@ -42,7 +47,10 @@ def getAllGradesforStudents(db, userID):
         output.append(courseDict)
 
     return output
-            
+
+
+#erstellt in den verschiedenen Tables die Daten für den neuen Test
+#Table Event, Grade und Exam 
 def addNewExamenForCourseWithEventAndDefaultGrades(db,courseID,examenName,weight,location,starttime,endtime,describtion):
     eventID = str(uuid.uuid4())
     db.addNewExamen(courseID,eventID,examenName,weight)
@@ -50,7 +58,8 @@ def addNewExamenForCourseWithEventAndDefaultGrades(db,courseID,examenName,weight
     db.addNewEvent(eventID,location,starttime,endtime,describtion, 666,courseID)
     return True
 
-#Teacher Only
+
+#Returned alle Alle Kurse und alle Tests in diesen Kursen
 def getAllCoursesWithAllExamsFromUserID(db,userID): 
      
     courses = db.getALLCourseWithUserID(userID)
@@ -78,6 +87,7 @@ def getAllCoursesWithAllExamsFromUserID(db,userID):
 
     return output
 
+#Retured alle Noten, Description usw. von allen Schüler in einem Test
 def getAllGradesFromAllStudentsOfTest(db, eventID):
 
     grades = db.getAllGradesPlusNamesWithEventID(eventID)
@@ -95,7 +105,9 @@ def getAllGradesFromAllStudentsOfTest(db, eventID):
     
     return gradeslist
 
-
+#Inverse funktion von obendran
+#Funktion pflegt alle Änderungen wieder in DB
+# !!!!! erstellt automatisch Notifcations bei Änderungen
 def updateAllGradesFromAllStudentsOfTest(db,grades,eventID):
     for gradeDict in grades:
         if "userID" not in gradeDict:
@@ -157,7 +169,7 @@ def updateAllGradesFromAllStudentsOfTest(db,grades,eventID):
     return
 
 
-
+#returned alle Daten über eine Prüfung
 def getAllExamAndEventDataWithEventID(db,eventID):
     examData = db.getAllExamAndEventDataWithEventID(eventID)
 
@@ -174,6 +186,7 @@ def getAllExamAndEventDataWithEventID(db,eventID):
 
     return examDict
 
+#pflegt alle Datenänderungen einer Prüfung wieder in DB ein
 def updateAllExamAndEventDataWithEventIDAndCourseID(db,exam):
     if "testName" not in exam:
         return False
@@ -202,6 +215,8 @@ def updateAllExamAndEventDataWithEventIDAndCourseID(db,exam):
 
     return True
 
+#Pflegt neuen FCM-Token in DB ein
+#Falls schon vorhanden von User, dann macht er gar nichts
 def postFcmToken(db,userID,fcmToken):
     if db.isFcmTokenExistWithUserID(userID,fcmToken):
         return
@@ -211,7 +226,7 @@ def postFcmToken(db,userID,fcmToken):
     db.addNewFcmToken(userID,fcmToken)
     return
 
-
+#bekommt alle wichtigen Userinformationen
 def getAllUserData(db,userID):
     userData = db.getAllUserDataWithUserID(userID)
     for a in range(7,13,1):
@@ -236,6 +251,7 @@ def getAllUserData(db,userID):
     }
     return outputDict
 
+#Inversion von oben, pflegt alle Änderungen der Userinformationen wieder in DB ein
 def postAllUserInformation(db,data,userID):
     userName = data["userName"]
     email = data["email"]
@@ -263,6 +279,7 @@ def postAllUserInformation(db,data,userID):
     return True
 
 
+#returned alle Lektionen von einem Tag xx
 def getScheduleOfOneDay(db,userID,date,starttime=None,endtime=None):
     schedule = []
 
@@ -443,7 +460,7 @@ def getScheduleOfOneDay(db,userID,date,starttime=None,endtime=None):
 
 
 
-
+#Ruft ein bis mehrmals getScheduleOfOneDay auf um alle Lektionen vom Zeitpuntk A bis B zu bekommen
 def getSchedule(db,userID,starttime,endtime):
     starttime = datetime.strptime(starttime, "%Y-%m-%d %H:%M")
     endtime = datetime.strptime(endtime, "%Y-%m-%d %H:%M")
@@ -499,7 +516,8 @@ def getSchedule(db,userID,starttime,endtime):
         
 
 
-
+#Wird bei getAbsenceUser gebraucht um Wertigkeit der Absenzen zu berechen
+#Rechnet die Zeit von Zeitpunkt A zu B aus
 def getTimeDifferenz(time1,time2):
     diff = abs(time1 - time2)
     minutes = int(diff.total_seconds() / 60)
@@ -507,12 +525,13 @@ def getTimeDifferenz(time1,time2):
 
 
 
-
+#Nimmt die Zeit und dividiert sie durch 45 um Anzahl an "lektionen" zu bekommen
+#bzw. um die Wertigkeit der Zeit zu berechenn für Absencen (rundet ab)
 def getNumberofAbsencesWithTimeDifferenz(timeDifferenz):
     timeDifferenzInLection = int(timeDifferenz / 45)
     return timeDifferenzInLection 
 
-
+#User bekommt alle Absenzen in drei verschiedenen Arrays, je nach Status
 def getAbsenceUser(db,userID):
     #finish Absence
     arrayFinishAbsence = db.getAbsenceWithUserIDAndType(userID,2)
@@ -646,7 +665,7 @@ def getAbsenceUser(db,userID):
     }
     return outputDict
 
-
+#führt für jeden Schüler getAbsenceUser aus um alle Daten für den Klassenlehrer zu bekommen
 def getAbsenceTeacher(db,userID):
     className = db.getClassNameWithUserID(userID)
 
@@ -670,7 +689,7 @@ def getAbsenceTeacher(db,userID):
 
 
 
-
+#Überprüft ob Person / userId ein Klassenlehrer von Schüler / UserID ist
 def isClassTeacher(db,teacherUserID,studentUserID):
     className = db.getClassNameWithUserID(teacherUserID)
 
@@ -698,7 +717,7 @@ def isClassTeacher(db,teacherUserID,studentUserID):
     return False
 
 
-
+#erlaubt aus zwei Absenzen eine Zu machen und fügt alle einzelnen verpassten Lektionen zusammen 
 def mergeAbsence(db,userID,role,absenceIDlist):
 
     # userid,endday,excused,description,fileid
@@ -783,6 +802,7 @@ def mergeAbsence(db,userID,role,absenceIDlist):
 
     return
 
+#verändert eine Absenze bzw dessen Daten, speichert Veränderngen (wenn gültig mit Zugriffsrecht) in DB
 def changeAbsence(db,userID,role,absence):
     #userid,endday,excused,description,fileid
     absenceID = absence["absenceID"]
@@ -836,7 +856,8 @@ def changeAbsence(db,userID,role,absence):
 
 
 
-#only for Teacher
+#nur für Lehrer
+# löscht eine "verpasste" Lektion bzw. das Event davon in der DB
 def deleteAbsenceEvent(db,teacherUserID,studentUserID,eventID,absenceID):
 
     if not isClassTeacher(db,teacherUserID,studentUserID):
@@ -847,7 +868,7 @@ def deleteAbsenceEvent(db,teacherUserID,studentUserID,eventID,absenceID):
 
 
 
-
+#überprüft ob das Event mit diesen Daten überhaupt in der DB existiert
 def isEventExists(db,courseID,eventID,starttime,endtime):
     if eventID == "" or eventID == "nothing":
         time1 = datetime.strptime(starttime, "%Y-%m-%d %H:%M")
@@ -862,7 +883,7 @@ def isEventExists(db,courseID,eventID,starttime,endtime):
 
 
 
-
+# erstellt eine anwesenheitsliste für Lehrer
 def getAnwesenheitsliste(db,userID,courseID,eventID,starttime,endtime):
     if not isEventExists(db,courseID,eventID,starttime,endtime):
         return False
@@ -901,7 +922,7 @@ def getAnwesenheitsliste(db,userID,courseID,eventID,starttime,endtime):
     
     return output
         
-        
+#Inversion von getAnwesenheitsliste, speichert alle Änderungen in DB       
 def postAnwesenheitsliste(db,userID,courseID,eventID,starttime,endtime,anwesenheitsliste):
 
     databaseAnwesenheitsliste = getAnwesenheitsliste(db,userID,courseID,eventID,starttime,endtime)
@@ -940,7 +961,7 @@ def postAnwesenheitsliste(db,userID,courseID,eventID,starttime,endtime,anwesenhe
 
 
 
-
+#überprüft ob User Zugriff auf File hat, returned Bool 
 def isUserHavePermissionToFileID(db,userID,fileID):
 
 

@@ -4,7 +4,9 @@ from argon2.exceptions import VerifyMismatchError
 import uuid
 import service
 
-
+#############################################
+## Dieses File kann eigentlich ignoriert werden, es wird genutzt, damit die DB automatisch neu aufgesetzt werden kann
+## dieses File füllt auch gerade Testwerte ein nur python SetupDatabase.py und alles wird neu aufgesetzt
 
 db = database.Database()
 

@@ -467,7 +467,9 @@ def testFcmToken():
     return jsonify({}), 200
 
 
-#Only for teacher
+#Nur für Lehrer
+#Inverse Funktion von getAllGradesFromTest, User kann alles genau so (verändert) wieder zurückschicken
+#danach werden die Daten in der DB angepasst
 @app.route('/postAllGradesFromAllStudentsOfTest', methods=["Post"])
 def postAllGradesFromAllStudentsOfTest():
 
@@ -520,6 +522,8 @@ def postAllGradesFromAllStudentsOfTest():
 
     return jsonify({}), 200
 
+
+#User postet den FCM-Token und dieser wird in DB gespeichert
 @app.route('/postFcmToken', methods=["Post"])
 def postFcmToken():
 
@@ -566,7 +570,7 @@ def postFcmToken():
 
 
 
-
+#User erhält alle wichtigen Informationen über sich
 @app.route('/getUserData', methods=["Get"])
 def getAllUserData():
 
@@ -583,6 +587,9 @@ def getAllUserData():
 
     return jsonify(output), 200
 
+
+#Inverse Funktion von getUserData, User kann alles genau gleich (veränderten Werten) wieder zurück schicken
+#Änderungen werden in DB gespeichert
 @app.route('/postUserData', methods=["post"])
 def postAllUserInformation():
 
@@ -616,6 +623,7 @@ def postAllUserInformation():
     return jsonify({"error": "Einträge im JSON sind falsch"}), 400
 
 
+#User erhält alle Unterrichtslektionen in einem Zeitabschnitt
 @app.route('/getSchedule', methods=["Get"])
 def getSchedule():
 
@@ -647,7 +655,8 @@ def getSchedule():
 
     return jsonify({"schedule": output}), 200
 
-
+#Api-Schnittstelle falls Lehrer oder Schüler Absencen ändern oder zusammenfügen möchten.
+#Je ob Lehrer oder Schüler gibt es unterschiedliche Rechte
 @app.route('/absence', methods=["post"])
 def changeAndMergeAbsence():
 
@@ -692,7 +701,9 @@ def changeAndMergeAbsence():
 
     return jsonify({"error": "Ein Fehler ist aufgetreten"}), 400
 
-
+# Lehrer wie auch SuS bekommen bekommen alle Absencen
+#SuS bekommen ihre eigene
+#Lehrer bekommen eine Liste von SuS mit ihren Absencen, aber nur bei Klassenlehrer, anonst gibt es gar nichts
 @app.route('/absence', methods=["get"])
 def getAbsence():
     token = request.headers.get("token")
@@ -718,7 +729,9 @@ def getAbsence():
 
     return jsonify({"absence": output}), 200
 
-    
+
+#Nur für Lehrer
+#Absenzen-Events können hier gelöscht werden   
 @app.route('/absence', methods=["delete"])
 def deleteAbsenceEvent():
 
@@ -750,7 +763,8 @@ def deleteAbsenceEvent():
     return jsonify({}), 200
 
 
-
+#Nur für Lehrer
+#Lehrer bekommt eine Präsenzliste für eine Lektion
 @app.route('/presenceList', methods=["get"])
 def getAnwesenheitsliste():
     token = request.headers.get("token")
@@ -815,7 +829,9 @@ def getAnwesenheitsliste():
     return jsonify({"anwesenheitsliste": output, "lesson": lesson}), 200
 
 
-
+#Nur für Lehrer
+#Inverse von Präsenzliste
+#Lehrer schicken genau die gleiche Liste von presenceList (get) wieder zurück (angepasst), Änderungen werden in DB übernommen
 @app.route('/presenceList', methods=["post"])
 def postAnwesenheitsliste():
     token = request.headers.get("token")
@@ -881,7 +897,8 @@ def postAnwesenheitsliste():
 
     
 
-
+# User kann file auf den Server laden
+# bekommt File-ID zurück und muss die bei Grade, Absence usw. einfügen
 @app.route("/file", methods=["POST"])
 def uploadFile():
 
@@ -918,6 +935,7 @@ def uploadFile():
     return jsonify({"fileID": fileID}), 200
 
 
+#Inversion von /file (post), User bekommt File zurück, falls er Rechte darauf hat
 @app.route("/file/<fileID>", methods=["GET"])
 def download_file(fileID):
     
@@ -961,8 +979,8 @@ def download_file(fileID):
     )
 
 
-
-
+#Nur für Lehrer
+#Lehrer könen Krankmeldungen, Lektionsabsagen und Mutationen eintragen
 @app.route("/addEvent", methods=["Post"])
 def addEvent():
     
@@ -1019,7 +1037,7 @@ def addEvent():
 
     return jsonify({}), 200
     
-
+#User bekommt alle Course in denen er sich befindet
 @app.route("/getCourses", methods=["Get"])
 def getCourses():
     token = request.headers.get("token")
@@ -1054,6 +1072,8 @@ def getCourses():
 
 
 #Nicht anfassen!!!
+#Start vom Programm
+#threaded=False, gab probleme wegen gleichzeitigen DB zugriffen, so hat es funktioniert
 
 
 if __name__ == '__main__':

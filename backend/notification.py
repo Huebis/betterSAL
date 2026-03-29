@@ -1,11 +1,18 @@
 import firebase_admin
 from firebase_admin import credentials, messaging
 
+######################################
+## in diesem File werden Notifications versendet mithilfe von Firebase, daher auch ihr Import
+
+
+
+# Speicher für den Privat-key für die Notification über Google
+# Dieses File ist nicht in Github zu finden, bin nicht blöde :), muss manuel kopiert und referenziert werden
 cred = credentials.Certificate("bettersal-firebase-adminsdk-fbsvc-06bd88d65c.json")
 firebase_admin.initialize_app(cred)
 
 
-
+#Absenden einer Nachricht für Push-Nachrichten aber auch falls User in der App ist (dafür ist data)
 def sendNotification(token, title, body):
     message = messaging.Message(    
         notification=messaging.Notification(
@@ -27,7 +34,8 @@ def sendNotification(token, title, body):
 
 
 
-
+#Hauptfunktion, überprüft zuerst ob User diese Notification erhalten möchte, falls Ja versucht er die Nachricht zu senden
+#falls ein FCMToken nicht mehr gültig ist, wird er gelöscht
 def sentNotificationToUserID(db,userID,title,body,notificationType):
     #Permission von user für notificationType abfragen.
 
@@ -56,7 +64,7 @@ def sentNotificationToUserID(db,userID,title,body,notificationType):
     
 
 
-    #list of fcmToken (but tuple)
+
     AllFcmToken = db.getAllFcmTokenFromUserID(userID)
 
     for fcmToken in AllFcmToken:
