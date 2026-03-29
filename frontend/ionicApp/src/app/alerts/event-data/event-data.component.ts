@@ -2,6 +2,7 @@ import {IonHeader,IonToolbar,IonTitle,IonButtons,IonButton,IonContent,IonList,Io
 import { Component, Input,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from "@angular/router";
+import { ApiService } from 'src/app/service/api';
 
 @Component({
   selector: 'app-event-data',
@@ -15,11 +16,10 @@ export class EventDataComponent implements OnInit {
   @Input() event: any;
   @Input() role: any;
 
-  constructor(private modalController: ModalController,private router: Router) {}
+  constructor(private modalController: ModalController,private router: Router,private api:ApiService) {}
 
   ngOnInit() {
-    // Falls das Datum als String kommt, stellen wir sicher, dass es ein Date-Objekt ist
-    // oder wir nutzen die Slice-Methode direkt im HTML.
+
   }
 
   dismiss() {
@@ -31,6 +31,37 @@ export class EventDataComponent implements OnInit {
     this.modalController.dismiss();
     this.router.navigate(['home/presense',this.event.courseID,this.event.starttime, this.event.endtime, this.event.eventID]);
 
+  }
+  changeEventToSickTeacher(){
+    let data:any={
+        courseID: this.event.courseID,
+        eventID: this.event.eventID,
+        type: 450,
+        description: this.event.description ?? '',
+        starttime: this.event.starttime,
+        endtime: this.event.endtime,
+        location: this.event.location,
+        fileID: this.event.fileID ?? ''
+      }
+      console.log(data)
+      this.api.sendRequestPost(data,"addEvent").subscribe();
+      this.modalController.dismiss({ refreshed: true });
+  }
+
+    cancelLection(){
+    let data:any={
+        courseID: this.event.courseID,
+        eventID: this.event.eventID,
+        type: 400,
+        description: this.event.description ?? '',
+        starttime: this.event.starttime,
+        endtime: this.event.endtime,
+        location: this.event.location,
+        fileID: this.event.fileID ?? ''
+      }
+      console.log(data)
+      this.api.sendRequestPost(data,"addEvent").subscribe();
+      this.modalController.dismiss({ refreshed: true });
   }
 }
 

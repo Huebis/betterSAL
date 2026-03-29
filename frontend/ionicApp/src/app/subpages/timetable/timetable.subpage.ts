@@ -63,7 +63,7 @@ export class TimetableSubpage  implements OnInit {
 
   selectedPeriod:string='week';
 
-  elementsShownByType:Array<boolean>=[true,true,true];
+  elementsShownByType:Array<boolean>=[true,true,true,true];
 
 
   scale:number = 6.60; //11h*60min*0.95
@@ -194,6 +194,12 @@ export class TimetableSubpage  implements OnInit {
         }
     });
     await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data?.refreshed) {
+      this.loadData(); // Aktualisiert die Liste ohne kompletten Reload
+    }
+    
   }
 
   calculateWeekdayLabel(date:string):string{

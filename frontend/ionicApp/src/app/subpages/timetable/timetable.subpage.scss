@@ -53,7 +53,7 @@
 }
 .eventData{
     border-radius: 5px;
-    background-color: green;
+    //background-color: green;
     height: 100%;
     position:relative;
 }
@@ -88,13 +88,17 @@ ion-button.unselected{
     background-color: green;
     display: var(--type0Display);
 }
-.type1{
-    background-color: red;
+.type450{
+    background-color:var(--ion-color-danger) ;
     display: var(--type1Display);
 }
-.type2{
-    background-color: yellow;
+.type400{
+    background-color:var(--ion-color-warning);
     display: var(--type2Display);
+}
+.type666{
+    background-color:var(--ion-color-primary);
+    display: var(--type3Display);
 }
 
 

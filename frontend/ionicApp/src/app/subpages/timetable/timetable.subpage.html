@@ -26,13 +26,24 @@
       </ion-button>
 
    
-      @for (number of [0,1,2]; track $index) {   
+      @for (number of [0,1,2,3]; track $index) {   
         <ion-button
         [ngClass]="{'selected':elementsShownByType[number],
             'unselected':!elementsShownByType[number],
           }"
         (click)="changeShown(number)">
-        Type{{number}}
+        @if (number == 0) {
+          Normaler Unterricht
+        } 
+        @else if (number == 1) {
+          Unterrichtsausfall
+        } 
+        @else if (number == 2) {
+          Lehrer Krank
+        }
+        @else if (number == 3) {
+          Prüfungen
+        }
       </ion-button>  
       
       } 
