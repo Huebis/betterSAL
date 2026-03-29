@@ -99,6 +99,11 @@ export class TeacherAbsencesSubpage implements OnInit {
       this.students = v.absence || []; 
     });
   }
+  sendData(item:any){
+    this.api.sendRequestPost(item,"absence?requestType=change").subscribe();
+    item.change=false;
+    this.loadData();
+  }
 
   activateMerge(headerItems: any, student: User) {
     if (headerItems.merge) {

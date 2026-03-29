@@ -100,24 +100,23 @@
             <p>
                 {{item.events[0].starttime}} - {{item.events[item.events.length-1].endtime}}
             </p>
-            <p>
+            <div>
                 @if (item.change){
                     <ion-input
+                        [(ngModel)]="item.description"
                         (ionChange)="headerItems.somethingChanged=false"
                         type="text"
-                        [(ngModel)]="item.description"
                         name="description"
                         label="Description" 
                         placeholder="Enter description"
                         label-placement="floating" 
-                        fill="outline" 
-                        value="test">
+                        fill="outline">
                     </ion-input>
                 }@else{
                     {{item.description}}
                 }
             
-        </p>
+            </div>
         <p> 
             {{item.absenceAmount}} 
         </p>
