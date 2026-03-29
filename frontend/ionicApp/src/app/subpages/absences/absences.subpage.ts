@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/service/api';
 import { DropdownComponent } from "../../component/dropdown/dropdown.component";
-import { IonCheckbox, IonButton } from "@ionic/angular/standalone";
+import { IonCheckbox, IonButton, IonInput, IonCol, IonRow, IonGrid } from "@ionic/angular/standalone";
 import { FormsModule } from '@angular/forms';
 import { FileUploadComponent } from "src/app/component/file-upload/file-upload.component";
 import { FileDownloadComponent } from "src/app/component/file-download/file-download.component";
 import { IonicModule } from "@ionic/angular";
 import { Head } from 'rxjs';
 import { TimeDisplayComponent } from "src/app/component/time-display/time-display.component";
-
+import { DatePipe, CommonModule } from '@angular/common';
 
 export interface Event{
   courseName: string
@@ -46,7 +46,7 @@ export interface HeaderItems{
   selector: 'app-absences',
   templateUrl: './absences.subpage.html',
   styleUrls: ['./absences.subpage.scss'],
-  imports: [DropdownComponent, FormsModule, FileUploadComponent, FileDownloadComponent, TimeDisplayComponent, IonButton,IonCheckbox,IonicModule],
+  imports: [DropdownComponent, FormsModule, FileUploadComponent, FileDownloadComponent, TimeDisplayComponent, IonButton,IonCheckbox,IonInput,IonCheckbox,IonCol,IonRow,IonGrid,DatePipe, CommonModule],
 })
 export class AbsencesSubpage  implements OnInit {
   data:any;

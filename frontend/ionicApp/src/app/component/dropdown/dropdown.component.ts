@@ -2,15 +2,18 @@ import { CommonModule } from '@angular/common';
 import {Component, Input } from '@angular/core';
 
 import { TimeDisplayComponent } from '../time-display/time-display.component';
-import { IonIcon } from '@ionic/angular/standalone'; 
 import { addIcons } from 'ionicons'; 
 import { chevronDownOutline } from 'ionicons/icons';
+
+import {IonIcon, IonHeader,IonToolbar,IonTitle, IonButtons, IonContent, IonButton, IonInput,IonCheckbox} from "@ionic/angular/standalone";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
   styleUrls: ['./dropdown.component.scss'],
-  imports: [CommonModule,IonIcon],
+  standalone: true,
+  imports: [CommonModule,IonIcon, IonHeader,IonToolbar,IonTitle, IonButtons, IonContent, IonButton, IonInput,IonCheckbox,FormsModule],
 })
 export class DropdownComponent {
   @Input() headerItems:any={}
@@ -26,3 +29,5 @@ export class DropdownComponent {
     this.isOpen = !this.isOpen;
   }
 }
+
+
