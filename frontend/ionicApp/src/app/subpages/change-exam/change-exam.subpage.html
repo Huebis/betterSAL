@@ -1,4 +1,4 @@
-
+<ion-header [translucent]="true">
 <div class="subheader">
   <ion-toolbar>
     <ion-list class="examValues">
@@ -71,6 +71,7 @@
     </ion-item>
   </ion-toolbar>
 </div>
+</ion-header>
 <ion-content>
   <div>
   @if (this.eventID!=0){
@@ -123,7 +124,7 @@
       id="date"
       displayFormat="YYYY-MM-DD HH:MM" 
       pickerFormat="YYYY-MM-DD HH:MM"
-      [(ngModel)]="this.starttime"
+      [(ngModel)]="this.data.exam.starttime"
       presentation="date"
     ></ion-datetime>
   </ng-template>

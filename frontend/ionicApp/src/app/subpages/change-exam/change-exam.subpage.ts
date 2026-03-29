@@ -38,7 +38,7 @@ export interface Data{
   selector: 'app-change-exam',
   templateUrl: './change-exam.subpage.html',
   styleUrls: ['./change-exam.subpage.scss'],
-  imports: [FormsModule, IonInput, IonDatetime, IonItem, IonButton, IonDatetimeButton, IonModal, IonList, IonContent, IonToolbar, FileUploadComponent],
+  imports: [FormsModule, IonInput, IonDatetime, IonItem, IonButton,IonHeader, IonDatetimeButton, IonModal, IonList, IonContent, IonToolbar, FileUploadComponent],
 
 })
 export class ChangeExamSubpage  implements OnInit {
@@ -82,12 +82,13 @@ export class ChangeExamSubpage  implements OnInit {
   }
   getData(){
     this.api.sendRequestGet({"courseID":this.courseID,"eventID":this.eventID},"getAllGradesFromTest").subscribe( v =>{
-      v.exam.starttime = v.exam.starttime.replace(" ","T");
-      v.exam.endtime = v.exam.endtime.replace(" ","T");
-      console.log(v.exam.endtime.replace(" ","T"));
-      this.data=v;
+
+
+      this.data = v;
+      this.data.exam.starttime = v.exam.starttime.replace(" ", "T");
+      this.data.exam.endtime = v.exam.endtime.replace(" ", "T");    
       console.log(this.data)
-      
+            
       this.somethingChanged=true;
     })
   }
