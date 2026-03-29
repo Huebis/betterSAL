@@ -2,6 +2,9 @@
 test.py
 password.py
 backend/database.db
+backend/database.db-shm
+backend/database.db-wal
+
 test/
 __pycache__/
 

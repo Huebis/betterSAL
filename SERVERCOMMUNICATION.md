@@ -12,17 +12,6 @@ password (plain, json)
 token
 role
 
-### register
-/register_user
-
-#### input
-username (plain, json)
-password (plain, json)
-email (plain, json)
-
-#### output
-
-
 ### password Change
 /changePassword
 
@@ -45,60 +34,220 @@ token (plain, json)
 #### output
 empty JSON
 
-### getfile
-/get_file_by_id
 
-#### input
-token
-fileId (json)
-
-#### output
-file (attachment)
 
 ### getGradesStudent
-/get_grades_student
+/getGradesStudent
+
 #### input
 token
+
 #### output
-subjects:[{name,[{ grade, date, message, fileId},...]},...](json) 
+subjects (array)
 
 
 ### addNewTest
 /addNewTest
 #### input
 token
-courseID, testName, weight, location, date, starttime, endtime, describtion
+courseID
+testName
+weight
+location
+date
+starttime
+endtime
+description
 
-
-### getTest
-/get_test_by_id
-#### input
-token
-testId (json)
 #### output
-{name, date, students:{{studentName, grade, message, fileId},...}} (json) 
+empty JSON
 
-### postTest
-/post_test_by_id
-#### input
+
+### deleteTest
+/deleteTest
+#### Input
 token
-{testId,students:{{studentName, grade, message, fileId},...}} (json)
+eventID
+#### output
+empty JSON
 
 
 ### getAllTests
 /getAllTests
-#### input
+#### Input
 token
 #### output
-{{courseId, subject, tests,{{testId, name, date, greaded},...}}...} (json)
+courses
 
 
-###getAllGradesFromTest
+### getAllGradesFromTest
 /getAllGradesFromTest
-### input
+#### Input
 token
-eventID (in url)
-courseID (in url)
+eventID (url Parameter)
+courseID (url Parameter)
+#### output 
+grades
+exam
+
+
+### postAllGradesFromAllStudentsOfTest
+/postAllGradesFromAllStudentsOfTest
+Es ist die Inverse Funktion von getAllGradesFromTest, die genau gleichen Daten können (verändert) wieder zurück geschickt werden
+#### Input
+token
+grades
+exam
+#### output
+empty JSON
+
+
+
+### getUserData
+/getUserData
+#### Input
+token
+#### output
+userName
+ClassName
+major
+email
+role
+firstName
+lastName
+notifAbsenceOfTeacherToday
+notifAbsenceOfTeacherTomorrow
+notifExamTomorrow
+notifEventTomorrow
+notifAbsenceDueTomorrow
+notifGradeChange
+
+
+
+
+### postAllUserInformation
+/postAllUserInformation
+Inversion von getUserData, Objekt kann (verändert) einfach wieder zurück geschickt werden.
+#### Input
+token
+userName
+email
+notifAbsenceOfTeacherToday
+notifAbsenceOfTeacherTomorrow
+notifExamTomorrow
+notifEventTomorrow
+notifAbsenceDueTomorrow
+notifGradeChange
+#### output
+courses
+
+
+### getSchedule
+/getSchedule
+#### Input
+token
+starttime (url Parameter)
+endtime (url Parameter)
+#### output
+schedule
+
+
+### changeAndMergeAbsence
+/absence
+#### Input
+token
+requestType (url Parameter) "merge" / "change"
+
+bei merge: absenceIDList
+bei change: absenceID, excused, description,fileID
+#### output
+empty JSON
+
+
+### getAbsence
+/absence
+#### Input
+token
+#### output
+absence
+
+### deleteAbsenceEvent
+/absence
+#### Input
+token
+userID
+eventID
+absenceID
+#### output
+empty JSON
+
+
+### getAnwesenheitsliste
+/presenceList
+#### Input
+token
+starttime (url Parameter)
+endtime (url Parameter)
+eventID (url Parameter)
+courseID (url Parameter)
+#### output
+anwesenheitsliste
+lesson
+
+### postAnwesenheitsliste
+/presenceList
+Inversionsfunktion von getAnwesenheitsliste, gleiche Daten (verändert) wieder zurückschicken.
+#### Input
+token
+anwesenheitsliste
+lesson
+#### output
+empty JSON
+
+### uploadFile
+/file
+#### Input
+token
+file
+#### output
+fileID
+
+### download_file
+//file/<fileID>
+#### Input
+token
+<fileID> (in url)
+#### output
+file
+
+### addEvent
+/addEvent
+#### Input
+token
+courseID
+type
+description
+fileID
+starttime
+endtime
+location
+
+#### output
+empty JSON
+
+### getCourses
+/getCourses
+#### Input
+token
+#### output
+courses
+
+### getAbsence
+/absence
+#### Input
+token
+#### output
+absence
 
 ### Output
 
@@ -107,4 +256,8 @@ courseID (in url)
 | ERROR number| Description |
 | ----------- | ----------- |
 | 200         | OK          |
-| 403         | token invalid|
+| 400         | API-Input is invalid or backend prozess failed|
+| 450         | token invalid|
+
+
+
