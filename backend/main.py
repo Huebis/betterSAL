@@ -559,7 +559,7 @@ def postFcmToken():
     print("alles hat funktioniert mit dem Token")
 
     
-    notification.sentNotificationToUserID(db,userID,"ANGEMOLDEN","Sie haben sich erfolgreich angemolden",5)
+    #notification.sentNotificationToUserID(db,userID,"ANGEMOLDEN","Sie haben sich erfolgreich angemolden",5)
 
 
 
