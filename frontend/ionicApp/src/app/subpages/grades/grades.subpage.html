@@ -5,7 +5,7 @@
       <div>{{ item.date | date:'dd.MM.yyyy'}}</div>
       <div>{{ item.date}}</div>
       
-      <app-file-download item.fileID></app-file-download>
+      <app-file-download [fileID]='item.fileID'></app-file-download>
       @if (item.grade){
         <div>{{ item.grade }}</div>
       }

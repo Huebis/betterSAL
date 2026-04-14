@@ -6,13 +6,14 @@ import { IonButton, IonIcon } from '@ionic/angular/standalone';
   selector: 'app-file-download',
   templateUrl: './file-download.component.html',
   styleUrls: ['./file-download.component.scss'],
-  imports: [IonButton,IonIcon,]
+  imports: [IonButton,IonIcon]
 })
 export class FileDownloadComponent{
 //9850902c-35d1-46d8-9d0e-f211d15f56e7
-  constructor(private api:ApiService) { }
-
   @Input() fileID:string="";
+
+  constructor(private api:ApiService) { console.log(this.fileID)}
+
   getFile(){
     this.api.downloadFile(this.fileID).subscribe((blob)=>{
       const url = window.URL.createObjectURL(blob);

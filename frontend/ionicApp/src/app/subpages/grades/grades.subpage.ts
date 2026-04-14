@@ -43,6 +43,7 @@ export class GradesSubpage  implements OnInit {
     loadData(){
       this.api.sendRequestGet({},"getGradesStudent").subscribe(v => {
         this.subjects=v.subjects;
+        console.log(v.subjects);
       });
 
     };
