@@ -1,0 +1,17 @@
+<h1>Exersice</h1>
+
+
+@for (item of exercises[position].input; track $index) {
+  <p>{{exercises[position].sentence.slice(item.lastPosition,item.position)}}</p>
+  <ion-input
+    type="text"
+    [(ngModel)]="item.text"
+    name="Message"
+    label="Message" 
+    placeholder="Enter Message"
+    label-placement="floating" 
+    fill="outline" 
+    value="">
+  </ion-input>
+}
+<p>{{exercises[position].sentence.slice(exercises[position].input[exercises[position].input.length-1].position,exercises[position].sentence.length)}}</p>
