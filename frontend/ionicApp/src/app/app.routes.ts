@@ -14,7 +14,7 @@ import { UserComponent } from './subpages/user/user.component';
 import { TeacherAbsencesSubpage } from './subpages/teacher-absences/teacher-absences.subpage';
 import { EventComponent } from './subpages/event/event.component';
 import { ExerciseComponent } from './subpages/exercise/exercise.component';
-import { VideoComponent } from './subpages/vicdeo/video.component';
+import { VideoComponent } from './subpages/video/video.component';
 
 
 
