@@ -13,6 +13,9 @@ import { CheckPresenseSubpage } from './subpages/check-presense/check-presense.s
 import { UserComponent } from './subpages/user/user.component';
 import { TeacherAbsencesSubpage } from './subpages/teacher-absences/teacher-absences.subpage';
 import { EventComponent } from './subpages/event/event.component';
+import { ExerciseComponent } from './subpages/exercise/exercise.component';
+import { VideoComponent } from './subpages/vicdeo/video.component';
+
 
 
 export const routes: Routes = [
@@ -32,6 +35,11 @@ export const routes: Routes = [
       {path:'presense/:courseID/:starttime/:endtime/:eventID',component:CheckPresenseSubpage},
 
       {path:'user',component:UserComponent},
+
+      {path:'exercise',component:ExerciseComponent},
+
+      {path:'video',component:VideoComponent},
+
     ]
   },
   { path: 'login', component:LoginPage},
