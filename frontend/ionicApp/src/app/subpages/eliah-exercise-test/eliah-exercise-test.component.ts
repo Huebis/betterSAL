@@ -48,12 +48,12 @@ uebungen: Lerneinheit[] = [
       titel: 'Exercise 1',
       beschreibung: 'Rewrite the sentences to make conditional sentences.',
       aufgaben: [
-        { frage: 'I make films that appeal to both children and adults, as they do better at the box office. If I make ...', antwort: 'films that appeal to both children and adults, they do better at the box office.' },
-        { frage: "The director has a dark imagination and is considering an unhappy ending. If the director didn't ...", antwort: 'have a dark imagination, he wouldn’t be considering an unhappy ending.' },
-        { frage: "I didn't see the film, so I couldn't join in the discussion. I could ...", antwort: 'have joined in the discussion if I had seen the film.' },
-        { frage: "A film can contain violent images, but audiences are usually warned by the cinema. Audiences will ...", antwort: 'be warned by the cinema if a film contains violent images.' },
-        { frage: "My friend has been making animated films since he did an art degree. If my friend hadn't ...  ", antwort: 'done an art degree, he wouldn’t have been making animated films since then.' },
-        { frage: "Girls aren't encouraged to become film directors by seeing films without female heroines. Girls might ...", antwort: 'be encouraged to become film directors if they saw films with female heroines.' }
+        { frage: 'I make films that appeal to both children and adults, as they do better at the box office. If I make ...', antwort: 'If I make films that appeal to both children and adults, they do better at the box office.' },
+        { frage: "The director has a dark imagination and is considering an unhappy ending. If the director didn't ...", antwort: "If the director didn't have a dark imagination, he wouldn’t be considering an unhappy ending." },
+        { frage: "I didn't see the film, so I couldn't join in the discussion. I could ...", antwort: 'I could have joined in the discussion if I had seen the film.' },
+        { frage: "A film can contain violent images, but audiences are usually warned by the cinema. Audiences will ...", antwort: 'Audiences will be warned by the cinema if a film contains violent images.' },
+        { frage: "My friend has been making animated films since he did an art degree. If my friend hadn't ...  ", antwort: "If my friend hadn't done an art degree, he wouldn’t have been making animated films since then." },
+        { frage: "Girls aren't encouraged to become film directors by seeing films without female heroines. Girls might ...", antwort: 'Girls might be encouraged to become film directors if they saw films with female heroines.' }
       ]
     },
     {
