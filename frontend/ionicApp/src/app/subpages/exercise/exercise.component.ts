@@ -11,6 +11,7 @@ export interface Exercise{
   }>
   sentence:string
   help:string
+  instruction:string
 }
 
 
@@ -30,6 +31,7 @@ export class ExerciseComponent  implements OnInit {
     }],
     sentence:"1234567890123456789",
     help:"",
+    instruction:"fill in the blank",
   }
   ]
   position:number=0;
@@ -37,9 +39,25 @@ export class ExerciseComponent  implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
-  checkExercise(){
-    if (this.exercises[this.position].input.text===this.exercises[this.position].input.text)
+  ngOnInit() {
+    let input=localStorage.getItem("english")
+    if (input!=null){
+      let Object=JSON.parse(input);
+      for (let i=0; i<Object.length; i++){
+        for (let a=0; a<Object[i].length; a++){
+          this.exercises[i].input[a].text = Object[i][a];
+        }
+      }
+        
+    }
   }
+  check(){
+    console.log("test");
+    this.status=true;
+    localStorage.setItem("english", JSON.stringify(this.exercises.map( exercise => {return exercise.input.map(input => input.text)})))
+    console.log("test");
+  }
+  next(){}
+
 
 }

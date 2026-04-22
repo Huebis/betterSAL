@@ -1,14 +1,26 @@
 <h1>Exersice</h1>
 
+<h2>{{exercises[this.position].instruction}}</h2>
+<h4>{{exercises[this.position].help}}</h4>
 @if(status){
   @for (item of exercises[position].input; track $index) {
     <p>{{exercises[position].sentence.slice(item.lastPosition,item.position)}}</p>
-    <p>
-      {{item.solution}}
-    </p>
+    @if (item.text===item.solution){
+      <p style="color: green;">
+        {{item.solution}}
+      </p>
+    }@else{
+      <p style="display:inline; color: red;">
+        _{{item.text}}_
+      </p>
+      <p style="display:inline;">/</p>
+      <p style="display:inline; color: green;">
+        {{item.solution}}
+      </p>
+    }
   }
   <p>{{exercises[position].sentence.slice(exercises[position].input[exercises[position].input.length-1].position,exercises[position].sentence.length)}}</p>
-  <ion-button (click)="this.position+=1">Next</ion-button>
+  <ion-button (click)="this.position+=1; this.status=false">Next</ion-button>
 
 }@else{
   @for (item of exercises[position].input; track $index) {
@@ -25,5 +37,5 @@
     </ion-input>
   }
   <p>{{exercises[position].sentence.slice(exercises[position].input[exercises[position].input.length-1].position,exercises[position].sentence.length)}}</p>
-  <ion-button (click)="checkExercise()">Submit</ion-button>
+  <ion-button (click)="check()">Submit</ion-button>
 }
