@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonInput } from "@ionic/angular/standalone";
+import { IonInput, IonButton } from "@ionic/angular/standalone";
 import { FormsModule } from '@angular/forms';
 
 export interface Exercise{
@@ -18,7 +18,7 @@ export interface Exercise{
   selector: 'app-exercise',
   templateUrl: './exercise.component.html',
   styleUrls: ['./exercise.component.scss'],
-  imports: [IonInput,FormsModule],
+  imports: [IonInput, FormsModule, IonButton],
 })
 export class ExerciseComponent  implements OnInit {
   exercises:Array<Exercise>=[{
@@ -33,9 +33,13 @@ export class ExerciseComponent  implements OnInit {
   }
   ]
   position:number=0;
+  status:boolean=false;
 
   constructor() { }
 
   ngOnInit() {}
+  checkExercise(){
+    if (this.exercises[this.position].input.text===this.exercises[this.position].input.text)
+  }
 
 }
