@@ -1,0 +1,49 @@
+/* quiz.page.scss */
+ion-card {
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+ion-item {
+  --background: #535353;
+  border-radius: 8px;
+}
+
+
+
+.exercise-text p {
+  font-size: 1.0rem; /* Vorher ca. 1.0rem */
+  line-height: 1.6;  /* Besserer Zeilenabstand für langen Text */
+  color: var(--text-color);
+}
+
+/* 2. Die Fragen in den Karten */
+.question-text {
+  font-size: 1.0rem !important; /* Deutlich grösser */
+  margin-bottom: 15px;
+  display: block; /* Sorgt für sauberes Layout */
+}
+
+/* 3. Der Text in den Eingabefeldern */
+ion-input {
+  font-size: 1.2rem;
+  --color: #ffffff !important;
+}
+
+/* 4. Die Lösung (wenn man auf Anzeigen klickt) */
+.solution-box small {
+  font-size: 1.1rem; /* Größer als Standard-Small */
+  display: block;
+  padding: 5px 0;
+}
+
+.solution-box strong {
+  font-size: 1.3rem;
+  color: var(--accent-color); /* Hebt die Antwort farblich hervor */
+}
+
+/* 5. Die "Richtig!" Nachricht */
+.success-msg strong {
+  font-size: 1.5rem;
+}

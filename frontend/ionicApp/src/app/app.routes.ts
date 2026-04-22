@@ -15,6 +15,7 @@ import { TeacherAbsencesSubpage } from './subpages/teacher-absences/teacher-abse
 import { EventComponent } from './subpages/event/event.component';
 import { ExerciseComponent } from './subpages/exercise/exercise.component';
 import { VideoComponent } from './subpages/video/video.component';
+import {EliahExerciseTestComponent} from './subpages/eliah-exercise-test/eliah-exercise-test.component'
 
 
 
@@ -39,10 +40,12 @@ export const routes: Routes = [
       {path:'exercise',component:ExerciseComponent},
 
       {path:'video',component:VideoComponent},
+      
 
     ]
   },
   { path: 'login', component:LoginPage},
+  {path:'eliahTest',component:EliahExerciseTestComponent},
   {
     path: '',
     redirectTo: 'home/timetable',
