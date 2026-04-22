@@ -13,14 +13,14 @@ ion-item {
 
 
 .exercise-text p {
-  font-size: 1.0rem; /* Vorher ca. 1.0rem */
+  font-size: 1.2rem; /* Vorher ca. 1.0rem */
   line-height: 1.6;  /* Besserer Zeilenabstand für langen Text */
   color: var(--text-color);
 }
 
 /* 2. Die Fragen in den Karten */
 .question-text {
-  font-size: 1.0rem !important; /* Deutlich grösser */
+  font-size: 1.2rem !important; /* Deutlich grösser */
   margin-bottom: 15px;
   display: block; /* Sorgt für sauberes Layout */
 }
@@ -47,3 +47,5 @@ ion-input {
 .success-msg strong {
   font-size: 1.5rem;
 }
+
+

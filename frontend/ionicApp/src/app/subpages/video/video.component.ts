@@ -10,7 +10,7 @@ import { IonicModule } from '@ionic/angular';
   imports: [SafePipe,IonicModule]
 })
 export class VideoComponent  implements OnInit {
-  videoUrl: string = "https://www.youtube.com/embed/E4ePZqypTfY";
+  videoUrl: string = "https://www.youtube.com/embed/u5AA9JZJgQA";
   constructor() { }
 
   ngOnInit() {}
