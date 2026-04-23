@@ -45,7 +45,7 @@ export const routes: Routes = [
     ]
   },
   { path: 'login', component:LoginPage},
-  {path:'eliahTest',component:EliahExerciseTestComponent},
+  {path:'Exercise',component:EliahExerciseTestComponent},
   {
     path: '',
     redirectTo: 'home/timetable',
